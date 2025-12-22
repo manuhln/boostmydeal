@@ -1,0 +1,28 @@
+{
+  "to_phone": "+918504088123",
+  "from_phone": "+1234567890",
+  "twilio_account_sid": "dummy",
+  "twilio_auth_token": "dummy",
+  "contact_name": "Test User",
+  "agent_initial_message": "Hello! This is a test call using Smallest AI.",
+  "user_speak_first": false,
+  "agent_prompt_preamble": "You are a friendly AI assistant making a test call.",
+  "livekit_sip_trunk_id": "YOUR_SIP_TRUNK_ID_HERE",
+  "tts": {
+    "provider_name": "smallest_ai",
+    "voice_id": "emily",
+    "model_id": "waves-v2",
+    "api_key": "YOUR_SMALLEST_AI_API_KEY_HERE"
+  },
+  "stt": {
+    "provider_name": "deepgram",
+    "model": "nova-2",
+    "api_key": "YOUR_DEEPGRAM_API_KEY_HERE"
+  },
+  "model": {
+    "name": "gpt-4o-mini",
+    "api_key": "YOUR_OPENAI_API_KEY_HERE"
+  },
+  "recording": false,
+  "webhook_url": "https://your-webhook-url.com/webhook"
+}

@@ -1,0 +1,70 @@
+{
+  "example_webhook_response": {
+    "type": "TRANSCRIPT_COMPLETE",
+    "call_id": "call-xyz123abc",
+    "full_transcript": "BOT: Hello! This is your AI assistant. How can I help you today?\nUSER: Hi, I'd like to schedule an appointment.\nBOT: I'd be happy to help you schedule an appointment. What day works best for you?\nUSER: How about next Tuesday at 2 PM?\nBOT: Perfect! I've scheduled your appointment for Tuesday at 2 PM. Is there anything else you need?\nUSER: No, that's all. Thanks!\nBOT: You're welcome! Have a great day!",
+    "recording_urls": [
+      "https://storage.googleapis.com/your-bucket/recordings/2025/11/11/call-xyz123abc_143022.mp4?signature=..."
+    ],
+    "user_tags_found": [
+      "appointment_scheduled"
+    ],
+    "system_tags_found": [],
+    "callback_requested": false,
+    "callback_time": null,
+    "cost_breakdown": {
+      "calling_provider_cost": 0.0914,
+      "tts_cost": 0.0290,
+      "stt_cost": 0.0086,
+      "llm_cost": 0.0000,
+      "total_cost": 0.1290,
+      "currency": "USD"
+    }
+  },
+  "cost_calculation_details": {
+    "call_duration": "2 minutes (120 seconds)",
+    "calling_provider": "Voxsun",
+    "calling_cost_calculation": "2 minutes × $0.0457/min = $0.0914",
+    "tts_provider": "Smallest.ai",
+    "tts_characters": 145,
+    "tts_cost_calculation": "145 chars ÷ 1000 × $0.05 = $0.00725 ≈ $0.0073",
+    "stt_provider": "Deepgram nova-2",
+    "stt_duration": "2 minutes",
+    "stt_cost_calculation": "2 minutes × $0.0043/min = $0.0086",
+    "llm_provider": "gpt-4o-mini",
+    "llm_cost_note": "Token tracking not yet implemented, showing $0",
+    "total": "$0.0914 + $0.0073 + $0.0086 + $0.0000 = $0.1073"
+  },
+  "optimization_example": {
+    "scenario": "100 calls per day, 3 minutes average duration",
+    "current_setup": {
+      "tts": "ElevenLabs",
+      "stt": "Deepgram nova-2",
+      "cost_per_call": 0.18,
+      "daily_cost": 18.00,
+      "monthly_cost": 540.00
+    },
+    "optimized_setup": {
+      "tts": "Smallest.ai (4x cheaper)",
+      "stt": "OpenAI gpt-4o-mini-transcribe (30% cheaper)",
+      "cost_per_call": 0.15,
+      "daily_cost": 15.00,
+      "monthly_cost": 450.00,
+      "monthly_savings": 90.00
+    }
+  },
+  "providers_comparison": {
+    "tts_costs_per_1000_chars": {
+      "smallest_ai": 0.05,
+      "openai": 0.015,
+      "eleven_labs_turbo": 0.15,
+      "eleven_labs_standard": 0.20
+    },
+    "stt_costs_per_minute": {
+      "openai_gpt_4o_mini_transcribe": 0.003,
+      "deepgram_nova_2": 0.0043,
+      "deepgram_nova": 0.0048,
+      "openai_whisper_1": 0.006
+    }
+  }
+}

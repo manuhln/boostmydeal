@@ -1,0 +1,7 @@
+1. Request --> route
+2. Controller 
+3. Service 
+4. Db calls 
+
+Sending res --> common methods
+validation --> common method 

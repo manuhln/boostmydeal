@@ -1,0 +1,341 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light mode colors */
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(0, 0%, 3.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(0, 0%, 3.9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(0, 0%, 3.9%);
+  --primary: hsl(15, 100%, 49%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(0, 0%, 96.1%);
+  --secondary-foreground: hsl(0, 0%, 9%);
+  --muted: hsl(0, 0%, 96.1%);
+  --muted-foreground: hsl(0, 0%, 45.1%);
+  --accent: hsl(0, 0%, 96.1%);
+  --accent-foreground: hsl(0, 0%, 9%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(0, 0%, 89.8%);
+  --input: hsl(0, 0%, 89.8%);
+  --ring: hsl(15, 100%, 49%);
+  --radius: 0.75rem;
+  
+  /* Sidebar colors */
+  --sidebar-background: hsl(0, 0%, 98%);
+  --sidebar-foreground: hsl(0, 0%, 9%);
+  --sidebar-primary: hsl(15, 100%, 49%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(0, 0%, 94%);
+  --sidebar-accent-foreground: hsl(0, 0%, 9%);
+  --sidebar-border: hsl(0, 0%, 89.8%);
+  --sidebar-ring: hsl(15, 100%, 49%);
+}
+
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(0, 0%, 100%);
+  --card: hsl(0, 0%, 5%);
+  --card-foreground: hsl(0, 0%, 100%);
+  --popover: hsl(0, 0%, 5%);
+  --popover-foreground: hsl(0, 0%, 100%);
+  --primary: hsl(15, 100%, 49%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(0, 0%, 10%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(0, 0%, 10%);
+  --muted-foreground: hsl(0, 0%, 60%);
+  --accent: hsl(15, 100%, 49%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(0, 0%, 15%);
+  --input: hsl(0, 0%, 10%);
+  --ring: hsl(15, 100%, 49%);
+  
+  /* Sidebar dark colors */
+  --sidebar-background: hsl(0, 0%, 0%);
+  --sidebar-foreground: hsl(0, 0%, 100%);
+  --sidebar-primary: hsl(15, 100%, 49%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(0, 0%, 10%);
+  --sidebar-accent-foreground: hsl(0, 0%, 100%);
+  --sidebar-border: hsl(0, 0%, 15%);
+  --sidebar-ring: hsl(15, 100%, 49%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Orange primary button - ensure white text in both themes */
+  .bg-\[\#F74000\] {
+    color: white !important;
+  }
+  
+  .metric-card {
+    @apply bg-white dark:bg-card rounded-xl p-6 border border-border shadow-sm;
+  }
+  
+  .metric-value {
+    @apply text-3xl font-bold text-foreground mt-2;
+  }
+  
+  .metric-change {
+    @apply text-sm mt-2 flex items-center;
+  }
+  
+  .metric-change.positive {
+    @apply text-emerald-600 dark:text-emerald-400;
+  }
+  
+  .metric-change.negative {
+    @apply text-red-600 dark:text-red-400;
+  }
+  
+  .status-badge {
+    @apply inline-flex px-2 py-1 text-xs font-semibold rounded-full;
+  }
+  
+  .status-completed {
+    @apply bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400;
+  }
+  
+  .status-in-progress {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400;
+  }
+  
+  .status-missed {
+    @apply bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400;
+  }
+
+  /* Custom scrollbar styles for transcript overlay */
+  .transcript-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #F74000 #1a1a1a;
+  }
+  
+  .transcript-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .transcript-scroll::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+  }
+  
+  .transcript-scroll::-webkit-scrollbar-thumb {
+    background: #F74000;
+    border-radius: 4px;
+  }
+  
+  .transcript-scroll::-webkit-scrollbar-thumb:hover {
+    background: #e63700;
+  }
+
+  /* Light theme transcript scrollbar (override default) */
+  html:not(.dark) .transcript-scroll {
+    scrollbar-color: #F74000 #ffffff !important;
+  }
+  
+  html:not(.dark) .transcript-scroll::-webkit-scrollbar-track {
+    background: #ffffff !important;
+  }
+  
+  .status-failed {
+    @apply bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400;
+  }
+  
+  .status-initiated {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400;
+  }
+  
+  /* Mobile optimization */
+  @media (max-width: 640px) {
+    .responsive-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    
+    .responsive-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .mobile-stack {
+      flex-direction: column;
+    }
+    
+    .mobile-full-width {
+      width: 100%;
+    }
+  }
+  
+  .status-cancelled {
+    @apply bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400;
+  }
+
+  /* Main sidebar scrollbar - themed and only visible on hover/scroll */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.3s ease;
+  }
+  
+  .sidebar-scroll:hover,
+  .sidebar-scroll:focus-within {
+    scrollbar-color: #F74000 #1a1a1a;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+  
+  .sidebar-scroll:hover::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+  
+  .sidebar-scroll:hover::-webkit-scrollbar-thumb {
+    background: #F74000;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+    background: #e63700;
+  }
+
+  /* Show scrollbar when actively scrolling */
+  .sidebar-scroll.scrolling {
+    scrollbar-color: #F74000 #1a1a1a;
+  }
+  
+  .sidebar-scroll.scrolling::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+  
+  .sidebar-scroll.scrolling::-webkit-scrollbar-thumb {
+    background: #F74000;
+  }
+
+  /* Light theme sidebar scrollbar (override default) */
+  html:not(.dark) .sidebar-scroll:hover,
+  html:not(.dark) .sidebar-scroll:focus-within {
+    scrollbar-color: #F74000 #ffffff !important;
+  }
+  
+  html:not(.dark) .sidebar-scroll:hover::-webkit-scrollbar-track {
+    background: #ffffff !important;
+  }
+  
+  html:not(.dark) .sidebar-scroll.scrolling {
+    scrollbar-color: #F74000 #ffffff !important;
+  }
+  
+  html:not(.dark) .sidebar-scroll.scrolling::-webkit-scrollbar-track {
+    background: #ffffff !important;
+  }
+
+  /* Table overflow container with rounded corners */
+  .overflow-x-auto.rounded-lg {
+    border-radius: 0.5rem;
+  }
+  
+  .overflow-x-auto.rounded-lg::-webkit-scrollbar {
+    display: block;
+    height: 8px;
+  }
+  
+  .overflow-x-auto.rounded-lg::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+  }
+  
+  .overflow-x-auto.rounded-lg::-webkit-scrollbar-thumb {
+    background: #F74000;
+    border-radius: 4px;
+  }
+  
+  .overflow-x-auto.rounded-lg::-webkit-scrollbar-thumb:hover {
+    background: #e63700;
+  }
+
+  html:not(.dark) .overflow-x-auto.rounded-lg::-webkit-scrollbar-track {
+    background: #ffffff !important;
+  }
+
+  /* Hide default browser scrollbars globally */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  
+  *::-webkit-scrollbar { 
+    display: none; /* Safari and Chrome */
+  }
+  
+  /* Re-enable scrollbars only for specific elements we want */
+  .sidebar-scroll::-webkit-scrollbar { 
+    display: block;
+    width: 8px;
+  }
+  
+  .transcript-scroll::-webkit-scrollbar { 
+    display: block;
+    width: 8px;
+  }
+  
+  /* Main content scrollbar - themed to match sidebar */
+  .main-content-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #F74000 #1a1a1a;
+  }
+  
+  .main-content-scroll::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+  }
+  
+  .main-content-scroll::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+  }
+  
+  .main-content-scroll::-webkit-scrollbar-thumb {
+    background: #F74000;
+    border-radius: 4px;
+  }
+  
+  .main-content-scroll::-webkit-scrollbar-thumb:hover {
+    background: #e63700;
+  }
+
+  /* Light theme main content scrollbar (override default) */
+  html:not(.dark) .main-content-scroll {
+    scrollbar-color: #F74000 #ffffff !important;
+  }
+  
+  html:not(.dark) .main-content-scroll::-webkit-scrollbar-track {
+    background: #ffffff !important;
+  }
+}

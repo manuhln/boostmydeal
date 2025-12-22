@@ -1,0 +1,72 @@
+{
+  "webhook_endpoint": "https://your-domain.replit.app/api/webhook/webhook-status",
+  "method": "POST",
+  "content_type": "application/json",
+  "required_webhooks": {
+    "1_phone_call_connected": {
+      "description": "Send when call is answered and connected",
+      "example": {
+        "type": "PHONE_CALL_CONNECTED",
+        "call_id": "call_12345abc",
+        "call_start_time": "2025-07-25T10:30:00Z",
+        "status": "connected",
+        "phone_number": "+1234567890",
+        "answered_by": "human"
+      },
+      "required_fields": ["type", "call_id"],
+      "optional_fields": ["call_start_time", "status", "phone_number", "answered_by"]
+    },
+    "2_transcript_complete": {
+      "description": "Send when transcript is ready (can be sent multiple times)",
+      "example": {
+        "type": "TRANSCRIPT_COMPLETE",
+        "call_id": "call_12345abc",
+        "full_transcript": "Hello, this is John from ABC Company. I'm calling about your recent inquiry regarding our services. The customer responded: Yes, I'm very interested in learning more about your pricing plans...",
+        "confidence_score": 0.95,
+        "language": "en-US",
+        "transcript_timestamp": "2025-07-25T10:32:15Z"
+      },
+      "required_fields": ["type", "call_id"],
+      "optional_fields": ["full_transcript", "confidence_score", "language", "transcript_timestamp"]
+    },
+    "3_phone_call_ended": {
+      "description": "Send when call completes - this updates final call status",
+      "example": {
+        "type": "PHONE_CALL_ENDED",
+        "call_id": "call_12345abc",
+        "duration_seconds": 180,
+        "call_end_time": "2025-07-25T10:33:00Z",
+        "end_reason": "completed",
+        "is_voicemail": false,
+        "user_tags": ["qualified", "interested", "follow-up-needed"],
+        "full_transcript": "Complete conversation transcript including both sides of the conversation...",
+        "call_summary": "Customer showed strong interest in premium package, requested follow-up next week",
+        "next_action": "schedule_demo"
+      },
+      "required_fields": ["type", "call_id"],
+      "optional_fields": ["duration_seconds", "call_end_time", "end_reason", "is_voicemail", "user_tags", "full_transcript", "call_summary", "next_action"]
+    },
+    "CALL_SUMMARY": {
+      "description": "Sent when AI analysis and summary is complete",
+      "example_payload": {
+        "type": "CALL_SUMMARY",
+        "call_id": "call_12345abc",
+        "call_summary": "Customer showed strong interest in premium package, requested follow-up next week",
+        "sentiment_analysis": "positive",
+        "lead_score": 8.5,
+        "next_action": "schedule_demo",
+        "key_points": ["interested in premium features", "budget confirmed", "decision maker"],
+        "summary_timestamp": "2025-07-25T10:35:00Z"
+      },
+      "required_fields": ["type", "call_id"],
+      "optional_fields": ["call_summary", "sentiment_analysis", "lead_score", "next_action", "key_points", "summary_timestamp"]
+    }
+  },
+  "important_notes": {
+    "call_id_consistency": "The same call_id must be used across all 3 webhooks for a single call",
+    "webhook_sequence": "Send in order: PHONE_CALL_CONNECTED → TRANSCRIPT_COMPLETE → PHONE_CALL_ENDED",
+    "retry_logic": "Retry webhooks if you receive HTTP 4xx/5xx responses",
+    "success_response": "HTTP 200 means webhook was processed successfully",
+    "user_tags_format": "user_tags should be an array of strings like ['qualified', 'interested']"
+  }
+}

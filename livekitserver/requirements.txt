@@ -1,0 +1,17 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+livekit>=1.0.12
+livekit-agents>=1.2.17
+livekit-plugins-elevenlabs
+livekit-plugins-deepgram
+livekit-plugins-openai
+livekit-plugins-silero
+twilio==8.12.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+livekit-api
+python-multipart
+pinecone
+google-cloud-storage
+livekit-plugins-smallestai
