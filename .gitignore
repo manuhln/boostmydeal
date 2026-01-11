@@ -1,2 +1,5 @@
 .env
 node_modules/
+ecosystem.config.cjs
+ecosyste.config.js
+ecosystem.config.pie-speech.cjs
