@@ -647,6 +647,55 @@ export class ZohoService {
   }
 
   /**
+   * Generate refresh token using authorization code
+   */
+  static async generateTokens(params: {
+    code: string;
+    clientId: string;
+    clientSecret: string;
+    region?: string;
+    redirectUri: string;
+  }): Promise<any> {
+    try {
+      const region = params.region || "com";
+      const accountsUrl = `https://accounts.zoho.${region}/oauth/v2/token`;
+
+      console.log("Zoho: Generating tokens from code at:", accountsUrl);
+
+      const response = await fetch(accountsUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          code: params.code,
+          client_id: params.clientId,
+          client_secret: params.clientSecret,
+          redirect_uri: params.redirectUri,
+          grant_type: "authorization_code",
+        }),
+      });
+
+      const responseText = await response.text();
+
+      if (!response.ok) {
+        console.error("Zoho token generation failed:", {
+          status: response.status,
+          error: responseText,
+        });
+        throw new Error(
+          `Failed to generate tokens: ${response.status} - ${responseText}`
+        );
+      }
+
+      return JSON.parse(responseText);
+    } catch (error: any) {
+      console.error("ZohoService: Token generation error:", error.message);
+      throw error;
+    }
+  }
+
+  /**
    * Send test email using Zoho (placeholder - would use Zoho Mail API)
    */
   static async searchDealsByName(
