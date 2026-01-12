@@ -1,7 +1,6 @@
 // Load environment variables first
-import { config } from 'dotenv';
+import { config } from "dotenv";
 config();
-
 
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
@@ -10,9 +9,9 @@ import { connectDB } from "./config/database";
 import authRoutes from "./routes/auth";
 
 // Initialize workers and services
-import './modules/calls/workers';
-import { invoiceScheduler } from './modules/billing/services/InvoiceScheduler';
-import { callbackScheduler } from './modules/calls/services/CallbackScheduler';
+import "./modules/calls/workers";
+import { invoiceScheduler } from "./modules/billing/services/InvoiceScheduler";
+import { callbackScheduler } from "./modules/calls/services/CallbackScheduler";
 
 const app = express();
 
@@ -23,13 +22,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Auth routes
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
 
-// Webhook routes (BEFORE other API routes to avoid auth middleware)  
-import { webhookRouter } from './modules/calls/routes/callRoutes';
-import { webhookRoutes } from './routes/webhook.routes';
-app.use('/api/webhook', webhookRouter);
-app.use('/api/webhook', webhookRoutes);
+// Webhook routes (BEFORE other API routes to avoid auth middleware)
+import { webhookRouter } from "./modules/calls/routes/callRoutes";
+import { webhookRoutes } from "./routes/webhook.routes";
+app.use("/api/webhook", webhookRouter);
+app.use("/api/webhook", webhookRoutes);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -85,27 +84,30 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-    
-    // Start the invoice scheduler after server is ready
-    try {
-      invoiceScheduler.startScheduler();
-      console.log('✅ [Server] Invoice scheduler initialized');
-    } catch (error) {
-      console.error('❌ [Server] Failed to start invoice scheduler:', error);
+  server.listen(
+    {
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    },
+    () => {
+      log(`serving on port ${port}`);
+
+      // Start the invoice scheduler after server is ready
+      try {
+        invoiceScheduler.startScheduler();
+        console.log("✅ [Server] Invoice scheduler initialized");
+      } catch (error) {
+        console.error("❌ [Server] Failed to start invoice scheduler:", error);
+      }
+
+      // Start the callback scheduler after server is ready
+      try {
+        callbackScheduler.startScheduler();
+        console.log("✅ [Server] Callback scheduler initialized");
+      } catch (error) {
+        console.error("❌ [Server] Failed to start callback scheduler:", error);
+      }
     }
-    
-    // Start the callback scheduler after server is ready
-    try {
-      callbackScheduler.startScheduler();
-      console.log('✅ [Server] Callback scheduler initialized');
-    } catch (error) {
-      console.error('❌ [Server] Failed to start callback scheduler:', error);
-    }
-  });
+  );
 })();

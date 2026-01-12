@@ -1,4 +1,4 @@
-import IORedis from 'ioredis';
+import IORedis from "ioredis";
 
 // Singleton Redis connection pool for BullMQ
 class RedisConnectionPool {
@@ -14,12 +14,16 @@ class RedisConnectionPool {
     return RedisConnectionPool.instance;
   }
 
-  getConnection(name: string = 'default'): IORedis {
+  getConnection(name: string = "default"): IORedis {
     if (!this.connections.has(name)) {
       // Validate Redis Cloud URL
-      const redisUrl = process.env.REDIS_CLOUD_URL;
-      if (!redisUrl || typeof redisUrl !== 'string') {
-        throw new Error('REDIS_CLOUD_URL environment variable is required and must be a valid URL string');
+      const redisUrl = process.env.REDIS_CLOUD_URL!;
+      // console.log(process.env);
+      // console.log("REDIS_CLOUD_URL", redisUrl);
+      if (!redisUrl || typeof redisUrl !== "string") {
+        throw new Error(
+          "REDIS_CLOUD_URL environment variable is required and must be a valid URL string"
+        );
       }
 
       // Redis Cloud connection established
@@ -34,19 +38,19 @@ class RedisConnectionPool {
         family: 4, // Use IPv4
       });
 
-      connection.on('connect', () => {
+      connection.on("connect", () => {
         console.log(`📡 [Redis-${name}] Connected to Redis Cloud successfully`);
       });
 
-      connection.on('error', (err) => {
+      connection.on("error", (err) => {
         console.error(`❌ [Redis-${name}] Connection error:`, err.message);
       });
 
-      connection.on('ready', () => {
+      connection.on("ready", () => {
         console.log(`✅ [Redis-${name}] Redis Cloud is ready for BullMQ`);
       });
 
-      connection.on('close', () => {
+      connection.on("close", () => {
         console.log(`🔌 [Redis-${name}] Connection closed`);
       });
 
@@ -66,6 +70,6 @@ class RedisConnectionPool {
 }
 
 export const redisPool = RedisConnectionPool.getInstance();
-export const redisConnection = redisPool.getConnection('main');
+export const redisConnection = redisPool.getConnection("main");
 
 export default redisConnection;
