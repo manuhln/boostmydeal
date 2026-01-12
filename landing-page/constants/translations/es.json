@@ -1,0 +1,179 @@
+{
+  "header": {
+    "product": "Producto",
+    "solutions": "Soluciones",
+    "why": "Por qué Boostmydeal",
+    "pricing": "Precios",
+    "resources": "Recursos",
+    "logIn": "Iniciar sesión",
+    "getStarted": "Empezar"
+  },
+  "hero": {
+    "title": "El Agente IA Todo-en-Uno Que Convierte Prospectos En Ventas Cerradas",
+    "subtitle": "Automatice la generación de leads, calificación, llamadas, programación, actualizaciones de CRM y cierre de ventas",
+    "description": "Todo impulsado por agentes de IA conectados a todo su stack de ventas",
+    "cta": "Automatizar Su Pipeline de Ventas",
+    "demo": "Reservar una Demo en Vivo",
+    "poweredBy": "Impulsado por Voxsun.com"
+  },
+  "product": {
+    "title": "Nuestro Producto",
+    "subtitle": "Todo lo que necesitas en un solo lugar",
+    "description": "Descubre funciones potentes diseñadas para aumentar tu productividad y optimizar tus operaciones."
+  },
+  "solutions": {
+    "title": "Soluciones",
+    "subtitle": "Adaptadas a tus necesidades",
+    "description": "Soluciones personalizadas que se adaptan a los requisitos de su negocio y escalan con su crecimiento."
+  },
+  "pricing": {
+    "title": "Precios",
+    "subtitle": "Elige el plan que se adapte a ti",
+    "description": "Precios transparentes sin tarifas ocultas. Comienza gratis y escala a medida que creces.",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "perMonth": "por mes",
+    "startFreeTrial": "Prueba gratuita"
+  },
+  "resources": {
+    "title": "Recursos",
+    "subtitle": "Aprende y crece con nosotros",
+    "description": "Accede a guías, tutoriales y documentación para aprovechar al máximo nuestra plataforma."
+  },
+  "footer": {
+    "company": "Empresa",
+    "about": "Acerca de",
+    "careers": "Carreras",
+    "contact": "Contacto",
+    "product": "Producto",
+    "features": "Características",
+    "security": "Seguridad",
+    "legal": "Legal",
+    "privacy": "Política de privacidad",
+    "terms": "Términos de servicio",
+    "copyright": "© 2024 Boostmydeal. Todos los derechos reservados."
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "¡Éxito!",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar"
+  },
+  "newsletter": {
+    "placeholder": "Ingrese su dirección de correo",
+    "submit": "Enviar",
+    "success": "¡Gracias por suscribirse!",
+    "error": "Por favor ingrese un email válido"
+  },
+  "partners": {
+    "videoCaption": "Vea cómo BoostMyDeal automatiza todo su flujo de trabajo de ventas",
+    "trustedBy": "Más de 1,000 empresas confían en nosotros a nivel mundial"
+  },
+  "socialProof": {
+    "chipLabel": "Prueba Social",
+    "title": "Confiado por equipos de ventas, agencias y empresas en rápido crecimiento",
+    "description": "Comprobado para ayudar a los equipos de ventas a responder más rápido y cerrar más tratos."
+  },
+  "customerPain": {
+    "chipLabel": "Punto de Dolor",
+    "title": "Los Equipos de Ventas Pierden Negocios Porque El Trabajo Manual Lo Ralentiza Todo",
+    "description": "Los seguimientos manuales, las herramientas desconectadas y los tiempos de respuesta lentos hacen que los prospectos se enfríen y las oportunidades se pierdan."
+  },
+  "solution": {
+    "chipLabel": "Un Flujo de Trabajo IA",
+    "title": "Un Flujo de Trabajo de IA Que Gestiona Todo Su Proceso de Ventas Desde el Prospecto Hasta el Cierre",
+    "description": "BoostMyDeal es una plataforma de flujo de trabajo de agente de IA que automatiza la generación de prospectos, calificación, alcance y cierre de negocios al conectar redes sociales, CRMs, sistemas telefónicos, herramientas de programación, videoconferencias y más en un único flujo de trabajo fluido."
+  },
+  "features": {
+    "feature1": {
+      "title": "Captura de Leads Impulsada por IA Desde Plataformas Sociales",
+      "description": "BoostMyDeal captura y califica automáticamente leads de canales de redes sociales, asegurando compromiso instantáneo y cero fuga de leads."
+    },
+    "feature2": {
+      "title": "Agentes de Llamadas IA Automatizados — 24/7",
+      "description": "BoostMyDeal captura y califica automáticamente leads de canales de redes sociales, asegurando compromiso instantáneo y cero fuga de leads."
+    },
+    "feature3": {
+      "title": "Conexión Con Cualquier CRM — Sin Limitaciones",
+      "description": "BoostMyDeal captura y califica automáticamente leads de canales de redes sociales, asegurando compromiso instantáneo y cero fuga de leads."
+    },
+    "feature4": {
+      "title": "Integración Nativa Con Proveedores PBX Empresariales",
+      "description": "Conecte su proveedor PBX o VoIP de confianza directamente a BoostMyDeal para gestión de llamadas en tiempo real, enrutamiento y análisis."
+    },
+    "feature5": {
+      "title": "Programación y Videollamadas Impulsadas por IA",
+      "description": "Reserve reuniones automáticamente, sincronice con calendarios, lance videollamadas con herramientas de conferencia integradas."
+    },
+    "feature6": {
+      "title": "Automatización Inteligente de Correos Que Cierra Negocios",
+      "description": "Integración de correo SMTP, agentes de IA hacen seguimiento automáticamente, respuestas personalizadas a escala."
+    }
+  },
+  "industryCase": {
+    "chipLabel": "Caso de Industria",
+    "title": "Diseñado para Equipos de Ventas de Alto Rendimiento",
+    "description": "Un flujo de trabajo de IA que se adapta a diferentes modelos de ventas e industrias.",
+    "industry1": {
+      "title": "Equipos de Ventas",
+      "description": "Automatice seguimientos y cierre negocios más rápido"
+    },
+    "industry2": {
+      "title": "Agencias de Marketing",
+      "description": "Responda a los prospectos instantáneamente y escale el alcance"
+    },
+    "industry3": {
+      "title": "Centros de Llamadas",
+      "description": "Gestione llamadas entrantes y salientes 24/7"
+    },
+    "industry4": {
+      "title": "PYMEs",
+      "description": "Respuesta más rápida a prospectos y automatización de ventas inteligente"
+    },
+    "industry5": {
+      "title": "Bienes Raíces",
+      "description": "Califique prospectos de propiedades sin demoras"
+    },
+    "industry6": {
+      "title": "Empresas SaaS",
+      "description": "Convierta prospectos entrantes a escala"
+    },
+    "industry7": {
+      "title": "Proveedores Servicios B2B",
+      "description": "Nunca pierda prospectos de alta intención"
+    },
+    "industry8": {
+      "title": "Empresas",
+      "description": "Flujos de trabajo de ventas IA escalables diseñados para la complejidad"
+    }
+  },
+  "workflow": {
+    "step1": {
+      "label": "Lead ingresa",
+      "sublabel": "desde redes sociales"
+    },
+    "step2": {
+      "label": "IA califica",
+      "sublabel": "por llamada o correo"
+    },
+    "step3": {
+      "label": "CRM actualiza",
+      "sublabel": "automáticamente"
+    },
+    "step4": {
+      "label": "Reunión",
+      "sublabel": "programada"
+    },
+    "step5": {
+      "label": "Seguimientos gestionados",
+      "sublabel": "por IA"
+    },
+    "step6": {
+      "label": "Negocio",
+      "sublabel": "cerrado más rápido"
+    }
+  }
+}

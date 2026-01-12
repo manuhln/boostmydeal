@@ -1,0 +1,179 @@
+{
+  "header": {
+    "product": "Product",
+    "solutions": "Solutions",
+    "why": "Why Boostmydeal",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "logIn": "Log In",
+    "getStarted": "Get started"
+  },
+  "hero": {
+    "title": "The All-in-One AI Agent That Turns Leads Into Closed Deals",
+    "subtitle": "Automate lead generation, qualification, calling, scheduling, CRM updates, and deal closing",
+    "description": "All powered by AI agents connected to your entire sales stack",
+    "cta": "Start Automating Your Sales Pipeline",
+    "demo": "Book a Live Demo",
+    "poweredBy": "Powered by Voxsun.com"
+  },
+  "product": {
+    "title": "Our Product",
+    "subtitle": "Everything you need in one place",
+    "description": "Discover powerful features designed to boost your productivity and streamline your operations."
+  },
+  "solutions": {
+    "title": "Solutions",
+    "subtitle": "Tailored for your needs",
+    "description": "Custom solutions that adapt to your business requirements and scale with your growth."
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Choose the plan that fits you",
+    "description": "Transparent pricing with no hidden fees. Start free and scale as you grow.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "perMonth": "per month",
+    "startFreeTrial": "Start free trial"
+  },
+  "resources": {
+    "title": "Resources",
+    "subtitle": "Learn and grow with us",
+    "description": "Access guides, tutorials, and documentation to get the most out of our platform."
+  },
+  "footer": {
+    "company": "Company",
+    "about": "About",
+    "careers": "Careers",
+    "contact": "Contact",
+    "product": "Product",
+    "features": "Features",
+    "security": "Security",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© 2024 Boostmydeal. All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "newsletter": {
+    "placeholder": "Enter your email address",
+    "submit": "Submit",
+    "success": "Thank you for subscribing!",
+    "error": "Please enter a valid email"
+  },
+  "partners": {
+    "videoCaption": "Watch how BoostMyDeal automates your entire sales workflow",
+    "trustedBy": "Trusted by over 1,000 companies globally"
+  },
+  "socialProof": {
+    "chipLabel": "Social Proof",
+    "title": "Trusted by sales teams, agencies, and fast-growing businesses",
+    "description": "Proven to help sales teams respond faster and close more deals."
+  },
+  "customerPain": {
+    "chipLabel": "Customer Pain",
+    "title": "Sales Teams Lose Deals Because Manual Work Slows Everything Down",
+    "description": "Manual follow-ups, disconnected tools, and slow response times cause leads to go cold and deals to slip away."
+  },
+  "solution": {
+    "chipLabel": "One AI Workflow",
+    "title": "One AI Workflow That Manages Your Entire Sales Journey from Lead to Close",
+    "description": "BoostMyDeal is an AI agent workflow platform that automates lead generation, qualification, outreach, and deal closing by connecting social media, CRMs, phone systems, scheduling tools, video conferencing, and more into a single seamless workflow."
+  },
+  "features": {
+    "feature1": {
+      "title": "AI-Powered Lead Capture From Social Platforms",
+      "description": "BoostMyDeal automatically captures and qualifies leads from social media channels, ensuring instant engagement and zero lead leakage."
+    },
+    "feature2": {
+      "title": "Automated AI Calling Agents — 24/7",
+      "description": "BoostMyDeal automatically captures and qualifies leads from social media channels, ensuring instant engagement and zero lead leakage."
+    },
+    "feature3": {
+      "title": "Connect With Any CRM — No Limitations",
+      "description": "BoostMyDeal automatically captures and qualifies leads from social media channels, ensuring instant engagement and zero lead leakage."
+    },
+    "feature4": {
+      "title": "Native Integration With Business PBX Providers",
+      "description": "Connect your trusted PBX or VoIP provider directly to BoostMyDeal for real-time call handling, routing, and analytics."
+    },
+    "feature5": {
+      "title": "AI-Driven Scheduling & Video Meetings",
+      "description": "Automatically book meetings, Sync with calendars, Launch video calls with integrated conferencing tools."
+    },
+    "feature6": {
+      "title": "Intelligent Email Automation That Closes Deals",
+      "description": "SMTP email integration, AI email agents follow up automatically, Personalized responses at scale."
+    }
+  },
+  "industryCase": {
+    "chipLabel": "Industry Case",
+    "title": "Built for High-Performance Sales Teams",
+    "description": "One AI workflow that adapts to different sales models and industries.",
+    "industry1": {
+      "title": "Sales Teams",
+      "description": "Automate follow-ups and close deals faster"
+    },
+    "industry2": {
+      "title": "Marketing Agencies",
+      "description": "Respond to leads instantly and scale outreach"
+    },
+    "industry3": {
+      "title": "Call Centers",
+      "description": "Handle inbound and outbound calls 24/7"
+    },
+    "industry4": {
+      "title": "SMBs",
+      "description": "Faster lead response and smarter sales automation"
+    },
+    "industry5": {
+      "title": "Real Estate",
+      "description": "Qualify property leads without delays"
+    },
+    "industry6": {
+      "title": "SaaS Companies",
+      "description": "Convert inbound leads at scale"
+    },
+    "industry7": {
+      "title": "B2B Service Providers",
+      "description": "Never miss high-intent prospects"
+    },
+    "industry8": {
+      "title": "Enterprises",
+      "description": "Scalable AI sales workflows built for complex"
+    }
+  },
+  "workflow": {
+    "step1": {
+      "label": "Lead enters",
+      "sublabel": "from social media"
+    },
+    "step2": {
+      "label": "AI qualifies",
+      "sublabel": "via call or email"
+    },
+    "step3": {
+      "label": "CRM updates",
+      "sublabel": "automatically"
+    },
+    "step4": {
+      "label": "Meeting",
+      "sublabel": "scheduled"
+    },
+    "step5": {
+      "label": "Follow-ups handled",
+      "sublabel": "by AI"
+    },
+    "step6": {
+      "label": "Deal",
+      "sublabel": "closed faster"
+    }
+  }
+}
