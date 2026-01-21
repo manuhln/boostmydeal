@@ -26,15 +26,6 @@
     "subtitle": "Tailored for your needs",
     "description": "Custom solutions that adapt to your business requirements and scale with your growth."
   },
-  "pricing": {
-    "title": "Pricing",
-    "subtitle": "Choose the plan that fits you",
-    "description": "Transparent pricing with no hidden fees. Start free and scale as you grow.",
-    "monthly": "Monthly",
-    "yearly": "Yearly",
-    "perMonth": "per month",
-    "startFreeTrial": "Start free trial"
-  },
   "resources": {
     "title": "Resources",
     "subtitle": "Learn and grow with us",
@@ -115,7 +106,7 @@
   },
   "industryCase": {
     "chipLabel": "Industry Case",
-    "title": "Built for High-Performance Sales Teams",
+    "title": "From Lead to Closed Deal — Fully Automated",
     "description": "One AI workflow that adapts to different sales models and industries.",
     "industry1": {
       "title": "Sales Teams",
@@ -174,6 +165,98 @@
     "step6": {
       "label": "Deal",
       "sublabel": "closed faster"
+    }
+  },
+  "highPerformance": {
+    "chipLabel": "Industry Case",
+    "title": "Built for High-Performance Sales Teams",
+    "description": "One AI workflow that adapts to different sales models and industries."
+  },
+  "pricing": {
+    "chipLabel": "Customer Plans",
+    "title": "Simple Plans for Every Sales Team",
+    "description": "Flexible pricing designed for teams of every size, from solo founders to enterprise sales operations.",
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "period": {
+      "month": "month",
+      "year": "year"
+    },
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "subtitle": "Ideal for individuals & small agencies",
+        "description": "Kickstart your AI sales journey with 300 included minutes of humanlike AI calling, automated email follow-ups, and CRM sync — perfect for solopreneurs and small agencies ready to scale smarter.",
+        "features": [
+          "300 AI calling minutes included",
+          "Humanlike AI calling",
+          "Automated email follow-ups",
+          "CRM sync"
+        ],
+        "overage": "$0.50 per additional AI minute"
+      },
+      "growth": {
+        "name": "Growth",
+        "subtitle": "Ideal for growing teams",
+        "description": "Scale your sales automation with 1,000 AI minutes, advanced CRM and email integration, and full workflow automation — built for growing teams that want consistent deal flow with less manual work.",
+        "features": [
+          "1,000 AI calling minutes included",
+          "Advanced CRM & email integration",
+          "Full workflow automation",
+          "Consistent deal flow management"
+        ],
+        "overage": "$0.50 per additional AI minute"
+      },
+      "pro": {
+        "name": "Pro",
+        "subtitle": "Ideal for high-performance teams",
+        "description": "Empower your sales operation with 3,000 AI minutes, deeper analytics, and full AI personalization across calls, emails, and meetings — ideal for high-performing sales organizations running at scale.",
+        "badge": "Most popular plan",
+        "features": [
+          "3,000 AI calling minutes included",
+          "Deeper analytics & reporting",
+          "Full AI personalization across calls, emails & meetings",
+          "High-performing sales operations at scale"
+        ],
+        "overage": "$0.50 per additional AI minute"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "subtitle": "Built for large teams & agencies",
+        "description": "Unlock the full power of BoostMyDeal with custom AI models, API access, unlimited users, and dedicated support — tailored for large teams or agencies managing thousands of calls each month.",
+        "price": "Custom",
+        "features": [
+          "Custom AI models",
+          "API access",
+          "Unlimited users",
+          "Dedicated support",
+          "Enterprise-grade customization"
+        ],
+        "overage": "Custom pricing"
+      }
+    },
+    "payAsYouGo": {
+      "title": "Pay-As-You-Go Plan",
+      "subtitle": "Start for free — pay only for what you use.",
+      "description": "Recharge anytime with prepaid credits — no monthly fees, no commitments.",
+      "getStarted": "Get Started",
+      "moreDetails": "More Details",
+      "overageTitle": "Overage",
+      "features": [
+        "Start for free — pay only for what you use",
+        "Top-Up Balance: Buy $25, $50, $100, or $500 in BoostMyDeal Credits",
+        "Automatic Deduction: Every AI call minute or email follow-up deducts credits in real time",
+        "Balance Alerts: System prompts auto-reload when balance drops below $10",
+        "Optional Auto-Recharge: Enable auto top-up for seamless operations",
+        "No monthly fees, no commitments"
+      ],
+      "overage": {
+        "aiCalling": "AI Calling Minute",
+        "emailFollowup": "Email Follow-up",
+        "videoHandoff": "Video Handoff"
+      }
     }
   }
 }

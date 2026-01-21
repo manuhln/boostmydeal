@@ -1,6 +1,8 @@
 
 import { Footer } from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import { BlogSection } from "@/components/sections/Blog/BlogSections";
+import { CustomerStory } from "@/components/sections/CustomerStory/CustomerStory";
 import Features from "@/components/sections/Features/Features";
 import { Hero } from "@/components/sections/Hero/Hero";
 import IndustryCase from "@/components/sections/IndustryCase/IndustryCase";
@@ -15,7 +17,7 @@ import { WhyBoostMyDeal } from "@/components/sections/why/WhyBoostMyDeal";
 export default function HomePage() {
   return (
     <>
-      <Header />
+
       <main>
         <Hero />
         <Partners />
@@ -25,8 +27,10 @@ export default function HomePage() {
         <IndustryCase />
         <Plans />
         <WhyBoostMyDeal />
+        <CustomerStory />
+        <BlogSection />
       </main>
-      <Footer />
+
     </>
   )
 }

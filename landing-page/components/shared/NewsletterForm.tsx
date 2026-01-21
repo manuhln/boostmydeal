@@ -39,7 +39,7 @@ export function NewsletterForm() {
 
       setMessage({ type: 'success', text: t('newsletter.success') })
       setEmail('')
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: t('newsletter.error') })
     } finally {
       setIsLoading(false)
@@ -48,14 +48,14 @@ export function NewsletterForm() {
 
   return (
     <div className="space-y-3">
-      <form onSubmit={handleSubmit} className="flex p-2 bg-gray-50/20 gap-2 text-white placeholder-gray-500 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+      <form onSubmit={handleSubmit} className="flex p-2 bg-gray-50/20 gap-2 text-white placeholder-gray-500 rounded-xl border-none border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
       >
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t('newsletter.placeholder')}
-          className="flex-1 px-4 py-2.5 bg-transparent text-white placeholder-gray-500 rounded-lg border-none border-gray-700 focus:outline-none focus:border-transparent"
+          className="flex-1 px-4 py-2.5 bg-transparent bg-gray-100 text-white placeholder-gray-500 rounded-lg border-none border-gray-700 focus:outline-none focus:border-transparent"
           disabled={isLoading}
         />
         <button

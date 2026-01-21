@@ -26,15 +26,6 @@
     "subtitle": "Adaptées à vos besoins",
     "description": "Des solutions personnalisées qui s'adaptent aux exigences de votre entreprise et évoluent avec votre croissance."
   },
-  "pricing": {
-    "title": "Tarifs",
-    "subtitle": "Choisissez le plan qui vous convient",
-    "description": "Tarification transparente sans frais cachés. Commencez gratuitement et évoluez à votre rythme.",
-    "monthly": "Mensuel",
-    "yearly": "Annuel",
-    "perMonth": "par mois",
-    "startFreeTrial": "Essai gratuit"
-  },
   "resources": {
     "title": "Ressources",
     "subtitle": "Apprenez et grandissez avec nous",
@@ -115,8 +106,7 @@
   },
   "industryCase": {
     "chipLabel": "Cas d'Industrie",
-    "title": "Conçu pour les Équipes Commerciales Haute Performance",
-    "description": "Un workflow IA qui s'adapte aux différents modèles de vente et industries.",
+    "title": "Du Prospect à la Vente Conclue — Entièrement Automatisé",
     "industry1": {
       "title": "Équipes Commerciales",
       "description": "Automatisez les suivis et concluez les ventes plus rapidement"
@@ -174,6 +164,98 @@
     "step6": {
       "label": "Affaire",
       "sublabel": "conclue plus rapidement"
+    }
+  },
+  "highPerformance": {
+    "chipLabel": "Cas d'Industrie",
+    "title": "Conçu pour les Équipes Commerciales Haute Performance",
+    "description": "Un workflow IA qui s'adapte aux différents modèles de vente et industries."
+  },
+  "pricing": {
+    "chipLabel": "Plans Clients",
+    "title": "Plans Simples pour Chaque Équipe Commerciale",
+    "description": "Tarification flexible conçue pour les équipes de toutes tailles, des fondateurs solo aux opérations de vente d'entreprise.",
+    "billing": {
+      "monthly": "Mensuel",
+      "yearly": "Annuel"
+    },
+    "period": {
+      "month": "mois",
+      "year": "an"
+    },
+    "plans": {
+      "starter": {
+        "name": "Démarrage",
+        "subtitle": "Idéal pour les particuliers et petites agences",
+        "description": "Lancez votre parcours de vente IA avec 300 minutes d'appels IA incluses, suivis email automatisés et synchronisation CRM — parfait pour les entrepreneurs et petites agences prêts à évoluer intelligemment.",
+        "features": [
+          "300 minutes d'appels IA incluses",
+          "Appels IA humanisés",
+          "Suivis email automatisés",
+          "Synchronisation CRM"
+        ],
+        "overage": "0,50 $ par minute IA supplémentaire"
+      },
+      "growth": {
+        "name": "Croissance",
+        "subtitle": "Idéal pour les équipes en croissance",
+        "description": "Développez votre automatisation des ventes avec 1 000 minutes IA, intégration CRM et email avancée, et automatisation complète du workflow — conçu pour les équipes en croissance qui veulent un flux d'affaires constant avec moins de travail manuel.",
+        "features": [
+          "1 000 minutes d'appels IA incluses",
+          "Intégration CRM et email avancée",
+          "Automatisation complète du workflow",
+          "Gestion cohérente du flux d'affaires"
+        ],
+        "overage": "0,50 $ par minute IA supplémentaire"
+      },
+      "pro": {
+        "name": "Pro",
+        "subtitle": "Idéal pour les équipes haute performance",
+        "description": "Renforcez votre opération de vente avec 3 000 minutes IA, analyses approfondies et personnalisation IA complète sur les appels, emails et réunions — idéal pour les organisations de vente haute performance à grande échelle.",
+        "badge": "Plan le plus populaire",
+        "features": [
+          "3 000 minutes d'appels IA incluses",
+          "Analyses et rapports approfondis",
+          "Personnalisation IA complète sur appels, emails et réunions",
+          "Opérations de vente haute performance à grande échelle"
+        ],
+        "overage": "0,50 $ par minute IA supplémentaire"
+      },
+      "enterprise": {
+        "name": "Entreprise",
+        "subtitle": "Conçu pour grandes équipes et agences",
+        "description": "Débloquez toute la puissance de BoostMyDeal avec des modèles IA personnalisés, accès API, utilisateurs illimités et support dédié — adapté aux grandes équipes ou agences gérant des milliers d'appels chaque mois.",
+        "price": "Sur mesure",
+        "features": [
+          "Modèles IA personnalisés",
+          "Accès API",
+          "Utilisateurs illimités",
+          "Support dédié",
+          "Personnalisation de niveau entreprise"
+        ],
+        "overage": "Tarification personnalisée"
+      }
+    },
+    "payAsYouGo": {
+      "title": "Plan Pay-As-You-Go",
+      "subtitle": "Commencez gratuitement — payez uniquement ce que vous utilisez.",
+      "description": "Rechargez à tout moment avec des crédits prépayés — pas de frais mensuels, pas d'engagement.",
+      "getStarted": "Commencer",
+      "moreDetails": "Plus de Détails",
+      "overageTitle": "Dépassement",
+      "features": [
+        "Commencez gratuitement — payez uniquement ce que vous utilisez",
+        "Recharge de solde : Achetez 25 $, 50 $, 100 $ ou 500 $ en crédits BoostMyDeal",
+        "Déduction automatique : Chaque minute d'appel IA ou suivi email déduit des crédits en temps réel",
+        "Alertes de solde : Le système propose une recharge automatique quand le solde descend sous 10 $",
+        "Recharge automatique optionnelle : Activez la recharge auto pour des opérations fluides",
+        "Pas de frais mensuels, pas d'engagement"
+      ],
+      "overage": {
+        "aiCalling": "Minute d'appel IA",
+        "emailFollowup": "Suivi email",
+        "videoHandoff": "Transfert vidéo"
+      }
     }
   }
 }

@@ -47,8 +47,8 @@ export function Hero() {
   const scrollToSection = useScrollToSection(80)
 
   return (
-    <Section background="white" spacing="lg" id='hero'
-      className="relative min-h-screen flex items-center overflow-hidden"
+    <Section background="white" spacing="none" id='hero'
+      className="relative min-h-screen mt-0 pt-0 sm:min-h-screen flex items-center overflow-hidden"
     >
       {/* Background Image avec gradient overlay */}
       <div
@@ -60,18 +60,12 @@ export function Hero() {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        {/* Overlay avec gradient blanc qui se dissipe */}
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-white/20 to-white/30" /> */}
-
-        {/* Effet de dégradé orange depuis le bas */}
-        {/* <div className="absolute inset-0 bg-gradient-to-t from-orange-500/20 via-transparent to-transparent" /> */}
+        {/* espace gradiant pour l'effet blanc sur le hero */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-white/10 to-white/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-orange-500/20 via-transparent to-transparent" />
       </div>
-
-      {/* Contenu */}
       <Container className="relative z-10">
-        <div className="max-w-4xl mx-auto text-center py-20 sm:py-32">
-
-          {/* Badge "Powered by" */}
+        <div className="max-w-4xl mx-auto text-center ">
           <div className="flex justify-center mb-8 animate-fade-in">
             <Chip
               icon={<ZapIcon />}
@@ -83,38 +77,22 @@ export function Hero() {
               {t('hero.poweredBy')}
             </Chip>
           </div>
-
-          {/* Titre principal */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
             {t('hero.title')}
           </h1>
-
-          {/* Sous-titre */}
           <p className="text-xl sm:text-2xl text-white mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
             {t('hero.subtitle')} {t('hero.description')}
           </p>
 
-          {/* Description */}
-          {/* <p className="text-base sm:text-lg text-gray-500 mb-12 max-w-2xl mx-auto animate-fade-in-up animation-delay-300">
-            {t('hero.description')}
-          </p> */}
-
-          {/* Boutons CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up animation-delay-400">
-
-            {/* Bouton principal avec effet brillant */}
             <Button
               variant="outline"
               size="lg"
               onClick={() => scrollToSection('pricing')}
               className="relative overflow-hidden drop-shadow-white drop-shadow-lg hover:shadow-xl transition-all duration-300 border-none outline-none  "
             >
-
-              Start Automating Your Sales Pipeline
-
+              {t('hero.cta')}
             </Button>
-
-            {/* Bouton secondaire avec icône play */}
             <Button
               variant="solid"
               size="lg"
@@ -122,12 +100,9 @@ export function Hero() {
               iconPosition="left"
               className="group drop-shadow-white drop-shadow-lg  transition-all duration-300"
             >
-              Book a Live Demo
+              {t('hero.demo')}
             </Button>
           </div>
-
-
-
         </div>
       </Container>
     </Section>

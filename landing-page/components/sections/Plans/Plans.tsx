@@ -3,116 +3,123 @@
 import { ContentLayout } from '@/components/layout/ContentLayout';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { PricingCard } from '@/components/ui/PricingCard';
+import { PricingCard } from '@/components/shared/PricingCard';
 import { Section } from '@/components/ui/Section';
 import { Toggle } from '@/components/ui/Toggle';
 import { Icons } from '@/constants/icon-import';
+import { useTranslation } from '@/context/LanguageContext';
+import Image from 'next/image';
 import { useState } from 'react';
 
 export function Plans() {
+  const { t } = useTranslation();
   const [billingPeriod, setBillingPeriod] = useState<'Monthly' | 'Yearly'>('Monthly');
 
-  // Plans de pricing
   const pricingPlans = [
     {
-      name: 'Starter',
-      subtitle: 'Ideal for individuals & small agencies',
+      nameKey: 'pricing.plans.starter.name',
+      subtitleKey: 'pricing.plans.starter.subtitle',
+      descriptionKey: 'pricing.plans.starter.description',
       price: billingPeriod === 'Monthly' ? 199 : 1990,
-      features: [
-        '300 AI calling minutes',
-        'Automated email follow-ups',
-        '$0.50 /additional AI minute',
-        'Human-like AI conversations',
+      featuresKeys: [
+        'pricing.plans.starter.features.0',
+        'pricing.plans.starter.features.1',
+        'pricing.plans.starter.features.2',
+        'pricing.plans.starter.features.3',
       ],
-      overage: '$0.50 additional AI minute',
+      overageKey: 'pricing.plans.starter.overage',
     },
     {
-      name: 'Growth',
-      subtitle: 'Ideal for growing teams',
+      nameKey: 'pricing.plans.growth.name',
+      subtitleKey: 'pricing.plans.growth.subtitle',
+      descriptionKey: 'pricing.plans.growth.description',
       price: billingPeriod === 'Monthly' ? 499 : 4990,
-      features: [
-        '1,000 AI calling minutes',
-        'Advanced CRM & email integrations',
-        'Full AI sales workflow automation',
-        'Consolidated follow-ups',
+      featuresKeys: [
+        'pricing.plans.growth.features.0',
+        'pricing.plans.growth.features.1',
+        'pricing.plans.growth.features.2',
+        'pricing.plans.growth.features.3',
       ],
-      overage: '$0.50 additional AI minute',
+      overageKey: 'pricing.plans.growth.overage',
     },
     {
-      name: 'Pro',
-      subtitle: 'Ideal for high-performance teams',
+      nameKey: 'pricing.plans.pro.name',
+      subtitleKey: 'pricing.plans.pro.subtitle',
+      descriptionKey: 'pricing.plans.pro.description',
       price: billingPeriod === 'Monthly' ? 999 : 9990,
-      badge: 'Most popular plan',
-
-      features: [
-        '3,000 AI calling minutes',
-        'Advanced analytics & reporting',
-        'AI personalization across calls, emails & meetings',
-        'Priority onboarding & feature',
+      badgeKey: 'pricing.plans.pro.badge',
+      featuresKeys: [
+        'pricing.plans.pro.features.0',
+        'pricing.plans.pro.features.1',
+        'pricing.plans.pro.features.2',
+        'pricing.plans.pro.features.3',
       ],
-      overage: '$0.50 additional AI minute',
+      overageKey: 'pricing.plans.pro.overage',
     },
     {
-      name: 'Enterprise',
-      subtitle: 'Built for large teams & agencies',
-      price: 'Custom',
-      features: [
-        'Custom AI models',
-        'API access',
-        'Unlimited users',
-        'Dedicated onboarding & support',
-        'Enterprise-grade customization',
+      nameKey: 'pricing.plans.enterprise.name',
+      subtitleKey: 'pricing.plans.enterprise.subtitle',
+      descriptionKey: 'pricing.plans.enterprise.description',
+      priceKey: 'pricing.plans.enterprise.price',
+      featuresKeys: [
+        'pricing.plans.enterprise.features.0',
+        'pricing.plans.enterprise.features.1',
+        'pricing.plans.enterprise.features.2',
+        'pricing.plans.enterprise.features.3',
+        'pricing.plans.enterprise.features.4',
       ],
-      overage: 'Custom pricing',
+      overageKey: 'pricing.plans.enterprise.overage',
     },
   ];
 
-  // Pay-As-You-Go features
-  const payAsYouGoFeatures = [
-    'Top-Up Balance: User buys $25, $50, $100, or $500 in BoostMyDeal Credits.',
-    'Automatic Deduction: Every AI call minute or email follow-up deducts credits in real time.',
-    'Balance Alerts: When balance drops below $10, system prompts auto-reload.',
-    'Optional Auto-Recharge: Users can enable auto top-up',
+  const payAsYouGoFeaturesKeys = [
+    'pricing.payAsYouGo.features.0',
+    'pricing.payAsYouGo.features.1',
+    'pricing.payAsYouGo.features.2',
+    'pricing.payAsYouGo.features.3',
+    'pricing.payAsYouGo.features.4',
+    'pricing.payAsYouGo.features.5',
   ];
 
-  const overagePricing = [
-    { label: 'Email Follow-up', price: '$0.02' },
-    { label: 'AI Calling Minute', price: '$0.70' },
-    { label: 'Video Handoff', price: '$0.30' },
+  const overagePricingKeys = [
+    { labelKey: 'pricing.payAsYouGo.overage.aiCalling', price: '$0.70' },
+    { labelKey: 'pricing.payAsYouGo.overage.emailFollowup', price: '$0.02' },
+    { labelKey: 'pricing.payAsYouGo.overage.videoHandoff', price: '$0.30' },
   ];
 
   return (
-    <Section background="white" spacing="lg" id=''>
+    <Section background="white" spacing="lg" id="pricing">
       <ContentLayout
         layout="centered"
-        chip={{ text: 'Customer Plans' }}
-        title="Simple Plans for Every Sales Team"
-        description="Flexible pricing designed for teams of every size, from solo founders to enterprise sales operations."
+        chip={{ icon: <Image src={Icons.planIcon} alt='icon' width={15} height={15} />, text: t('pricing.chipLabel') }}
+
+        title={t('pricing.title')}
+        description={t('pricing.description')}
         maxWidth="xl"
       >
         {/* Toggle Monthly/Yearly */}
         <div className="flex justify-center mt-8 mb-12">
           <Toggle
-            options={['Monthly', 'Yearly']}
-            selected={billingPeriod}
-            onChange={(value) => setBillingPeriod(value as 'Monthly' | 'Yearly')}
+            options={[t('pricing.billing.monthly'), t('pricing.billing.yearly')]}
+            selected={billingPeriod === 'Monthly' ? t('pricing.billing.monthly') : t('pricing.billing.yearly')}
+            onChange={(value) => setBillingPeriod(value === t('pricing.billing.monthly') ? 'Monthly' : 'Yearly')}
           />
         </div>
 
         {/* Grid de pricing cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {pricingPlans.map((plan) => (
+          {pricingPlans.map((plan, index) => (
             <PricingCard
-              key={plan.name}
-              name={plan.name}
-              subtitle={plan.subtitle}
-              price={typeof plan.price === 'number' ? plan.price : 0}
-              period={billingPeriod === 'Monthly' ? 'month' : 'year'}
-              features={plan.features}
-              overage={plan.overage}
-              badge={plan.badge}
-              onGetStarted={() => console.log(`Get started with ${plan.name}`)}
-              onMoreDetails={() => console.log(`More details for ${plan.name}`)}
+              key={index}
+              name={t(plan.nameKey)}
+              subtitle={t(plan.subtitleKey)}
+              price={plan.priceKey ? undefined : plan.price}
+              period={billingPeriod === 'Monthly' ? t('pricing.period.month') : t('pricing.period.year')}
+              features={plan.featuresKeys.map(key => t(key))}
+              overage={t(plan.overageKey)}
+              badge={plan.badgeKey ? t(plan.badgeKey) : undefined}
+              onGetStarted={() => console.log(`Get started with ${t(plan.nameKey)}`)}
+              onMoreDetails={() => console.log(`More details for ${t(plan.nameKey)}`)}
             />
           ))}
         </div>
@@ -121,38 +128,38 @@ export function Plans() {
         <Card variant="custom" className="border-2 border-gray-200">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             {/* Colonne 1 : Info */}
-            <div className=''>
+            <div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Pay-As-You-Go Plan
+                {t('pricing.payAsYouGo.title')}
               </h3>
               <p className="text-xs text-gray-600 mb-6">
-                Start for free — pay only for what you use.
+                {t('pricing.payAsYouGo.subtitle')}
               </p>
               <Button
                 variant="solid"
                 size="md"
                 onClick={() => console.log('Get started PAYG')}
-                className='w-full'
+                className="w-full"
               >
-                Get Started
+                {t('pricing.payAsYouGo.getStarted')}
               </Button>
               <button className="block w-full text-sm text-gray-600 hover:text-gray-900 mt-3 transition-colors">
-                More Details
+                {t('pricing.payAsYouGo.moreDetails')}
               </button>
             </div>
 
             {/* Colonne 2 : Features */}
             <div className="lg:col-span-2">
               <p className="text-sm text-gray-600 mb-4">
-                Recharge anytime with prepaid credits — no monthly fees, no commitments.
+                {t('pricing.payAsYouGo.description')}
               </p>
               <ul className="space-y-2">
-                {payAsYouGoFeatures.map((feature, index) => (
+                {payAsYouGoFeaturesKeys.map((featureKey, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0.5">
                       <Icons.checkIcon size={14} className="text-secondaryMain" />
                     </div>
-                    <span className="text-xs text-gray-700 text-left">{feature}</span>
+                    <span className="text-xs text-gray-700 text-left">{t(featureKey)}</span>
                   </li>
                 ))}
               </ul>
@@ -160,11 +167,13 @@ export function Plans() {
 
             {/* Colonne 3 : Overage Pricing */}
             <div className="bg-gray-50 rounded-xl p-6">
-              <p className="text-sm font-semibold text-gray-900 mb-4">Overage</p>
+              <p className="text-sm font-semibold text-gray-900 mb-4">
+                {t('pricing.payAsYouGo.overageTitle')}
+              </p>
               <div className="space-y-3">
-                {overagePricing.map((item, index) => (
+                {overagePricingKeys.map((item, index) => (
                   <div key={index} className="flex justify-between items-center">
-                    <span className="text-sm text-gray-700">{item.label}</span>
+                    <span className="text-sm text-gray-700">{t(item.labelKey)}</span>
                     <span className="text-lg font-bold text-gray-900">{item.price}</span>
                   </div>
                 ))}

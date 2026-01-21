@@ -4,6 +4,8 @@ export const Images = {
   logo: "/logo.png",
   logoText: "/logoText.png",
   FooterLogo: "/footerLogo.png",
+  logoWhite: "/logoWhite.png",
+  logoTextWhite: "/logoTextWhite.png",
 
   // Icons/Illustrations
   heroIllustration: "/images/hero-illustration.png",
@@ -39,6 +41,10 @@ export const Images = {
   feature4: "/content/feature (4).png",
   feature5: "/content/feature (5).png",
   feature6: "/content/feature (6).png",
+  blog1: "/content/Blog1.png",
+  blog2: "/content/BlogPost1.png",
+  blog3: "/content/BlogPost2.png",
+  customerStory1: "/content/Image.png",
 } as const;
 
 export type ImageKey = keyof typeof Images;

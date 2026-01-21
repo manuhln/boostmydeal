@@ -116,6 +116,7 @@ export function Card({
         </div>
       )}
 
+
       {/* Variant Content avec icône ronde */}
       {variant === 'content' && icon && (
         <div className=" ">
@@ -135,15 +136,13 @@ export function Card({
         </div>
       )}
       <div className={` ${paddingClasses[variant][size]}`}>
-        {/* Titre */}
+
         {title && (
           <h3 className={`font-bold text-gray-900 mb-2 ${variant === 'feature' ? 'text-lg lg:text-xl' : 'text-base lg:text-lg'
             }`}>
             {title}
           </h3>
         )}
-
-        {/* Description */}
         {description && (
           <p className={`text-gray-600 leading-relaxed ${variant === 'feature' ? 'text-sm' : 'text-xs lg:text-sm'
             }`}>
@@ -151,7 +150,6 @@ export function Card({
           </p>
         )}
       </div>
-      {/* Children optionnel */}
       {children}
     </>
   );
@@ -175,7 +173,6 @@ export function Card({
     );
   }
 
-  // Sinon, simple div
   return (
     <div className={cardClasses}>
       {cardContent}

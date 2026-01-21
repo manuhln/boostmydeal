@@ -18,12 +18,12 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     sectionId: "solutions",
   },
   {
-    label: "Why Boostmydeal",
-    sectionId: "why",
-  },
-  {
     label: "Pricing",
     sectionId: "pricing",
+  },
+  {
+    label: "Why Boostmydeal",
+    sectionId: "why",
   },
   {
     label: "Resources",

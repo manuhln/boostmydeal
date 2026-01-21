@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Container } from '@/components/ui/Container'
 import { Navigation } from './Navigation'
 import { MobileMenu } from './MobileMenu'
 import { LanguageSelector } from './LanguageSelector'
@@ -13,6 +12,7 @@ import { Images } from '@/constants/images-import'
 import { SECTION_IDS } from '@/constants/navigaton'
 import { useActiveSection } from '@/hooks/useActiveSection'
 import { useTranslation } from '@/context/LanguageContext'
+import { Section } from '../ui/Section'
 
 
 
@@ -45,16 +45,16 @@ function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 lg:z-50 bg-gray-200  transition-all   duration-300 ${isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 bg-[#FEFBFF]  transition-all   duration-300 ${isScrolled
           ? ' py-3'
           : ' py-4'
           }`}
       >
-        <Container size='full'>
+        <Section id='' spacing='none' >
           <div className='flex space-x-4 items-center justify-center w-full'>
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="" className="flex items-center space-x-2">
+              <Link href="/" className="flex items-center space-x-2">
                 <Image src={Images.logo} alt="logo" className="w-full h-full object-cover" width={20} height={20} />
               </Link>
             </div>
@@ -62,8 +62,8 @@ function Header() {
             <div className="flex items-center justify-between bg-white w-full rounded-xl shadow-lg/30 p-4 space-x-4 ">
               {/* Logo text  */}
               <div className="flex items-center">
-                <Link href="" className="flex items-center space-x-2">
-                  <Image src={Images.logoText} alt="logoText" className="w-full h-full object-cover" width={300} height={300} />
+                <Link href="/" className="flex items-center space-x-2">
+                  <Image src={Images.logoText} alt="logoText" className="w-full h-full object-cover" width={100} height={100} />
                 </Link>
               </div>
               <div className="hidden lg:flex w-1/2">
@@ -90,8 +90,6 @@ function Header() {
 
                 <LanguageSelector />
               </div>
-
-              {/* Bouton Hamburger - visible uniquement sur mobile */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="lg:hidden p-2 text-gray-700 hover:text-gray-900 focus:outline-none"
@@ -102,7 +100,7 @@ function Header() {
 
             </div>
           </div>
-        </Container>
+        </Section>
       </header>
 
       <div className="h-20" />

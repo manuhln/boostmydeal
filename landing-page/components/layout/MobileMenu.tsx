@@ -52,13 +52,13 @@ export function MobileMenu({ isOpen, onClose, activeSection }: MobileMenuProps) 
             <div className="flex items-center space-x-2">
               <div className="flex items-center">
                 <Link href="" className="flex items-center space-x-2">
-                  <Image src={Images.logo} alt="logo" className="w-full h-full object-cover" width={20} height={20} />
+                  <Image src={Images.logo} alt="logo" className="w-full h-full object-cover" width={0} height={0} />
                 </Link>
               </div>
 
               <div className="flex items-center">
                 <Link href="" className="flex items-center space-x-2">
-                  <Image src={Images.logoText} alt="logoText" className="w-full h-full object-cover" width={300} height={300} />
+                  <Image src={Images.logoText} alt="logoText" className="w-full h-full object-cover" width={200} height={200} />
                 </Link>
               </div>
             </div>

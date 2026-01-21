@@ -1,11 +1,45 @@
 @import "tailwindcss";
 
-
-
 @theme inline {
   --color-main: #F24C1A;
   --color-secondaryBlack: #1C1C1C;
   --color-secondaryGray: #A7A2A2;
   --color-secondaryMain: #FFDCD1;
   --drop-shadow-myDrop: 20px 20px 20px 20px rgba(255, 255, 255, 1);
+}
+
+/*----------font css start--------------*/
+@font-face {
+  font-family: "Aeonik TRIAL";
+  src: url("/fonts/AeonikTRIAL-Light.woff2") format("woff2"),
+    url("/fonts/AeonikTRIAL-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Aeonik TRIAL";
+  src: url("/fonts/AeonikTRIAL-Regular.woff2") format("woff2"),
+    url("/fonts/AeonikTRIAL-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Aeonik TRIAL";
+  src: url("/fonts/AeonikTRIAL-Bold.woff2") format("woff2"),
+    url("/fonts/AeonikTRIAL-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*----------font css end--------------*/
+
+
+body {
+  font-family: "Aeonik TRIAL", sans-serif !important;
+
 }

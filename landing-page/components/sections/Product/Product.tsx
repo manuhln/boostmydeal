@@ -13,7 +13,7 @@ export default function Product() {
   const { t } = useTranslation()
 
   return (
-    <Section background="white" spacing="lg" id=''>
+    <Section background="white" spacing="lg" id='product'>
       <Container>
         <ContentLayout
           imagePosition="right"

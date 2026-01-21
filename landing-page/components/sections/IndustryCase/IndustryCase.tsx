@@ -24,8 +24,6 @@ export default function IndustryCase() {
             variant: "default"
           }}
           title={t('industryCase.title')}
-          description={t('industryCase.description')}
-
         />
         <div className="flex flex-wrap items-start justify-center gap-6 lg:gap-8">
           {steps.map((step, index) => (
@@ -60,11 +58,11 @@ export default function IndustryCase() {
           layout='centered'
           chip={{
             icon: <Image src={Icons.industryIcon} alt='iconInt' width={15} height={10} />,
-            text: t('industryCase.chipLabel'),
+            text: t('highPerformance.chipLabel'),
             variant: "default"
           }}
-          title={t('industryCase.title')}
-          description={t('industryCase.description')}
+          title={t('highPerformance.title')}
+          description={t('highPerformance.description')}
         />
 
         {/* Grid des cartes industries */}

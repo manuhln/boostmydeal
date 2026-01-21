@@ -7,6 +7,9 @@ import { RiComputerLine } from "react-icons/ri";
 import { BsArrowRight } from "react-icons/bs";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa";
+import { LuUsersRound } from "react-icons/lu";
+import { PiCopySimple } from "react-icons/pi";
+
 export const Icons = {
   HamburgerMenu: GiHamburgerMenu,
   ArrowIcon: IoIosArrowForward, // Exporte la fonction directement
@@ -17,6 +20,8 @@ export const Icons = {
   ComputerLineIcon: RiComputerLine,
   checkIcon: FaCircleCheck,
   StarIcon: FaStar,
+  UsersRoundIcon: LuUsersRound,
+  CopySimpleIcon: PiCopySimple,
   check: "/icons/check.png",
   X: "/icons/X.png",
   twitter: "/social/X.png",
@@ -39,4 +44,5 @@ export const Icons = {
   workflowStep4Icon4: "/icons/worflowicon(4).png",
   workflowStep5Icon5: "/icons/worflowicon(5).png",
   workflowStep6Icon6: "/icons/worflowicon(6).png",
+  planIcon: "/icons/palnIcon.png",
 };

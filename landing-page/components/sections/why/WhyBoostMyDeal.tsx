@@ -1,7 +1,8 @@
-import { ComparisonFeature, ComparisonTable } from "@/components/shared/ComparisonTable";
+import { ComparisonTable } from "@/components/shared/ComparisonTable";
 import { Chip } from "@/components/ui/Chip";
 import { Section } from "@/components/ui/Section";
 import { features } from "./comparason";
+import { Icons } from "@/constants/icon-import";
 
 
 export function WhyBoostMyDeal() {
@@ -21,12 +22,12 @@ export function WhyBoostMyDeal() {
 
 
   return (
-    <Section background="white" spacing="sm" id="WhyBoostMyDeal">
+    <Section background="white" spacing="sm" id="why">
       {/* Header */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         {/* Left: Chip + Title */}
         <div>
-          <Chip variant="default">Comparison Page</Chip>
+          <Chip icon={<Icons.CopySimpleIcon />} variant="default">Comparison Page</Chip>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mt-4 leading-tight">
             Why BoostMyDeal Is Different
           </h2>
