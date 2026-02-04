@@ -238,16 +238,16 @@ export default function CallLogs() {
       console.log("🚀 Initiating call with data:", outboundCallData);
 
       // DEMO VERSION: Temporary shortcut bypassing Redis/webhook
-      const result = await initiateCallDemo.mutateAsync({
-        assistantId: outboundCallData.assistantId,
-        toNumber: outboundCallData.toNumber,
-        contactName: outboundCallData.contactName,
-      });
-      // const result = await initiateCall.mutateAsync({
+      // const result = await initiateCallDemo.mutateAsync({
       //   assistantId: outboundCallData.assistantId,
       //   toNumber: outboundCallData.toNumber,
-      //   message: `Call to ${outboundCallData.contactName}`,
+      //   contactName: outboundCallData.contactName,
       // });
+      const result = await initiateCall.mutateAsync({
+        assistantId: outboundCallData.assistantId,
+        toNumber: outboundCallData.toNumber,
+        message: `Call to ${outboundCallData.contactName}`,
+      });
       console.log("✅ Call initiation result:", result);
       toast({
         title: "Call Initiated",
@@ -462,10 +462,10 @@ export default function CallLogs() {
                       </Button>
                       <Button
                         type="submit"
-                        disabled={initiateCallDemo.isPending}
+                        disabled={initiateCall.isPending}
                         className="bg-[#F74000] hover:bg-[#E63600] text-white w-full sm:w-auto disabled:opacity-50"
                       >
-                        {initiateCallDemo.isPending ? (
+                        {initiateCall.isPending ? (
                           <>
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                             Initiating...

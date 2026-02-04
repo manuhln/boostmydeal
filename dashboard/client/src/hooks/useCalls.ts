@@ -31,7 +31,7 @@ interface ApiResponse<T> {
   return useQuery<ApiResponse<CallWithAgent[]>>({
     queryKey: ["/api/calls", filters],
     queryFn: () => apiRequest("GET", url),
-    refetchInterval: 3000, // Refetch every 3 seconds for real-time updates
+    refetchInterval: 5000, // Refetch every 5 seconds for real-time updates
     refetchIntervalInBackground: true, // Continue refetching when tab is in background
   });
 }
