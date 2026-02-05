@@ -144,15 +144,19 @@ export class PhoneNumberController {
       const organizationId = user.organizationId;
       const { provider, page, limit } = req.query;
 
+      console.log('📱 [Phone] Fetching phone numbers for org:', organizationId, { provider, page, limit });
+
       let phoneNumbers;
 
       if (page || limit) {
         // Paginated request
         const pageNum = parseInt(page as string) || 1;
         const limitNum = parseInt(limit as string) || 10;
+        console.log('📱 [Phone] Paginated request - page:', pageNum, 'limit:', limitNum);
         phoneNumbers = await this.phoneNumberService.getPhoneNumbersPaginated(organizationId, pageNum, limitNum);
       } else if (provider) {
         // Filter by provider
+        console.log('📱 [Phone] Filtering by provider:', provider);
         const phoneNumberList = await this.phoneNumberService.getPhoneNumbersByProvider(
           organizationId, 
           provider as 'twilio' | 'voxsun'
@@ -160,17 +164,19 @@ export class PhoneNumberController {
         phoneNumbers = { phoneNumbers: phoneNumberList };
       } else {
         // Get all phone numbers
+        console.log('📱 [Phone] Getting all phone numbers');
         const phoneNumberList = await this.phoneNumberService.getPhoneNumbersByOrganization(organizationId);
         phoneNumbers = { phoneNumbers: phoneNumberList };
       }
 
+      console.log('✅ [Phone] Successfully retrieved phone numbers:', phoneNumbers.phoneNumbers?.length || 0, 'items');
       res.status(200).json({
         success: true,
         message: 'Phone numbers retrieved successfully',
         data: phoneNumbers
       });
     } catch (error: any) {
-      console.error('Error retrieving phone numbers:', error);
+      console.error('❌ [Phone] Error retrieving phone numbers:', error);
       res.status(500).json({
         success: false,
         message: error.message || 'Failed to retrieve phone numbers'

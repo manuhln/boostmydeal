@@ -21,6 +21,15 @@ connectDB().catch(console.error);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Health check endpoint for Docker and load balancer health probes
+app.get("/api/health", (_req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    service: "dashboard",
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Auth routes
 app.use("/api/auth", authRoutes);
 
@@ -83,7 +92,7 @@ app.use((req, res, next) => {
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = 5000;
+  const port = parseInt(process.env.PORT || "5000", 10);
   server.listen(
     {
       port,

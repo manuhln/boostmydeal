@@ -31,7 +31,7 @@ class RedisConnectionPool {
       const connection = new IORedis(redisUrl, {
         maxRetriesPerRequest: null, // Required by BullMQ
         enableReadyCheck: false,
-        lazyConnect: true,
+        lazyConnect: false,  // Changed to false to auto-connect
         connectTimeout: 30000, // Increased timeout for Redis Cloud
         commandTimeout: 30000, // Increased command timeout
         keepAlive: 30000, // Keepalive interval in milliseconds for Redis Cloud

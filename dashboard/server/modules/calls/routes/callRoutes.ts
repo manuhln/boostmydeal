@@ -15,6 +15,13 @@ router.use(authMiddleware);
 router.get('/', callController.getCalls);
 
 /**
+ * @route GET /api/calls/debug/queue-status
+ * @desc DEBUG: Get queue status
+ * @access Private (requires authentication)
+ */
+router.get('/debug/queue-status', callController.getQueueStatus);
+
+/**
  * @route GET /api/calls/export
  * @desc Export calls to CSV
  * @access Private (requires authentication)

@@ -184,19 +184,27 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
-    console.log('Login attempt for:', email);
+    console.log('🔐 [Auth] Login attempt for:', email);
 
     const user = await User.findOne({ email }).select('+password');
-    if (!user || !user.isActive) {
-      console.log('User not found or inactive:', email);
+    if (!user) {
+      console.log('❌ [Auth] User not found in MongoDB for email:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    if (!user.isActive) {
+      console.log('⚠️  [Auth] User account inactive for email:', email);
+      return res.status(401).json({ message: 'User account is inactive' });
+    }
+
+    console.log('✅ [Auth] User found in MongoDB. Validating password...');
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-      console.log('Invalid password for:', email);
+      console.log('❌ [Auth] Invalid password for:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    console.log('✅ [Auth] Password valid. Proceeding with login for:', email);
 
     const organization = await Organization.findById(user.organizationId);
     if (!organization || !organization.isActive) {

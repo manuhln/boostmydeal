@@ -52,10 +52,20 @@ export class PhoneNumberDAL extends BaseDAL<IPhoneNumber> {
     const result = await this.findOne({ _id: phoneNumberId, organizationId });
     if (!result) return null;
     
-    return {
-      accountSid: decrypt(result.accountSid),
-      authToken: decrypt(result.authToken)
-    };
+    try {
+      if (!result.accountSid || !result.authToken) {
+        console.warn('⚠️  [Phone] Missing accountSid or authToken for phone number:', phoneNumberId);
+        return null;
+      }
+      
+      return {
+        accountSid: decrypt(result.accountSid),
+        authToken: decrypt(result.authToken)
+      };
+    } catch (error: any) {
+      console.error('❌ [Phone] Error decrypting credentials:', error.message);
+      return null;
+    }
   }
 
   async updatePhoneNumber(phoneNumberId: string, organizationId: string, updateData: UpdatePhoneNumberDTO): Promise<IPhoneNumber | null> {
@@ -114,8 +124,34 @@ export class PhoneNumberDAL extends BaseDAL<IPhoneNumber> {
 
   // Private helper method to sanitize phone number for display (mask sensitive data)
   private sanitizePhoneNumberForDisplay(phoneNumber: IPhoneNumber): IPhoneNumber {
-    const decryptedAccountSid = decrypt(phoneNumber.accountSid);
-    const maskedAccountSid = '****' + decryptedAccountSid.slice(-4);
+    let maskedAccountSid = '****';
+    
+    // Check if accountSid exists before attempting to decrypt
+    if (!phoneNumber.accountSid) {
+      console.warn('⚠️  [Phone Sanitize] Phone number missing accountSid:', phoneNumber._id);
+      return {
+        ...phoneNumber.toObject(),
+        accountSid: '****',
+        authToken: '****'
+      };
+    }
+    
+    try {
+      const decryptedAccountSid = decrypt(phoneNumber.accountSid);
+      maskedAccountSid = '****' + decryptedAccountSid.slice(-4);
+      console.log('✅ [Phone Decrypt] Successfully decrypted accountSid');
+    } catch (error: any) {
+      console.warn('🔐 [Phone Decrypt] Could not decrypt accountSid:', error.message);
+      // If decryption fails, try to mask what we have
+      try {
+        const accountSidStr = phoneNumber.accountSid?.toString() || '';
+        if (accountSidStr && accountSidStr.length > 4) {
+          maskedAccountSid = '****' + accountSidStr.slice(-4);
+        }
+      } catch (e) {
+        console.warn('⚠️  [Phone Sanitize] Could not extract accountSid:', e);
+      }
+    }
     
     return {
       ...phoneNumber.toObject(),
@@ -128,10 +164,19 @@ export class PhoneNumberDAL extends BaseDAL<IPhoneNumber> {
   private decryptPhoneNumber(phoneNumber: IPhoneNumber): IPhoneNumber {
     const decryptedPhoneNumber = phoneNumber.toObject();
     try {
-      decryptedPhoneNumber.accountSid = decrypt(phoneNumber.accountSid);
-      decryptedPhoneNumber.authToken = decrypt(phoneNumber.authToken);
+      if (phoneNumber.accountSid) {
+        decryptedPhoneNumber.accountSid = decrypt(phoneNumber.accountSid);
+      } else {
+        console.warn('⚠️  [Phone Decrypt] Missing accountSid for phone:', phoneNumber._id);
+      }
+      
+      if (phoneNumber.authToken) {
+        decryptedPhoneNumber.authToken = decrypt(phoneNumber.authToken);
+      } else {
+        console.warn('⚠️  [Phone Decrypt] Missing authToken for phone:', phoneNumber._id);
+      }
     } catch (error) {
-      console.error('Error decrypting phone number data:', error);
+      console.error('❌ [Phone Decrypt] Error decrypting phone number data:', error);
       // Return original data if decryption fails
     }
     return decryptedPhoneNumber as IPhoneNumber;

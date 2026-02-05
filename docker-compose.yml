@@ -1,0 +1,192 @@
+# BoostMyDeal Docker Compose Configuration
+# Services: dashboard, livekitserver, orchestrates, agent-worker
+# Excludes: pie-speech, landing-page (separate deployments)
+
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: boostmydeal-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - boostmydeal-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: boostmydeal-dashboard
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - DATABASE_URL=${DATABASE_URL}
+      - MONGODB_URI=${MONGODB_URI}
+      - REDIS_CLOUD_URL=${REDIS_CLOUD_URL}
+      - UPSTASH_REDIS_URL=${UPSTASH_REDIS_URL}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - TELEPHONIC_SERVER_URL=http://orchestrates:3000
+      - LIVEKIT_SERVER_URL=http://livekitserver:5002
+      - APP_URL=${APP_URL}
+      - BASE_URL=${BASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - VITE_STRIPE_PUBLIC_KEY=${VITE_STRIPE_PUBLIC_KEY}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_INDEX_NAME=${PINECONE_INDEX_NAME}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_EMAIL=${SMTP_EMAIL}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcs-credentials.json
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - SENTRY_DSN=${SENTRY_DSN}
+    volumes:
+      - dashboard-uploads:/app/uploads
+      - ./credentials:/app/credentials:ro
+    networks:
+      - boostmydeal-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      redis:
+        condition: service_healthy
+      livekitserver:
+        condition: service_healthy
+      orchestrates:
+        condition: service_healthy
+
+  livekitserver:
+    build:
+      context: ./livekitserver
+      dockerfile: Dockerfile
+    container_name: boostmydeal-livekitserver
+    restart: unless-stopped
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - LIVEKIT_SIP_TRUNK_ID=${LIVEKIT_SIP_TRUNK_ID}
+      - MONGODB_URI=${MONGODB_URI}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
+      - SMALLEST_AI_API_KEY=${SMALLEST_AI_API_KEY}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_INDEX_NAME=${PINECONE_INDEX_NAME}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcs-credentials.json
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - DASHBOARD_URL=http://dashboard:5001
+      - SENTRY_DSN=${SENTRY_DSN}
+    volumes:
+      - call-configs:/tmp
+      - ./credentials:/app/credentials:ro
+    networks:
+      - boostmydeal-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  agent-worker:
+    build:
+      context: ./livekitserver
+      dockerfile: Dockerfile
+    container_name: boostmydeal-agent-worker
+    restart: unless-stopped
+    command: ["python", "agent_worker.py", "start"]
+    environment:
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
+      - SMALLEST_AI_API_KEY=${SMALLEST_AI_API_KEY}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_INDEX_NAME=${PINECONE_INDEX_NAME}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcs-credentials.json
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - SENTRY_DSN=${SENTRY_DSN}
+    volumes:
+      - call-configs:/tmp
+      - ./credentials:/app/credentials:ro
+    networks:
+      - boostmydeal-network
+    depends_on:
+      livekitserver:
+        condition: service_healthy
+
+  orchestrates:
+    build:
+      context: ./orchestrates
+      dockerfile: Dockerfile
+    container_name: boostmydeal-orchestrates
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGODB_URI=${MONGODB_URI}
+      - REDIS_URL=${REDIS_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_INDEX_NAME=${PINECONE_INDEX_NAME}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcs-credentials.json
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - BASE_URL=${BASE_URL}
+      - SERVER_URL=${SERVER_URL}
+      - DASHBOARD_URL=http://dashboard:5001
+      - SENTRY_DSN=${SENTRY_DSN}
+    volumes:
+      - ./credentials:/app/credentials:ro
+    networks:
+      - boostmydeal-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  boostmydeal-network:
+    driver: bridge
+    name: boostmydeal-network
+
+volumes:
+  dashboard-uploads:
+    name: boostmydeal-dashboard-uploads
+  call-configs:
+    name: boostmydeal-call-configs

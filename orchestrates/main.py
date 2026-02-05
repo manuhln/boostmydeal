@@ -463,6 +463,20 @@ async def start_dynamic_outbound_call(to_phone: str,
         return call_id
 
 
+@app.get("/health")
+@app.head("/health")
+async def health_check():
+    """Health check endpoint for Docker and load balancer health probes."""
+    return JSONResponse(
+        status_code=200,
+        content={
+            "status": "healthy",
+            "service": "orchestrates",
+            "timestamp": datetime.now().isoformat()
+        }
+    )
+
+
 @app.get("/")
 async def root(request: Request):
     env_vars = {

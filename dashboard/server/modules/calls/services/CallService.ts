@@ -120,12 +120,20 @@ export class CallService {
       }
 
       console.log(`📞 [CallService] Fetching phone number with ID: ${agent.phoneNumberId}`);
-      const phoneNumber = await PhoneNumber.findOne({ 
+      let phoneNumber = await PhoneNumber.findOne({ 
         _id: agent.phoneNumberId, 
         organizationId: organizationId 
       });
 
+      // If not found in the organization, try to find it without org constraint for debugging
       if (!phoneNumber) {
+        console.warn(`⚠️  [CallService] Phone number not found in organization ${organizationId}, checking if it exists elsewhere...`);
+        const phoneNumberAnyOrg = await PhoneNumber.findOne({ _id: agent.phoneNumberId });
+        if (phoneNumberAnyOrg) {
+          console.warn(`⚠️  [CallService] Phone number EXISTS but belongs to organization: ${phoneNumberAnyOrg.organizationId}, expected: ${organizationId}`);
+        } else {
+          console.warn(`⚠️  [CallService] Phone number does not exist in database at all`);
+        }
         console.error(`❌ [CallService] Phone number not found: ${agent.phoneNumberId} for organization: ${organizationId}`);
         return { success: false, message: 'Phone number configuration not found' };
       }
@@ -458,12 +466,20 @@ export class CallService {
       }
 
       console.log(`📞 [CallService] Fetching phone number with ID: ${agent.phoneNumberId}`);
-      const phoneNumber = await PhoneNumber.findOne({ 
+      let phoneNumber = await PhoneNumber.findOne({ 
         _id: agent.phoneNumberId, 
         organizationId: organizationId 
       });
 
+      // If not found in the organization, try to find it without org constraint for debugging
       if (!phoneNumber) {
+        console.warn(`⚠️  [CallService] Phone number not found in organization ${organizationId}, checking if it exists elsewhere...`);
+        const phoneNumberAnyOrg = await PhoneNumber.findOne({ _id: agent.phoneNumberId });
+        if (phoneNumberAnyOrg) {
+          console.warn(`⚠️  [CallService] Phone number EXISTS but belongs to organization: ${phoneNumberAnyOrg.organizationId}, expected: ${organizationId}`);
+        } else {
+          console.warn(`⚠️  [CallService] Phone number does not exist in database at all`);
+        }
         console.error(`❌ [CallService] Phone number not found: ${agent.phoneNumberId} for organization: ${organizationId}`);
         return { success: false, message: 'Phone number configuration not found' };
       }

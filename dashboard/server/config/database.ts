@@ -10,6 +10,10 @@ export async function connectDB() {
   }
 
   try {
+    // Log connection URI (redacted for security)
+    const redactedURI = MONGODB_URI.replace(/:[^:]*@/, ':****@');
+    console.log('📡 [MongoDB] Attempting to connect to:', redactedURI);
+    
     const options = {
       bufferCommands: false,
       maxPoolSize: 10,
@@ -19,7 +23,7 @@ export async function connectDB() {
 
     await mongoose.connect(MONGODB_URI, options);
     isConnected = true;
-    console.log('MongoDB connected successfully');
+    console.log('✅ [MongoDB] Connected successfully to:', redactedURI);
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;

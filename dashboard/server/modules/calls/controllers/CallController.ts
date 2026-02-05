@@ -7,6 +7,36 @@ import { redisPool } from '../redis/config';
 
 export class CallController {
   /**
+   * DEBUG: Get queue status
+   * GET /api/calls/debug/queue-status
+   */
+  async getQueueStatus(req: Request, res: Response): Promise<void> {
+    try {
+      const stats = await outboundCallQueue.getJobCounts();
+      const jobs = await outboundCallQueue.getJobs(['waiting', 'active', 'failed']);
+      
+      res.status(200).json({
+        success: true,
+        stats,
+        jobCount: jobs.length,
+        jobs: jobs.map(j => ({
+          id: j.id,
+          name: j.name,
+          state: j.getState(),
+          progress: j.progress(),
+          attempts: j.attemptsMade,
+          maxAttempts: j.opts.attempts
+        }))
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: (error as Error).message
+      });
+    }
+  }
+
+  /**
    * Get webhook payload data for a specific call
    * GET /api/calls/:callId/webhooks
    */
@@ -321,28 +351,20 @@ export class CallController {
         );
 
         console.log(`✅ [CallController] Call job ${job.id} added to queue successfully`);
+        console.log(`📞 [CallController] Call will be processed asynchronously with job ID: ${job.id}`);
+        
+        // Log queue stats for debugging
+        const queueStats = await outboundCallQueue.getJobCounts();
+        console.log(`📊 [CallController] Queue stats after job added:`, queueStats);
 
-        // Wait for job completion to get the actual result
-        console.log(`⏳ [CallController] Waiting for job ${job.id} to complete...`);
-        const result = await job.waitUntilFinished();
-
-        console.log(`🎉 [CallController] Job ${job.id} completed with result:`, result);
-
-        // Return the actual result from the telephonic server
-        if (result && result.call_id) {
-          res.status(200).json({
-            status: "success",
-            message: result.message,
-            call_id: result.call_id,
-            to_phone: result.to_phone,
-            from_phone: result.from_phone
-          });
-        } else {
-          res.status(500).json({
-            status: "error",
-            message: "Call failed - no call_id received"
-          });
-        }
+        // Return job ID immediately - call will be processed asynchronously
+        res.status(202).json({
+          status: "success",
+          message: "Call queued for processing",
+          job_id: job.id,
+          to_phone: callData.payload.config.to_number,
+          from_phone: callData.payload.config.from_number
+        });
 
       } catch (queueError) {
         console.warn(`⚠️ [CallController] Queue failed, falling back to direct processing:`);
@@ -362,28 +384,32 @@ export class CallController {
           };
           
           // Process the call directly and wait for result
+          console.log(`🚀 [CallController] Processing call directly without queue`);
           const result = await processOutboundCall(jobData as any);
           
-          console.log(`✅ [CallController] Call processed directly as fallback with result:`, result);
+          console.log(`✅ [CallController] Call processed directly with result:`, result);
 
           // Return the actual result from the telephonic server
           if (result && result.call_id) {
             res.status(200).json({
               status: "success",
-              message: result.message,
+              message: result.message || "Call initiated successfully",
               call_id: result.call_id,
-              to_phone: result.to_phone,
-              from_phone: result.from_phone
+              to_phone: result.to_phone || callData.payload.config.to_number,
+              from_phone: result.from_phone || callData.payload.config.from_number
             });
           } else {
+            console.error(`❌ [CallController] No call_id in result:`, result);
             res.status(500).json({
               status: "error",
-              message: "Call failed - no call_id received"
+              message: "Call failed - no call_id received",
+              details: result
             });
           }
 
         } catch (directProcessError) {
           console.error(`❌ [CallController] Direct processing failed:`, directProcessError);
+          console.error(`❌ [CallController] Error details:`, (directProcessError as Error)?.message);
           res.status(500).json({
             status: "error",
             message: `Call failed: ${(directProcessError as Error)?.message || 'Unknown error'}`
