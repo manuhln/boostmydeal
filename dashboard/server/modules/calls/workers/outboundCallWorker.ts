@@ -80,6 +80,10 @@ export async function processOutboundCall(job: Job<CallQueuePayload>) {
       from: call.from
     });
 
+    // Save Twilio SID immediately so webhooks can find this call
+    console.log(`💾 [OutboundWorker] Saving Twilio SID to call record`);
+    await callService.saveTwilioSid(callId, call.sid);
+
     // Step 3.5: Send JSON payload to telephonic server with agent tags
     console.log(`🌐 [OutboundWorker] Sending agent data with tags to telephonic server`);
     

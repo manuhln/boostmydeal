@@ -617,6 +617,28 @@ export class CallService {
   }
 
   /**
+   * Save Twilio SID to call record immediately after call is created
+   * This ensures webhooks can find the call by SID
+   */
+  async saveTwilioSid(callId: string, twilioSid: string): Promise<boolean> {
+    try {
+      console.log(`📞 [CallService] Saving Twilio SID to call record: ${twilioSid}`);
+      
+      await Call.findByIdAndUpdate(callId, {
+        twilioSid: twilioSid,
+        status: 'ringing',
+        updatedAt: new Date()
+      });
+
+      console.log(`✅ [CallService] Twilio SID saved successfully`);
+      return true;
+    } catch (error) {
+      console.error(`❌ [CallService] Error saving Twilio SID:`, error);
+      return false;
+    }
+  }
+
+  /**
    * Update call record with success status and call_id from telephonic server
    */
   async updateCallWithSuccess(callId: string, externalCallId: string, responseData: any): Promise<boolean> {
