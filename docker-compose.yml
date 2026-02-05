@@ -35,7 +35,7 @@ services:
       - REDIS_CLOUD_URL=${REDIS_CLOUD_URL}
       - UPSTASH_REDIS_URL=${UPSTASH_REDIS_URL}
       - SESSION_SECRET=${SESSION_SECRET}
-      - TELEPHONIC_SERVER_URL=http://orchestrates:3000
+      - TELEPHONIC_SERVER_URL=http://orchestrates:3000/start_outbound_call
       - LIVEKIT_SERVER_URL=http://livekitserver:5002
       - APP_URL=${APP_URL}
       - BASE_URL=${BASE_URL}

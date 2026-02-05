@@ -58,17 +58,19 @@ from vocode import sentry_transaction
 import time
 
 twilio_cost_fetcher = TwilioCostFetcher()
-# Temporarily disabled Sentry SDK initialization
-sentry_sdk.init(
-    dsn=os.getenv("SENTRY_DSN"),
-    environment=os.getenv("ENVIRONMENT", "development"),
-    traces_sample_rate=1.0,  # 100% sample, adjust later
-    integrations=[
-        FastApiIntegration(),
-        AsyncioIntegration(),
-        LoguruIntegration(),
-    ],
-)
+# Temporarily disabled Sentry SDK initialization to fix SpanRecorder compatibility issue
+if os.getenv("SENTRY_DSN"):
+    try:
+        sentry_sdk.init(
+            dsn=os.getenv("SENTRY_DSN"),
+            environment=os.getenv("ENVIRONMENT", "development"),
+            traces_sample_rate=0.0,  # Disabled tracing due to SpanRecorder compatibility issue
+            integrations=[
+                FastApiIntegration(),
+            ],
+        )
+    except Exception as e:
+        logger.warning(f"⚠️ Failed to initialize Sentry: {e}")
 
 
 def async_timed(func):

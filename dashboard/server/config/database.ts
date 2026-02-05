@@ -23,7 +23,7 @@ export async function connectDB() {
 
     await mongoose.connect(MONGODB_URI, options);
     isConnected = true;
-    console.log('✅ [MongoDB] Connected successfully to:', redactedURI);
+    // console.log('✅ [MongoDB] Connected successfully to:', redactedURI);
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;

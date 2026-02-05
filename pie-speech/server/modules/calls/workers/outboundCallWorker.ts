@@ -53,11 +53,12 @@ export async function processOutboundCall(job: Job<CallQueuePayload>) {
     twimlUrlWithTags.searchParams.set('assistant_id', payload.assistantId);
     twimlUrlWithTags.searchParams.set('call_id', callId);
     
+    const appUrl = process.env.APP_URL || 'https://portal.boostmydeal.com';
     const twilioCallPayload = {
       url: twimlUrlWithTags.toString(),
       to: payload.to_number,
       from: payload.config.from_number,
-      statusCallback: `https://c274131b-ce69-4963-95cc-126befb9097c-00-2runy6vs2ky1.kirk.replit.dev/api/webhook/call-status`,
+      statusCallback: `${appUrl}/api/webhook/call-status`,
       statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'],
       statusCallbackMethod: 'POST'
     };
