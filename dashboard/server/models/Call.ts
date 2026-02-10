@@ -14,9 +14,10 @@ export interface ICall extends Document {
   cost?: number;
   transcript?: string;
   recording?: string;
-  provider?: string; // Provider used (twilio, etc.)
+  provider?: string; // Provider used (twilio, voxsun, etc.)
   fromNumber?: string; // Phone number used to make the call
   twilioSid?: string; // Twilio call SID
+  voxsunCallId?: string; // Voxsun/LiveKit SIP call ID
   roomName?: string; // Room name from telephonic server
   startedAt?: Date;
   endedAt?: Date;
@@ -68,6 +69,7 @@ const callSchema = new Schema<ICall>({
   provider: String,
   fromNumber: String,
   twilioSid: { type: String, index: true },
+  voxsunCallId: { type: String, index: true },
   roomName: { type: String, index: true },
   startedAt: Date,
   endedAt: Date,
@@ -82,8 +84,10 @@ callSchema.index({ organizationId: 1, createdAt: -1 });
 callSchema.index({ organizationId: 1, assistantId: 1 });
 callSchema.index({ organizationId: 1, status: 1 });
 callSchema.index({ twilioSid: 1 });
+callSchema.index({ voxsunCallId: 1 });
 callSchema.index({ roomName: 1 });
 callSchema.index({ provider: 1, twilioSid: 1 });
+callSchema.index({ provider: 1, voxsunCallId: 1 });
 
 // Compound index for duplicate prevention
 callSchema.index({ 

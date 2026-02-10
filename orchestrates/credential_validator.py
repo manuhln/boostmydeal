@@ -149,6 +149,9 @@ class CredentialValidator:
         validation_results = {}
         validation_tasks = []
         
+        # Extract provider information (default to twilio for backward compatibility)
+        provider = data.get("provider", "twilio").lower()
+        
         # Extract credentials from payload
         twilio_account_sid = data.get("twilio_account_sid")
         twilio_auth_token = data.get("twilio_auth_token")
@@ -183,11 +186,16 @@ class CredentialValidator:
             os.getenv("OPENAI_API_KEY")
         )
         
-        # Validate Twilio credentials (always required)
-        if twilio_account_sid and twilio_auth_token:
-            validation_tasks.append(self._validate_twilio_task(twilio_account_sid, twilio_auth_token))
+        # Validate Twilio credentials ONLY if provider is twilio
+        if provider == "twilio":
+            if twilio_account_sid and twilio_auth_token:
+                validation_tasks.append(self._validate_twilio_task(twilio_account_sid, twilio_auth_token))
+            else:
+                validation_results["twilio"] = "Missing Twilio credentials (account_sid or auth_token)"
         else:
-            validation_results["twilio"] = "Missing Twilio credentials (account_sid or auth_token)"
+            # For non-Twilio providers (e.g., voxsun), skip Twilio validation
+            logger.info(f"ℹ️ Provider is '{provider}', skipping Twilio credential validation")
+            validation_results["twilio"] = f"Skipped (provider: {provider})"
         
         # Validate TTS provider credentials
         if tts_provider in ["eleven_labs", "elevenlabs"] and elevenlabs_api_key:

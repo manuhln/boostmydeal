@@ -1,12 +1,15 @@
 from fastapi import FastAPI, HTTPException, Request, Depends, Security
 from fastapi.responses import Response
 from fastapi.security import APIKeyHeader
+from pydantic import BaseModel, Field
 from livekit import api
+from livekit.protocol import sip as proto_sip
 from src.models import CallConfig
 import logging
 import os
 import uvicorn
-from typing import Dict, Optional
+import traceback
+from typing import Dict, Optional, List
 import secrets
 import json
 import time
@@ -24,6 +27,131 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 logging.getLogger("livekit").setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+# ============================================================================
+# PYDANTIC MODELS
+# ============================================================================
+
+class CreateSIPTrunkRequest(BaseModel):
+    """Request model for creating a Voxsun SIP trunk"""
+    phone_number: str = Field(..., description="The phone number to register (e.g., '+1 (438) 476-0245')")
+    voxsun_username: str = Field(..., description="Voxsun SIP username")
+    voxsun_password: str = Field(..., description="Voxsun SIP password")
+    voxsun_domain: str = Field(default="voxsun.net", description="Voxsun SIP domain")
+    voxsun_port: int = Field(default=5060, description="Voxsun SIP port")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "phone_number": "+14384760245",
+                "voxsun_username": "VoxSunai@voxsun.com",
+                "voxsun_password": "password123",
+                "voxsun_domain": "voxsun.net",
+                "voxsun_port": 5060
+            }
+        }
+
+
+class CreateSIPTrunkResponse(BaseModel):
+    """Response model for SIP trunk creation"""
+    status: str
+    sip_trunk_id: str
+    message: str
+    trunk_name: str
+    registered_number: str
+    sip_address: str
+
+
+class ValidateVoxsunCredentialsRequest(BaseModel):
+    """Request model for validating Voxsun credentials"""
+    voxsun_username: str = Field(..., description="Voxsun SIP username (e.g., VoxSunai@voxsun.com)")
+    voxsun_password: str = Field(..., description="Voxsun SIP password")
+    voxsun_domain: str = Field(default="voxsun.net", description="Voxsun SIP domain")
+    voxsun_port: int = Field(default=5060, description="Voxsun SIP port")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "voxsun_username": "VoxSunai@voxsun.com",
+                "voxsun_password": "password123",
+                "voxsun_domain": "voxsun.net",
+                "voxsun_port": 5060
+            }
+        }
+
+
+class ValidateVoxsunCredentialsResponse(BaseModel):
+    """Response model for credential validation"""
+    status: str  # "valid", "invalid", or "error"
+    message: str
+    details: Optional[dict] = None
+
+
+class StartSIPCallRequest(BaseModel):
+    """Request model for starting a SIP call to an existing room"""
+    room: str = Field(..., description="LiveKit room name (conversation_id)")
+    to_phone: str = Field(..., description="Destination phone number in E.164 format")
+    from_phone: str = Field(..., description="Caller phone number in E.164 format")
+    livekit_sip_trunk_id: str = Field(..., description="LiveKit SIP trunk ID")
+    contact_name: str = Field(default="Customer", description="Name of the person being called")
+    user_speak_first: bool = Field(default=False, description="If true, user speaks first")
+    # Optional: Agent configuration (if provided, will be saved for agent worker)
+    agent_initial_message: Optional[str] = Field(None, description="Initial greeting from agent")
+    agent_prompt_preamble: Optional[str] = Field(None, description="System prompt for agent")
+    tts_provider: Optional[str] = Field(None, description="TTS provider (eleven_labs, openai, etc.)")
+    tts_voice_id: Optional[str] = Field(None, description="TTS voice ID")
+    stt_provider: Optional[str] = Field(None, description="STT provider (deepgram, openai, etc.)")
+    stt_model: Optional[str] = Field(None, description="STT model")
+    llm_model: Optional[str] = Field(None, description="LLM model name")
+    llm_api_key: Optional[str] = Field(None, description="LLM API key")
+    voicemail_detection: Optional[bool] = Field(None, description="Enable voicemail detection")
+    voicemail_message: Optional[str] = Field(None, description="Message to leave on voicemail")
+    recording: Optional[bool] = Field(None, description="Enable call recording")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "room": "voxsun-+15146676791-360a1b17",
+                "to_phone": "+15146676791",
+                "from_phone": "+14384760245",
+                "livekit_sip_trunk_id": "ST_jcjARCs8wgzw",
+                "contact_name": "John Doe",
+                "user_speak_first": False,
+                "agent_initial_message": "Hello, how can I help you today?",
+                "agent_prompt_preamble": "You are a helpful customer service assistant.",
+                "tts_provider": "eleven_labs",
+                "tts_voice_id": "EXAVITQu4vr4xnSDxMaL",
+                "stt_provider": "deepgram",
+                "stt_model": "nova-2",
+                "llm_model": "gpt-4o-mini",
+                "voicemail_detection": False,
+                "recording": True
+            }
+        }
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "room": "voxsun-+14384760245-a1b2c3d4",
+                "to_phone": "+14384760245",
+                "from_phone": "+1555123456",
+                "livekit_sip_trunk_id": "voxsun_trunk_12345",
+                "contact_name": "John Doe",
+                "user_speak_first": False
+            }
+        }
+
+
+class StartSIPCallResponse(BaseModel):
+    """Response model for SIP call initiation"""
+    status: str
+    message: str
+    room: str
+    to_phone: str
+    from_phone: str
+    participant_id: str
+    call_id: str
+
 
 app = FastAPI(title="LiveKit Telephonic Agent Server")
 
@@ -237,6 +365,320 @@ async def root():
 @app.head("/health")
 async def health():
     return {"status": "healthy"}
+
+
+@app.post("/create_sip_trunk")
+async def create_sip_trunk(
+    request_data: CreateSIPTrunkRequest,
+    api_key: str = Depends(verify_api_key),
+    _rate_limit: None = Depends(check_rate_limit)
+) -> CreateSIPTrunkResponse:
+    """
+    🔒 PROTECTED ENDPOINT - Requires X-API-Key header
+    
+    Create a Voxsun SIP outbound trunk in LiveKit
+    
+    Required headers:
+    - X-API-Key: Your API key
+    
+    Returns:
+    - sip_trunk_id: The LiveKit SIP trunk ID to use for calls
+    """
+    livekit_api_client = None
+    try:
+        logger.info("=" * 80)
+        logger.info("📞 SIP TRUNK CREATION REQUEST RECEIVED")
+        logger.info("=" * 80)
+        logger.info(f"Creating SIP trunk for: {request_data.phone_number}")
+        logger.info(f"Domain: {request_data.voxsun_domain}:{request_data.voxsun_port}")
+        
+        livekit_api_client = api.LiveKitAPI(
+            url=LIVEKIT_URL,
+            api_key=LIVEKIT_API_KEY,
+            api_secret=LIVEKIT_API_SECRET,
+        )
+        
+        # Create the SIP trunk with port included in address
+        # LiveKit requires address format: "host:port"
+        sip_address = f"{request_data.voxsun_domain}:{request_data.voxsun_port}"
+        logger.info(f"📡 SIP Address (with port): {sip_address}")
+        logger.info(f"🔐 Auth Username: {request_data.voxsun_username}")
+        logger.info(f"🔐 Auth Password: {'*' * 8}")  # Don't log actual password
+        
+        trunk = proto_sip.SIPOutboundTrunkInfo(
+            name=f"Voxsun Trunk",
+            address=sip_address,
+            numbers=[request_data.phone_number],
+            auth_username=request_data.voxsun_username,
+            auth_password=request_data.voxsun_password,
+        )
+        
+        create_req = proto_sip.CreateSIPOutboundTrunkRequest(trunk=trunk)
+        result = await livekit_api_client.sip.create_outbound_trunk(create_req)
+        
+        logger.info("=" * 80)
+        logger.info("✅ SIP TRUNK CREATED SUCCESSFULLY")
+        logger.info("=" * 80)
+        logger.info(f"Trunk ID: {result.sip_trunk_id}")
+        logger.info(f"Trunk Name: {result.name}")
+        logger.info(f"SIP Address: {result.address}")
+        logger.info(f"Registered Numbers: {', '.join(result.numbers)}")
+        logger.info("=" * 80)
+        
+        return CreateSIPTrunkResponse(
+            status="success",
+            sip_trunk_id=result.sip_trunk_id,
+            message=f"SIP trunk created successfully for {request_data.phone_number}",
+            trunk_name=result.name,
+            registered_number=request_data.phone_number,
+            sip_address=result.address
+        )
+        
+    except api.TwirpError as e:
+        error_msg = f"LiveKit API error: {str(e)}"
+        logger.error(f"❌ {error_msg}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "LiveKit API Error",
+                "message": error_msg,
+                "phone_number": request_data.phone_number
+            }
+        )
+    
+    except Exception as e:
+        error_msg = f"Failed to create SIP trunk: {str(e)}"
+        logger.error(f"❌ {error_msg}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "SIP Trunk Creation Failed",
+                "message": error_msg,
+                "phone_number": request_data.phone_number
+            }
+        )
+    
+    finally:
+        if livekit_api_client:
+            await livekit_api_client.aclose()
+
+@app.post("/start_sip_call")
+async def start_sip_call(
+    request_data: StartSIPCallRequest,
+    api_key: str = Depends(verify_api_key),
+    _rate_limit: None = Depends(check_rate_limit)
+):
+    """
+    🔒 PROTECTED ENDPOINT - Requires X-API-Key header
+    
+    Start a SIP call to an existing LiveKit room (for Voxsun integration).
+    This is a simpler endpoint for SIP-only calls that don't require full Vocode setup.
+    The room must already exist (typically created by orchestrates).
+    """
+    livekit_api_client = None
+    try:
+        logger.info("=" * 80)
+        logger.info("📞 STARTING SIP CALL")
+        logger.info("=" * 80)
+        logger.info(f"Room: {request_data.room}")
+        logger.info(f"To Phone: {request_data.to_phone}")
+        logger.info(f"From Phone: {request_data.from_phone}")
+        logger.info(f"Contact Name: {request_data.contact_name}")
+        logger.info(f"SIP Trunk ID: {request_data.livekit_sip_trunk_id}")
+        if request_data.agent_initial_message:
+            logger.info(f"Agent Initial Message: {request_data.agent_initial_message[:50]}...")
+        logger.info("=" * 80)
+        
+        livekit_api_client = api.LiveKitAPI(
+            url=LIVEKIT_URL,
+            api_key=LIVEKIT_API_KEY,
+            api_secret=LIVEKIT_API_SECRET,
+        )
+        
+        # If agent config is provided, save it for the agent worker to use
+        if request_data.agent_initial_message:
+            try:
+                logger.info(f"💾 Saving call configuration for room: {request_data.room}")
+                
+                # Create a minimal CallConfig with provided agent configuration
+                from src.models import TTSConfig, STTConfig, ModelConfig
+                
+                # Use provided config or defaults
+                tts_config = TTSConfig(
+                    provider_name=request_data.tts_provider or "eleven_labs",
+                    voice_id=request_data.tts_voice_id or "EXAVITQu4vr4xnSDxMaL",
+                    api_key=os.getenv("ELEVENLABS_API_KEY", "")
+                )
+                
+                stt_config = STTConfig(
+                    provider_name=request_data.stt_provider or "deepgram",
+                    model=request_data.stt_model or "nova-2",
+                    api_key=os.getenv("DEEPGRAM_API_KEY", "")
+                )
+                
+                model_config = ModelConfig(
+                    name=request_data.llm_model or "gpt-4o-mini",
+                    api_key=request_data.llm_api_key or os.getenv("OPENAI_API_KEY", "")
+                )
+                
+                call_config = CallConfig(
+                    to_phone=request_data.to_phone,
+                    from_phone=request_data.from_phone,
+                    twilio_account_sid="sip-only",
+                    twilio_auth_token="sip-only",
+                    contact_name=request_data.contact_name,
+                    agent_initial_message=request_data.agent_initial_message,
+                    user_speak_first=request_data.user_speak_first,
+                    agent_prompt_preamble=request_data.agent_prompt_preamble or "You are a helpful assistant.",
+                    agent_generate_responses=True,
+                    tts=tts_config,
+                    stt=stt_config,
+                    model=model_config,
+                    voicemail=request_data.voicemail_detection or False,
+                    voicemail_message=request_data.voicemail_message,
+                    temperature=0.7,
+                    language="en",
+                    agent_speed=1.0,
+                    webhook_url="",
+                    use_knowledge_base=False,
+                    recording=request_data.recording or False,
+                    livekit_sip_trunk_id=request_data.livekit_sip_trunk_id,
+                    keyboard_sound=False
+                )
+                
+                save_call_config(request_data.room, call_config)
+                logger.info(f"✅ Call configuration saved for room: {request_data.room}")
+            except Exception as e:
+                logger.error(f"⚠️ Failed to save call config: {e}")
+                # Continue anyway - agent worker will use fallback metadata
+        
+        # Create agent dispatch with metadata
+        metadata = json.dumps({
+            "phone_number": request_data.to_phone,
+            "contact_name": request_data.contact_name,
+            "user_speak_first": request_data.user_speak_first,
+        })
+        
+        try:
+            logger.info(f"📤 Creating agent dispatch for room: {request_data.room}")
+            await livekit_api_client.agent_dispatch.create_dispatch(
+                api.CreateAgentDispatchRequest(
+                    room=request_data.room,
+                    agent_name="voice-assistant",
+                    metadata=metadata,
+                )
+            )
+            logger.info(f"✅ Agent dispatch created for room: {request_data.room}")
+        except Exception as e:
+            logger.error(f"⚠️ Failed to create agent dispatch: {e}")
+            # Continue anyway - the SIP participant can still be created
+        
+        # Verify room exists
+        try:
+            rooms = await livekit_api_client.room.list_rooms()
+            room_exists = any(room.name == request_data.room for room in rooms)
+            
+            if room_exists:
+                logger.info(f"✅ Room '{request_data.room}' exists")
+            else:
+                logger.warning(f"⚠️ Room '{request_data.room}' not found, will be created by agent system")
+        except Exception as e:
+            logger.warning(f"⚠️ Could not verify room existence: {e}")
+        
+        # Create SIP participant that joins the room
+        try:
+            logger.info("=" * 80)
+            logger.info("📞 Creating SIP Participant with parameters:")
+            logger.info(f"   Room: {request_data.room}")
+            logger.info(f"   Trunk ID: {request_data.livekit_sip_trunk_id}")
+            logger.info(f"   SIP Call To: {request_data.to_phone}")
+            logger.info(f"   Participant Identity (From): {request_data.from_phone}")
+            logger.info(f"   Participant Name: {request_data.contact_name}")
+            logger.info("=" * 80)
+            
+            sip_participant = await livekit_api_client.sip.create_sip_participant(
+                api.CreateSIPParticipantRequest(
+                    room_name=request_data.room,
+                    sip_trunk_id=request_data.livekit_sip_trunk_id,
+                    sip_call_to=request_data.to_phone,
+                    participant_identity=request_data.from_phone,
+                    participant_name=request_data.contact_name,
+                    dtmf="",
+                    play_ringtone=True,
+                    hide_phone_number=False,
+                )
+            )
+            
+            logger.info(f"✅ SIP Participant created successfully")
+            logger.info(f"   Participant ID: {sip_participant.participant_identity}")
+            logger.info(f"   SIP Call ID: {sip_participant.sip_call_id}")
+            logger.info("=" * 80)
+            
+            return StartSIPCallResponse(
+                status="success",
+                message="SIP call initiated successfully",
+                room=request_data.room,
+                to_phone=request_data.to_phone,
+                from_phone=request_data.from_phone,
+                participant_id=sip_participant.participant_identity,
+                call_id=sip_participant.sip_call_id,
+            )
+            
+        except api.TwirpError as e:
+            error_code = e.metadata.get("sip_status_code", "UNKNOWN") if hasattr(e, 'metadata') else "UNKNOWN"
+            error_message = str(e)
+            
+            # Log detailed error information for debugging
+            logger.error(f"❌ TwirpError received: {error_message}")
+            logger.error(f"   Error Code: {error_code}")
+            if hasattr(e, 'metadata'):
+                logger.error(f"   Error Metadata: {e.metadata}")
+            logger.error(f"   Error Type: {type(e).__name__}")
+            
+            # Check for specific error conditions
+            if "auth" in error_message.lower() or "401" in str(error_code) or "403" in str(error_code):
+                error_msg = f"❌ SIP Authentication Failed: Check Voxsun credentials (username/password/domain). SIP Status: {error_code}"
+            elif "not found" in error_message.lower() or error_code in ["404", "480"]:
+                error_msg = f"❌ Room or SIP Trunk not found. Verify trunk ID: {request_data.livekit_sip_trunk_id}"
+            elif "trunk" in error_message.lower():
+                error_msg = f"❌ SIP Trunk '{request_data.livekit_sip_trunk_id}' is invalid or unreachable"
+            elif "retry" in error_message.lower():
+                error_msg = f"❌ SIP Gateway Retry Limit Exceeded: {error_message}. This usually indicates authentication failure or unreachable gateway."
+            else:
+                error_msg = f"❌ SIP Error: {error_message} (Code: {error_code})"
+            
+            logger.error(f"{error_msg}")
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "SIP Call Failed",
+                    "message": error_msg,
+                    "sip_status": error_code,
+                    "room": request_data.room,
+                    "trunk_id": request_data.livekit_sip_trunk_id
+                }
+            )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        logger.error(f"❌ {error_msg}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "Internal Server Error",
+                "message": error_msg,
+                "room": request_data.room
+            }
+        )
+    
+    finally:
+        if livekit_api_client:
+            await livekit_api_client.aclose()
 
 
 @app.post("/start_outbound_call")

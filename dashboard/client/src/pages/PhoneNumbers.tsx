@@ -22,10 +22,12 @@ import { Layout } from "@/components/Layout";
 import { apiRequest } from "@/lib/queryClient";
 
 const voxsunSchema = z.object({
-  phoneNumber: z.string().min(10, "Phone number is required"),
+  phoneNumber: z.string().min(10, "Phone number (DID) is required"),
   countryCode: z.string().min(1, "Country code is required"),
-  accountSid: z.string().min(1, "Account SID is required"),
-  authToken: z.string().min(1, "Auth Token is required"),
+  voxsunUsername: z.string().min(1, "Voxsun username is required"),
+  voxsunPassword: z.string().min(1, "Voxsun password is required"),
+  voxsunDomain: z.string().min(1, "Voxsun domain (SIP server) is required"),
+  voxsunPort: z.coerce.number().int().min(1).max(65535).optional().default(5060),
 });
 
 const twilioSchema = z.object({
@@ -81,8 +83,10 @@ export default function PhoneNumbers() {
     defaultValues: {
       phoneNumber: "",
       countryCode: "",
-      accountSid: "",
-      authToken: "",
+      voxsunUsername: "",
+      voxsunPassword: "",
+      voxsunDomain: "",
+      voxsunPort: 5060,
     },
   });
 
@@ -108,8 +112,10 @@ export default function PhoneNumbers() {
           phoneNumber: data.phoneNumber,
           countryCode: data.countryCode,
           provider: 'voxsun',
-          accountSid: data.accountSid,
-          authToken: data.authToken
+          voxsunUsername: data.voxsunUsername,
+          voxsunPassword: data.voxsunPassword,
+          voxsunDomain: data.voxsunDomain,
+          voxsunPort: data.voxsunPort
         })
       });
 
@@ -373,9 +379,9 @@ export default function PhoneNumbers() {
                               name="phoneNumber"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Phone Number</FormLabel>
+                                  <FormLabel>Phone Number (DID)</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Enter phone number" {...field} />
+                                    <Input placeholder="Enter your DID number" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -398,12 +404,12 @@ export default function PhoneNumbers() {
 
                             <FormField
                               control={voxsunForm.control}
-                              name="accountSid"
+                              name="voxsunUsername"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Account SID</FormLabel>
+                                  <FormLabel>VoxSun Username</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Enter VoxSun Account SID" {...field} />
+                                    <Input placeholder="Enter VoxSun username" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -412,12 +418,40 @@ export default function PhoneNumbers() {
 
                             <FormField
                               control={voxsunForm.control}
-                              name="authToken"
+                              name="voxsunPassword"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Auth Token</FormLabel>
+                                  <FormLabel>VoxSun Password</FormLabel>
                                   <FormControl>
-                                    <Input type="password" placeholder="Enter VoxSun Auth Token" {...field} />
+                                    <Input type="password" placeholder="Enter VoxSun password" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={voxsunForm.control}
+                              name="voxsunDomain"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>SIP Server Domain</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Enter SIP server domain (e.g., voxsun.net)" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={voxsunForm.control}
+                              name="voxsunPort"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>SIP Server Port</FormLabel>
+                                  <FormControl>
+                                    <Input type="number" placeholder="5060" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>

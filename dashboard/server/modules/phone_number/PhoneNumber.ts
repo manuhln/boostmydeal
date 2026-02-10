@@ -3,10 +3,20 @@ import { Schema, model, Document } from 'mongoose';
 export interface IPhoneNumber extends Document {
   organizationId: string;
   workspaceId: string;
-  phoneNumber: string; // concatenated with country code
+  phoneNumber: string; // concatenated with country code (also used as Voxsun DID)
   provider: 'twilio' | 'voxsun';
+  
+  // Twilio fields
   accountSid: string; // encrypted
   authToken: string; // encrypted
+  
+  // Voxsun SIP trunk fields
+  voxsunUsername?: string; // encrypted
+  voxsunPassword?: string; // encrypted
+  voxsunDomain?: string;
+  voxsunPort?: number;
+  voxsunLiveKitTrunkId?: string; // SIP trunk ID from LiveKit (e.g., "ST_yKBcCX3ekUZy")
+  
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,6 +42,7 @@ const phoneNumberSchema = new Schema<IPhoneNumber>({
     enum: ['twilio', 'voxsun'],
     required: true
   },
+  // Twilio fields
   accountSid: {
     type: String,
     required: true
@@ -39,6 +50,28 @@ const phoneNumberSchema = new Schema<IPhoneNumber>({
   authToken: {
     type: String,
     required: true
+  },
+  // Voxsun SIP trunk fields
+  voxsunUsername: {
+    type: String,
+    default: null
+  },
+  voxsunPassword: {
+    type: String,
+    default: null
+  },
+  voxsunDomain: {
+    type: String,
+    default: null
+  },
+  voxsunPort: {
+    type: Number,
+    default: null
+  },
+  voxsunLiveKitTrunkId: {
+    type: String,
+    default: null,
+    index: true
   },
   createdAt: {
     type: Date,

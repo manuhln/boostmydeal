@@ -20,6 +20,12 @@ export interface CallQueuePayload {
     auth_token: string;
     from_number: string;
     twiml_url: string;
+    // Voxsun-specific fields
+    voxsun_username?: string;
+    voxsun_password?: string;
+    voxsun_domain?: string;
+    voxsun_port?: number;
+    voxsun_livekit_trunk_id?: string;
   };
   to_number: string;
   message: string;
@@ -147,14 +153,22 @@ export class CallService {
 
       console.log(`🔧 [CallService] Credentials decrypted successfully, account SID length: ${decryptedAccountSid.length}`);
 
-      // Prepare the queue payload
+      // Prepare the queue payload with provider-specific config
       const callQueuePayload: CallQueuePayload = {
         provider: phoneNumber.provider,
         config: {
           account_sid: decryptedAccountSid,
           auth_token: decryptedAuthToken,
           from_number: phoneNumber.phoneNumber,
-          twiml_url: process.env.TWILIO_TWIML_URL || 'https://handler.twilio.com/twiml/EH74e428ffd64e795d5e2dba74362e1380'
+          twiml_url: process.env.TWILIO_TWIML_URL || 'https://handler.twilio.com/twiml/EH74e428ffd64e795d5e2dba74362e1380',
+          // Add Voxsun-specific fields if provider is voxsun
+          ...(phoneNumber.provider === 'voxsun' && {
+            voxsun_username: phoneNumber.voxsunUsername ? decrypt(phoneNumber.voxsunUsername) : undefined,
+            voxsun_password: phoneNumber.voxsunPassword ? decrypt(phoneNumber.voxsunPassword) : undefined,
+            voxsun_domain: phoneNumber.voxsunDomain || undefined,
+            voxsun_port: phoneNumber.voxsunPort || undefined,
+            voxsun_livekit_trunk_id: phoneNumber.voxsunLiveKitTrunkId || undefined
+          })
         },
         to_number: payload.toNumber,
         message: payload.message,
@@ -180,7 +194,11 @@ export class CallService {
         to_number: callQueuePayload.to_number,
         assistantId: callQueuePayload.assistantId,
         user_tags: callQueuePayload.user_tags,
-        system_tags: callQueuePayload.system_tags
+        system_tags: callQueuePayload.system_tags,
+        ...(phoneNumber.provider === 'voxsun' && {
+          voxsun_domain: callQueuePayload.config.voxsun_domain,
+          voxsun_livekit_trunk_id: callQueuePayload.config.voxsun_livekit_trunk_id
+        })
       });
 
       return { 
@@ -213,7 +231,14 @@ export class CallService {
         organizationId: organizationId
       });
       
-      // If not found by twilioSid, try by MongoDB _id (only if it looks like a valid ObjectId)
+      // If not found by twilioSid, try by voxsunCallId
+      if (!call) {
+        call = await Call.findOne({
+          voxsunCallId: callId,
+          organizationId: organizationId
+        });
+      }
+
       if (!call && callId.match(/^[0-9a-fA-F]{24}$/)) {
         call = await Call.findOne({
           _id: callId,
@@ -222,7 +247,7 @@ export class CallService {
       }
 
       if (!call) {
-        console.log(`❌ [CallService] Call not found with ID/TwilioSid: ${callId}`);
+        console.log(`❌ [CallService] Call not found with ID/TwilioSid/VoxsunCallId: ${callId}`);
         return null;
       }
 
@@ -232,6 +257,7 @@ export class CallService {
       return {
         callId: call._id,
         twilioSid: call.twilioSid,
+        voxsunCallId: call.voxsunCallId,
         status: call.status,
         duration: call.duration,
         transcript: call.transcript, // Include transcript field
@@ -323,7 +349,13 @@ export class CallService {
     console.log(`🔄 [CallService] Updating call for event: ${eventType}, call ID: ${callId}`);
     
     try {
-      const callRecord = await Call.findOne({ twilioSid: callId });
+      // Try to find call by twilioSid first
+      let callRecord = await Call.findOne({ twilioSid: callId });
+      
+      // If not found, try by voxsunCallId
+      if (!callRecord) {
+        callRecord = await Call.findOne({ voxsunCallId: callId });
+      }
       
       if (!callRecord) {
         console.error(`❌ [CallService] Call not found with ID: ${callId}`);
@@ -634,6 +666,27 @@ export class CallService {
       return true;
     } catch (error) {
       console.error(`❌ [CallService] Error saving Twilio SID:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Save Voxsun call ID to call record
+   */
+  async saveVoxsunCallId(callId: string, voxsunCallId: string): Promise<boolean> {
+    try {
+      console.log(`📞 [CallService] Saving Voxsun call ID to call record: ${voxsunCallId}`);
+      
+      await Call.findByIdAndUpdate(callId, {
+        voxsunCallId: voxsunCallId,
+        status: 'ringing',
+        updatedAt: new Date()
+      });
+
+      console.log(`✅ [CallService] Voxsun call ID saved successfully`);
+      return true;
+    } catch (error) {
+      console.error(`❌ [CallService] Error saving Voxsun call ID:`, error);
       return false;
     }
   }

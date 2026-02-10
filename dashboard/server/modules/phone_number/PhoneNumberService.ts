@@ -1,6 +1,7 @@
 import { PhoneNumberDAL } from './phone_number.dal';
 import { CreatePhoneNumberDTO, UpdatePhoneNumberDTO, PhoneNumberResponseDTO, PhoneNumberListDTO } from './phone_number.dto';
 import { IPhoneNumber } from './PhoneNumber';
+import { VoxsunTrunkCreator } from './voxsun-trunk-creator';
 
 export class PhoneNumberService {
   private phoneNumberDAL: PhoneNumberDAL;
@@ -23,7 +24,36 @@ export class PhoneNumberService {
       throw new Error('Phone number already exists for this organization');
     }
 
-    const phoneNumber = await this.phoneNumberDAL.createPhoneNumber(organizationId, phoneNumberData);
+    let phoneNumber = await this.phoneNumberDAL.createPhoneNumber(organizationId, phoneNumberData);
+
+    // Auto-create LiveKit SIP trunk for Voxsun phone numbers
+    if (phoneNumberData.provider === 'voxsun' && phoneNumberData.voxsunUsername && phoneNumberData.voxsunPassword && phoneNumberData.voxsunDomain && phoneNumberData.voxsunPort) {
+      try {
+        const trunkId = await VoxsunTrunkCreator.createLiveKitSIPTrunk({
+          phoneNumber: phoneNumberData.countryCode + phoneNumberData.phoneNumber,
+          voxsunUsername: phoneNumberData.voxsunUsername,
+          voxsunPassword: phoneNumberData.voxsunPassword,
+          voxsunDomain: phoneNumberData.voxsunDomain,
+          voxsunPort: phoneNumberData.voxsunPort
+        });
+
+        if (trunkId) {
+          // Update the phone number with the trunk ID
+          phoneNumber = await this.phoneNumberDAL.updatePhoneNumber(
+            phoneNumber._id!.toString(),
+            organizationId,
+            { voxsunLiveKitTrunkId: trunkId }
+          ) || phoneNumber;
+        } else {
+          // Log warning but don't fail - trunk can be created manually or retried later
+          console.warn(`[PhoneNumberService] Failed to auto-create LiveKit SIP trunk for phone number ${phoneNumberData.countryCode + phoneNumberData.phoneNumber}`);
+        }
+      } catch (error) {
+        console.error(`[PhoneNumberService] Error creating LiveKit SIP trunk:`, error);
+        // Non-blocking: continue without trunk ID; can be created later
+      }
+    }
+
     return this.mapToResponseDTO(phoneNumber);
   }
 
@@ -101,7 +131,13 @@ export class PhoneNumberService {
       workspaceId: phoneNumber.workspaceId,
       phoneNumber: phoneNumber.phoneNumber,
       provider: phoneNumber.provider,
-      accountSid: phoneNumber.accountSid, // This is already decrypted by DAL
+      accountSid: phoneNumber.provider === 'twilio' ? phoneNumber.accountSid : undefined,
+      // Include Voxsun fields in response (but not sensitive credentials)
+      ...(phoneNumber.provider === 'voxsun' && {
+        voxsunDomain: phoneNumber.voxsunDomain,
+        voxsunPort: phoneNumber.voxsunPort,
+        voxsunLiveKitTrunkId: phoneNumber.voxsunLiveKitTrunkId
+      }),
       createdAt: phoneNumber.createdAt,
       updatedAt: phoneNumber.updatedAt
     };

@@ -33,17 +33,31 @@ export class PhoneNumberDAL extends BaseDAL<IPhoneNumber> {
     // Concatenate country code with phone number
     const fullPhoneNumber = phoneNumberData.countryCode + phoneNumberData.phoneNumber;
     
-    // Encrypt sensitive data
-    const encryptedData = {
+    // Prepare base data
+    const phoneNumberRecord: any = {
       organizationId,
       workspaceId: '1',
       phoneNumber: fullPhoneNumber,
-      provider: phoneNumberData.provider,
-      accountSid: encrypt(phoneNumberData.accountSid),
-      authToken: encrypt(phoneNumberData.authToken)
+      provider: phoneNumberData.provider
     };
 
-    const phoneNumber = await this.create(encryptedData);
+    // Handle provider-specific credentials
+    if (phoneNumberData.provider === 'twilio') {
+      phoneNumberRecord.accountSid = encrypt(phoneNumberData.accountSid || '');
+      phoneNumberRecord.authToken = encrypt(phoneNumberData.authToken || '');
+    } else if (phoneNumberData.provider === 'voxsun') {
+      // For Voxsun, we still need accountSid and authToken fields (may contain fallback values)
+      phoneNumberRecord.accountSid = encrypt(phoneNumberData.accountSid || 'voxsun');
+      phoneNumberRecord.authToken = encrypt(phoneNumberData.authToken || 'voxsun');
+      
+      // Add Voxsun-specific fields
+      phoneNumberRecord.voxsunUsername = phoneNumberData.voxsunUsername ? encrypt(phoneNumberData.voxsunUsername) : null;
+      phoneNumberRecord.voxsunPassword = phoneNumberData.voxsunPassword ? encrypt(phoneNumberData.voxsunPassword) : null;
+      phoneNumberRecord.voxsunDomain = phoneNumberData.voxsunDomain || null;
+      phoneNumberRecord.voxsunPort = phoneNumberData.voxsunPort || 5060;
+    }
+
+    const phoneNumber = await this.create(phoneNumberRecord);
     return this.sanitizePhoneNumberForDisplay(phoneNumber);
   }
 
@@ -68,6 +82,27 @@ export class PhoneNumberDAL extends BaseDAL<IPhoneNumber> {
     }
   }
 
+  // Method to get decrypted Voxsun credentials for API calls (internal use only)
+  async getVoxsunCredentials(phoneNumberId: string, organizationId: string): Promise<{ username: string; password: string } | null> {
+    const result = await this.findOne({ _id: phoneNumberId, organizationId });
+    if (!result) return null;
+    
+    try {
+      if (!result.voxsunUsername || !result.voxsunPassword) {
+        console.warn('⚠️  [Phone] Missing Voxsun credentials for phone number:', phoneNumberId);
+        return null;
+      }
+      
+      return {
+        username: decrypt(result.voxsunUsername),
+        password: decrypt(result.voxsunPassword)
+      };
+    } catch (error: any) {
+      console.error('❌ [Phone] Error decrypting Voxsun credentials:', error.message);
+      return null;
+    }
+  }
+
   async updatePhoneNumber(phoneNumberId: string, organizationId: string, updateData: UpdatePhoneNumberDTO): Promise<IPhoneNumber | null> {
     const encryptedUpdateData: any = { ...updateData };
     
@@ -77,13 +112,22 @@ export class PhoneNumberDAL extends BaseDAL<IPhoneNumber> {
       delete encryptedUpdateData.countryCode;
     }
     
-    // Encrypt sensitive fields if they're being updated
+    // Encrypt Twilio-specific fields if they're being updated
     if (updateData.accountSid) {
       encryptedUpdateData.accountSid = encrypt(updateData.accountSid);
     }
     if (updateData.authToken) {
       encryptedUpdateData.authToken = encrypt(updateData.authToken);
     }
+
+    // Encrypt Voxsun-specific fields if they're being updated
+    if (updateData.voxsunUsername) {
+      encryptedUpdateData.voxsunUsername = encrypt(updateData.voxsunUsername);
+    }
+    if (updateData.voxsunPassword) {
+      encryptedUpdateData.voxsunPassword = encrypt(updateData.voxsunPassword);
+    }
+    // Other Voxsun fields (domain, port, did) are not encrypted as they're not sensitive
 
     const phoneNumber = await this.updateOne(
       { _id: phoneNumberId, organizationId },

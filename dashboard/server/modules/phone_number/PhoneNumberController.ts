@@ -14,28 +14,43 @@ export class PhoneNumberController {
   static createValidationRules() {
     return [
       body('phoneNumber')
+        .trim()
         .notEmpty()
         .withMessage('Phone number is required')
         .isLength({ min: 10 })
         .withMessage('Phone number must be at least 10 characters'),
       body('countryCode')
+        .trim()
         .notEmpty()
         .withMessage('Country code is required')
         .matches(/^\+\d{1,4}$/)
         .withMessage('Country code must start with + and contain 1-4 digits'),
       body('provider')
+        .trim()
+        .notEmpty()
+        .withMessage('Provider is required')
         .isIn(['twilio', 'voxsun'])
         .withMessage('Provider must be either twilio or voxsun'),
+      // Twilio fields - validated only if provider is twilio (done in controller)
       body('accountSid')
-        .notEmpty()
-        .withMessage('Account SID is required')
-        .isLength({ min: 5 })
-        .withMessage('Account SID must be at least 5 characters'),
+        .optional({ checkFalsy: false })
+        .trim(),
       body('authToken')
-        .notEmpty()
-        .withMessage('Auth Token is required')
-        .isLength({ min: 5 })
-        .withMessage('Auth Token must be at least 5 characters')
+        .optional({ checkFalsy: false })
+        .trim(),
+      // Voxsun fields - validated only if provider is voxsun (done in controller)
+      body('voxsunUsername')
+        .optional({ checkFalsy: false })
+        .trim(),
+      body('voxsunPassword')
+        .optional({ checkFalsy: false })
+        .trim(),
+      body('voxsunDomain')
+        .optional({ checkFalsy: false })
+        .trim(),
+      body('voxsunPort')
+        .optional({ checkFalsy: false })
+        .toInt()
     ];
   }
 
@@ -91,28 +106,104 @@ export class PhoneNumberController {
   // Controller methods
   async createPhoneNumber(req: Request, res: Response): Promise<void> {
     try {
+      console.log('📞 [PhoneNumberController] Create request body:', JSON.stringify(req.body, null, 2));
+      
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        const errorMessages = errors.array().map(e => ({
+          field: e.param,
+          message: e.msg,
+          value: e.value
+        }));
+        console.error('❌ [PhoneNumberController] Validation errors:', errorMessages);
         res.status(400).json({
           success: false,
           message: 'Validation failed',
-          errors: errors.array()
+          errors: errorMessages
         });
         return;
       }
 
       const { user } = req as any;
       const organizationId = user.organizationId;
+      const provider = req.body.provider;
+
+      // Provider-specific validation
+      if (provider === 'twilio') {
+        // Validate Twilio fields
+        if (!req.body.accountSid || req.body.accountSid.toString().trim().length < 5) {
+          console.error('❌ [PhoneNumberController] Twilio: accountSid invalid or missing');
+          res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: [
+              { msg: 'Account SID is required and must be at least 5 characters', param: 'accountSid' }
+            ]
+          });
+          return;
+        }
+        
+        if (!req.body.authToken || req.body.authToken.toString().trim().length < 5) {
+          console.error('❌ [PhoneNumberController] Twilio: authToken invalid or missing');
+          res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: [
+              { msg: 'Auth Token is required and must be at least 5 characters', param: 'authToken' }
+            ]
+          });
+          return;
+        }
+      } else if (provider === 'voxsun') {
+        // Validate Voxsun fields
+        const missingFields = [];
+        
+        if (!req.body.voxsunUsername || req.body.voxsunUsername.toString().trim().length === 0) {
+          missingFields.push({ msg: 'VoxSun username is required', param: 'voxsunUsername' });
+        }
+        if (!req.body.voxsunPassword || req.body.voxsunPassword.toString().trim().length === 0) {
+          missingFields.push({ msg: 'VoxSun password is required', param: 'voxsunPassword' });
+        }
+        if (!req.body.voxsunDomain || req.body.voxsunDomain.toString().trim().length === 0) {
+          missingFields.push({ msg: 'VoxSun domain is required', param: 'voxsunDomain' });
+        }
+        
+        // Validate voxsunPort if provided
+        if (req.body.voxsunPort !== undefined && req.body.voxsunPort !== null) {
+          const port = typeof req.body.voxsunPort === 'number' ? req.body.voxsunPort : parseInt(req.body.voxsunPort);
+          if (isNaN(port) || port < 1 || port > 65535) {
+            missingFields.push({ msg: 'VoxSun port must be between 1 and 65535', param: 'voxsunPort' });
+          }
+        }
+        
+        if (missingFields.length > 0) {
+          console.error('❌ [PhoneNumberController] Voxsun missing/invalid required fields:', missingFields);
+          res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: missingFields
+          });
+          return;
+        }
+      }
       
       const phoneNumberData: CreatePhoneNumberDTO = {
         phoneNumber: req.body.phoneNumber,
         countryCode: req.body.countryCode,
         provider: req.body.provider,
+        // Twilio fields
         accountSid: req.body.accountSid,
-        authToken: req.body.authToken
+        authToken: req.body.authToken,
+        // Voxsun fields
+        voxsunUsername: req.body.voxsunUsername,
+        voxsunPassword: req.body.voxsunPassword,
+        voxsunDomain: req.body.voxsunDomain,
+        voxsunPort: req.body.voxsunPort || 5060
       };
 
       const phoneNumber = await this.phoneNumberService.createPhoneNumber(organizationId, phoneNumberData);
+      
+      console.log('✅ [PhoneNumberController] Phone number created successfully:', phoneNumber._id);
       
       res.status(201).json({
         success: true,
@@ -120,8 +211,9 @@ export class PhoneNumberController {
         data: phoneNumber
       });
     } catch (error: any) {
-      console.error('Error creating phone number:', error);
-      res.status(400).json({
+      console.error('❌ [PhoneNumberController] Error creating phone number:', error.message);
+      console.error('Stack trace:', error.stack);
+      res.status(500).json({
         success: false,
         message: error.message || 'Failed to create phone number'
       });

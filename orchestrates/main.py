@@ -533,13 +533,20 @@ async def api_start_outbound_call(request: Request):
             }
 
         logger.info("✅ All credentials validated successfully")
+        provider = data.get("provider", "twilio").lower()  # Get provider info
         to_phone = data.get("to_phone")
         from_phone = data.get("from_phone")
         twilio_account_sid = data.get("twilio_account_sid")
         twilio_auth_token = data.get("twilio_auth_token")
 
-        twilio_cost_fetcher.configure_credentials(twilio_account_sid,
-                                                  twilio_auth_token)
+        # Only configure Twilio cost fetcher if provider is twilio
+        if provider == "twilio" and twilio_account_sid and twilio_auth_token:
+            twilio_cost_fetcher.configure_credentials(twilio_account_sid,
+                                                      twilio_auth_token)
+        elif provider == "twilio":
+            logger.warning(f"⚠️ Provider is Twilio but missing credentials")
+        else:
+            logger.info(f"ℹ️ Provider is '{provider}', skipping Twilio cost fetcher configuration")
         agent_initial_message_start = data.get("agent_initial_message")
         base_agent_prompt = data.get("agent_prompt_preamble")
         # rag_response = data.get("rag_response")
@@ -708,16 +715,23 @@ async def api_start_outbound_call(request: Request):
 
         recording_raw = data.get("recording", True)
         transfer_message = "I'll transfer you to a human agent right away. Please hold."
-        # Create TwilioConfig
-        account_sid = twilio_account_sid
-        auth_token = twilio_auth_token
+        
+        # Handle provider-specific call initiation
+        if provider == "twilio":
+            # Create TwilioConfig only for Twilio calls
+            account_sid = twilio_account_sid
+            auth_token = twilio_auth_token
 
-        # Configure recording based on JSON payload
-        twilio_config = TwilioConfig(
-            account_sid=account_sid,
-            auth_token=auth_token,
-            record=recording_raw  # Use recording setting from JSON
-        )
+            # Configure recording based on JSON payload
+            twilio_config = TwilioConfig(
+                account_sid=account_sid,
+                auth_token=auth_token,
+                record=recording_raw  # Use recording setting from JSON
+            )
+        else:
+            # For non-Twilio providers (e.g., voxsun), set twilio_config to None
+            logger.info(f"ℹ️ Provider is '{provider}', skipping TwilioConfig initialization")
+            twilio_config = None
 
         # Determine behavior based on voicemail setting
         if voicemail_raw and voicemail_message:
@@ -893,20 +907,31 @@ async def api_start_outbound_call(request: Request):
         # Use provided base_url or fallback to current BASE_URL with default
         effective_base_url = base_url or BASE_URL or "localhost:3000"
 
-        # Start the outbound call
-        conversation_id = await start_dynamic_outbound_call(
-            to_phone=to_phone,
-            from_phone=from_phone,
-            base_url=effective_base_url,
-            telephony_config=twilio_config,
-            agent_config=agent_config,
-            synthesizer_config=synth_config,
-            transcriber_config=transcriber_config,
-            on_no_human_answer=on_no_human_answer,
-            recording_enabled=recording_raw)
+        # Provider-specific call initiation
+        if provider == "twilio":
+            # Start Twilio outbound call
+            conversation_id = await start_dynamic_outbound_call(
+                to_phone=to_phone,
+                from_phone=from_phone,
+                base_url=effective_base_url,
+                telephony_config=twilio_config,
+                agent_config=agent_config,
+                synthesizer_config=synth_config,
+                transcriber_config=transcriber_config,
+                on_no_human_answer=on_no_human_answer,
+                recording_enabled=recording_raw)
 
-        logger.info(
-            f"Outbound call started with conversation ID: {conversation_id}")
+            logger.info(
+                f"Outbound call started with conversation ID: {conversation_id}")
+        else:
+            # For Voxsun and other non-Twilio providers, generate conversation_id locally
+            # The actual call initiation happens in the dashboard's OutboundWorker via LiveKit SIP
+            import uuid
+            conversation_id = f"voxsun-{to_phone}-{uuid.uuid4().hex[:8]}"
+            logger.info(
+                f"ℹ️ Provider is '{provider}', call initiated via {provider.upper()} SIP (not Twilio)")
+            logger.info(
+                f"Generated conversation ID for {provider}: {conversation_id}")
 
         # Store phone numbers and Twilio credentials in webhook system for Call SID lookup
         try:
