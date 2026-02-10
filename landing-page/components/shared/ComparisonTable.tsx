@@ -1,6 +1,8 @@
-import { Icons } from "@/constants/icon-import";
-import Image from "next/image";
+'use client'
 
+import { Icons } from "@/constants/icon-import";
+import { useTranslation } from "@/context/LanguageContext";
+import Image from "next/image";
 
 export interface ComparisonFeature {
   category?: string;
@@ -26,14 +28,13 @@ export function ComparisonTable({
   features,
   className = '',
 }: ComparisonTableProps) {
-
-
+  const { t } = useTranslation();
 
   // Ratings (nombre d'étoiles)
   const ratings: { [key: string]: number | string } = {
     BOOSTMYDEAL: 5,
     Vapi: 2,
-    'Air.ai': 'Unverifiedly Sourced Data',
+    'Air.ai': t('comparison.table.unverifiedData'),
     Lemlist: 4,
     Clay: 2,
     Instantly: 4,
@@ -46,32 +47,32 @@ export function ComparisonTable({
 
   // Services regions
   const regions: { [key: string]: string } = {
-    BOOSTMYDEAL: 'Global',
-    Vapi: 'Global',
-    'Air.ai': 'North America, Europe, Asia',
-    Lemlist: 'Global',
-    Clay: 'Global',
-    Instantly: 'North America, Europe, Asia',
-    Reoon: 'Global',
-    'Smartlead.ai': 'Global',
-    'Sales.ai': 'Global',
-    Salesloftclose: 'Global',
-    'Sales.ai.com': 'Global',
+    BOOSTMYDEAL: t('comparison.table.regions.global'),
+    Vapi: t('comparison.table.regions.global'),
+    'Air.ai': t('comparison.table.regions.naEuropeAsia'),
+    Lemlist: t('comparison.table.regions.global'),
+    Clay: t('comparison.table.regions.global'),
+    Instantly: t('comparison.table.regions.naEuropeAsia'),
+    Reoon: t('comparison.table.regions.global'),
+    'Smartlead.ai': t('comparison.table.regions.global'),
+    'Sales.ai': t('comparison.table.regions.global'),
+    Salesloftclose: t('comparison.table.regions.global'),
+    'Sales.ai.com': t('comparison.table.regions.global'),
   };
 
   // Pricing models
   const pricingModels: { [key: string]: string } = {
-    BOOSTMYDEAL: 'Unlimited',
-    Vapi: 'Limited',
-    'Air.ai': 'Limited',
-    Lemlist: 'Per-user pricing',
-    Clay: 'Credit-based (seats only)',
-    Instantly: 'Credit-based (No seat-based tier)',
-    Reoon: 'Per-user pricing',
-    'Smartlead.ai': 'Plan-based',
-    'Sales.ai': 'Plan-based',
-    Salesloftclose: 'Plan-based',
-    'Sales.ai.com': 'Limited',
+    BOOSTMYDEAL: t('comparison.table.pricing.unlimited'),
+    Vapi: t('comparison.table.pricing.limited'),
+    'Air.ai': t('comparison.table.pricing.limited'),
+    Lemlist: t('comparison.table.pricing.perUser'),
+    Clay: t('comparison.table.pricing.creditBased'),
+    Instantly: t('comparison.table.pricing.creditBasedNoSeat'),
+    Reoon: t('comparison.table.pricing.perUser'),
+    'Smartlead.ai': t('comparison.table.pricing.planBased'),
+    'Sales.ai': t('comparison.table.pricing.planBased'),
+    Salesloftclose: t('comparison.table.pricing.planBased'),
+    'Sales.ai.com': t('comparison.table.pricing.limited'),
   };
 
   const renderStars = (count: number) => {
@@ -92,7 +93,7 @@ export function ComparisonTable({
         </div>
       ) : (
         <div className="flex justify-center">
-          <Image src={Icons.X} alt="check" width={10} height={10} />
+          <Image src={Icons.X} alt="cross" width={10} height={10} />
         </div>
       );
     }
@@ -106,12 +107,12 @@ export function ComparisonTable({
   return (
     <div className={`overflow-x-auto ${className}`}>
       <div className="min-w-[1200px] border border-gray-200">
-        <table className="w-full border-collapse  bg-white">
+        <table className="w-full border-collapse bg-white">
           {/* Header */}
           <thead>
             <tr className="border-b-2 border-gray-300">
               <th className="p-3 text-left bg-orange-50 sticky left-0 z-20 min-w-[200px] text-xs font-bold text-gray-700">
-                Category / Feature
+                {t('comparison.table.header.categoryFeature')}
               </th>
               <th className="p-1 bg-orange-100 min-w-[110px] text-xs font-bold text-gray-900 uppercase">
                 BOOSTMYDEAL
@@ -128,7 +129,7 @@ export function ComparisonTable({
             {/* Overall Customer Rating */}
             <tr className="border-b border-gray-200 bg-orange-50/30">
               <td className="p-1 text-xs font-bold text-gray-900 sticky left-0 z-10 bg-orange-50">
-                Overall Customer Rating
+                {t('comparison.table.header.overallRating')}
               </td>
               <td className="p-1 bg-orange-50/50">
                 {renderStars(5)}
@@ -154,7 +155,7 @@ export function ComparisonTable({
             {/* Offers services in */}
             <tr className="border-b border-gray-200 bg-white">
               <td className="p-3 text-xs font-semibold text-gray-900 sticky left-0 z-10 bg-white">
-                Offers services in
+                {t('comparison.table.header.offersServices')}
               </td>
               <td className="p-3 bg-orange-50/30 text-center text-[10px] text-gray-700">
                 {regions.BOOSTMYDEAL}
@@ -169,7 +170,7 @@ export function ComparisonTable({
             {/* Pay-per-Minute/Usage Option */}
             <tr className="border-b border-gray-200 bg-orange-50/30">
               <td className="p-3 text-xs font-semibold text-gray-900 sticky left-0 z-10 bg-orange-50">
-                Pay-per-Minute/Usage Option
+                {t('comparison.table.header.payPerUsage')}
               </td>
               <td className="p-3 bg-orange-50/50 text-center text-[10px] text-gray-700">
                 {pricingModels.BOOSTMYDEAL}
@@ -193,8 +194,8 @@ export function ComparisonTable({
                 <td className={`p-3 ${index % 2 === 0 ? 'bg-orange-50/30' : 'bg-orange-50/50'}`}>
                   {renderCell(item.boostMyDeal)}
                 </td>
-                {competitors.map((competitor, index) => (
-                  <td key={index} className="p-3">
+                {competitors.map((competitor, idx) => (
+                  <td key={idx} className="p-3">
                     {renderCell(item.competitors[competitor.name])}
                   </td>
                 ))}

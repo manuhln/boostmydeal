@@ -1,36 +1,39 @@
+'use client'
 import { ContentLayout } from "@/components/layout/ContentLayout";
 import { BlogCard } from "@/components/shared/BlogCard";
 import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
 import { Images } from "@/constants/images-import";
+import { useTranslation } from '@/context/LanguageContext';
 import Image from "next/image";
 import Link from "next/link";
 
 export function BlogSection() {
+  const { t } = useTranslation()
   // Données des articles de blog
   const blogPosts = [
     {
       id: 1,
       image: Images.blog1,
       imagePosition: 'left' as const,
-      title: 'How AI Sales Agents Help Teams Respond Faster and Close More Deals',
-      description: 'It helps streamline workflows, enhance customer interactions, and provide insights for smarter, data-driven decisions, driving business growth.',
+      title: t('blog.posts.aiSalesAgents.title'),
+      description: t('blog.posts.aiSalesAgents.description'),
       link: '/blog/ai-sales-agents',
     },
     {
       id: 2,
       image: Images.blog2,
       imagePosition: 'right' as const,
-      title: 'Automating the Sales with AI',
-      description: 'CRM streamlines workflows, automates tasks, and boosts team efficiency.',
+      title: t('blog.posts.automatingSales.title'),
+      description: t('blog.posts.automatingSales.description'),
       link: '/blog/automating-sales',
     },
     {
       id: 3,
       image: Images.blog3,
       imagePosition: 'right' as const,
-      title: 'Why Manual Sales Processes Are Costing You Revenue',
-      description: 'Enables better lead tracking, personalized communication, and faster deal closures.',
+      title: t('blog.posts.manualProcesses.title'),
+      description: t('blog.posts.manualProcesses.description'),
       link: '/blog/manual-processes',
     },
   ];
@@ -42,10 +45,9 @@ export function BlogSection() {
         <div className="mb-8 md:mb-12 px-4">
           <ContentLayout
             layout="centered"
-            chip={{ text: 'Blog', variant: 'default' }}
-            title="Tips To Grow Business"
-            description="Untitled is growing fast, and we are always looking for passionate, dynamic, and talented individuals to join our distributed team all around the world."
-            maxWidth="md"
+            chip={{ text: t('blog.chip'), variant: 'default' }}
+            title={t('blog.section.title')}
+            description={t('blog.section.description')} maxWidth="md"
           />
         </div>
 
@@ -81,7 +83,7 @@ export function BlogSection() {
                       href={blogPosts[0].link}
                       className="inline-block text-sm font-medium text-main hover:text-main/80 transition-colors mt-0"
                     >
-                      read more →
+                      {t('blog.readMore')} →
                     </Link>
                   </div>
                 </Card>

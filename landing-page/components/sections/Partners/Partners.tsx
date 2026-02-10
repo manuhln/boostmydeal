@@ -48,7 +48,7 @@ export function Partners() {
 
   // URL de la vidéo (YouTube, Vimeo, etc.)
   // Pour l'instant vide, à remplacer par ton URL vidéo
-  const videoUrl = '' // Ex: 'https://www.youtube.com/embed/VIDEO_ID?autoplay=1'
+  const videoUrl = "https://voxsun.com/images/BoostMyDeal.mov"
 
   return (
     <Section background="white" spacing="lg" id=''>
@@ -75,13 +75,17 @@ export function Partners() {
                 </div>
               </div>
 
-              {/* <iframe
-                  className="absolute inset-0 w-full h-full"
-                  src="https://www.youtube.com/watch?v=YvLgZiwoT3U"
-                  title="Video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                /> */}
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="https://voxsun.com/images/BoostMyDeal.mov"
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls={false}
+              >
+                Your browser does not support the video tag.
+              </video>
             </div>
 
             {/* Texte sous la vidéo */}

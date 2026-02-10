@@ -8,10 +8,16 @@ import { BsArrowRight } from "react-icons/bs";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa";
 import { LuUsersRound } from "react-icons/lu";
+import { FiZap } from "react-icons/fi";
 import { PiCopySimple } from "react-icons/pi";
+import { IoPlayCircleOutline } from "react-icons/io5";
+import { RiFileList3Line } from "react-icons/ri";
 
 export const Icons = {
   HamburgerMenu: GiHamburgerMenu,
+  zapIcon: FiZap,
+  playIcon: IoPlayCircleOutline,
+  fileListIcon: RiFileList3Line,
   ArrowIcon: IoIosArrowForward, // Exporte la fonction directement
   ArrowRightIcon: BsArrowRight,
   WorldIcon: BiWorld,

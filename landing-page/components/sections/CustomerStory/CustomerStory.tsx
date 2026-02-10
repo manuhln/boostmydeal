@@ -7,6 +7,7 @@ import { Section } from '@/components/ui/Section';
 import { Icons } from '@/constants/icon-import';
 import { Chip } from '@/components/ui/Chip';
 import { Images } from '@/constants/images-import';
+import { useTranslation } from '@/context/LanguageContext';
 
 interface Testimonial {
   id: number;
@@ -23,45 +24,45 @@ interface Testimonial {
 
 export function CustomerStory() {
   const [activeSlide, setActiveSlide] = useState(0);
-
+  const { t } = useTranslation()
   // Données des témoignages
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      chip: 'Customer Story',
+      chip: t('testimonials.customerStory'),
       rating: 5,
-      text: 'Speed is everything in real estate. BoostMyDeal allowed us to contact leads instantly and qualify them before our agents step in.',
+      text: t('testimonials.items.mariana.text'),
       author: {
-        name: 'Mariana Lee',
-        position: 'Sales Manager',
-        company: 'Zohopediac',
-        image: '/testimonials/mariana.jpg', // Remplace par ton chemin
+        name: t('testimonials.items.mariana.author.name'),
+        position: t('testimonials.items.mariana.author.position'),
+        company: t('testimonials.items.mariana.author.company'),
+        image: '/testimonials/mariana.jpg',
       },
-    },
-    {
-      id: 2,
-      chip: 'Customer Story',
-      rating: 5,
-      text: 'The AI automation helped us close 40% more deals in the first quarter. The personalization is incredible.',
-      author: {
-        name: 'John Smith',
-        position: 'CEO',
-        company: 'TechCorp',
-        image: '/testimonials/john.jpg',
-      },
-    },
-    {
-      id: 3,
-      chip: 'Customer Story',
-      rating: 5,
-      text: 'Our team productivity increased dramatically. BoostMyDeal handles all the repetitive tasks automatically.',
-      author: {
-        name: 'Sarah Johnson',
-        position: 'Marketing Director',
-        company: 'GrowthLabs',
-        image: '/testimonials/sarah.jpg',
-      },
-    },
+    }
+    // {
+    //   id: 2,
+    //   chip: 'Customer Story',
+    //   rating: 5,
+    //   text: 'The AI automation helped us close 40% more deals in the first quarter. The personalization is incredible.',
+    //   author: {
+    //     name: 'John Smith',
+    //     position: 'CEO',
+    //     company: 'TechCorp',
+    //     image: '/testimonials/john.jpg',
+    //   },
+    // },
+    // {
+    //   id: 3,
+    //   chip: 'Customer Story',
+    //   rating: 5,
+    //   text: 'Our team productivity increased dramatically. BoostMyDeal handles all the repetitive tasks automatically.',
+    //   author: {
+    //     name: 'Sarah Johnson',
+    //     position: 'Marketing Director',
+    //     company: 'GrowthLabs',
+    //     image: '/testimonials/sarah.jpg',
+    //   },
+    // },
   ];
 
   const currentTestimonial = testimonials[activeSlide];

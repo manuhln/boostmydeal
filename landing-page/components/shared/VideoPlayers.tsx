@@ -70,13 +70,17 @@ export function VideoPlayers({ isOpen, onClose, videoUrl }: VideoModalProps) {
         {/* Video Container */}
         <div className="relative bg-black rounded-lg overflow-hidden shadow-2xl" style={{ paddingBottom: '56.25%' }}>
           {videoUrl ? (
-            <iframe
-              className="absolute inset-0 w-full h-full"
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
               src={videoUrl}
-              title="Video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls={false}
+            >
+              Your browser does not support the video tag.
+            </video>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-white">
               <p>Vidéo non disponible</p>

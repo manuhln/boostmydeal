@@ -7,45 +7,16 @@ import { useTranslation } from '@/context/LanguageContext'
 import { useScrollToSection } from '@/hooks/useScrollPosition'
 import { Images } from '@/constants/images-import'
 import { Section } from '@/components/ui/Section'
-
-
-// Icône Zap (éclair)
-const ZapIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-  </svg>
-)
-
-// Icône Play (pour le bouton démo)
-const PlayIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" />
-  </svg>
-)
+import { useState } from 'react'
+import BookingModal from '@/components/shared/BookingModal'
+import { Icons } from '@/constants/icon-import'
+import WaitlistModal from '@/components/shared/WaitListMoadal'
 
 export function Hero() {
   const { t } = useTranslation()
   const scrollToSection = useScrollToSection(80)
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isWaitModalOpen, setIsWaitModalOpen] = useState(false)
   return (
     <Section background="white" spacing="none" id='hero'
       className="relative min-h-screen mt-0 pt-0 sm:min-h-screen flex items-center overflow-hidden"
@@ -68,7 +39,7 @@ export function Hero() {
         <div className="max-w-4xl mx-auto text-center ">
           <div className="flex justify-center mb-8 animate-fade-in">
             <Chip
-              icon={<ZapIcon />}
+              icon={<Icons.zapIcon />}
               iconPosition="left"
               variant="default"
               size="md"
@@ -89,22 +60,44 @@ export function Hero() {
               variant="outline"
               size="lg"
               onClick={() => scrollToSection('pricing')}
-              className="relative overflow-hidden drop-shadow-white drop-shadow-lg hover:shadow-xl transition-all duration-300 border-none outline-none  "
+              className="relative whitespace-nowrap  drop-shadow-white drop-shadow-lg hover:shadow-xl transition-all duration-300 border-none outline-none  "
             >
               {t('hero.cta')}
+            </Button>
+
+            <Button
+              variant="solid"
+              size="lg"
+              icon={<Icons.playIcon />}
+              iconPosition="left"
+              onClick={() => setIsModalOpen(true)}
+              className="group drop-shadow-white drop-shadow-lg  whitespace-nowrap transition-all duration-300"
+            >
+              {t('hero.demo')}
             </Button>
             <Button
               variant="solid"
               size="lg"
-              icon={<PlayIcon />}
+              icon={<Icons.fileListIcon />}
               iconPosition="left"
-              className="group drop-shadow-white drop-shadow-lg  transition-all duration-300"
+              onClick={() => setIsWaitModalOpen(true)}
+              className="group drop-shadow-white drop-shadow-lg  whitespace-nowrap transition-all duration-300"
             >
-              {t('hero.demo')}
+              {t('hero.waitlist')}
             </Button>
           </div>
         </div>
       </Container>
+      <BookingModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        logo={Images.logo}
+      />
+      <WaitlistModal
+        isOpen={isWaitModalOpen}
+        onClose={() => setIsWaitModalOpen(false)}
+        logo={Images.logo}
+      />
     </Section>
   )
 }

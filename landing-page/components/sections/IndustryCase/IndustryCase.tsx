@@ -28,7 +28,6 @@ export default function IndustryCase() {
         <div className="flex flex-wrap items-start justify-center gap-6 lg:gap-8">
           {steps.map((step, index) => (
             <div key={index} className="flex items-start gap-4 lg:gap-6">
-              {/* Étape avec IconBox + Label */}
               <div className="flex flex-col items-center">
                 <IconBox icon={step.icon} size="lg" />
                 <div className="text-center mt-4 max-w-[120px]">
@@ -36,7 +35,6 @@ export default function IndustryCase() {
                     {t(step.labelKey)}{' '}
                     <span className="font-bold">{t(step.sublabelKey)}</span>
                   </p>
-
                 </div>
               </div>
               <div className='hidden lg:block'>

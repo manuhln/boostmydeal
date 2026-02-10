@@ -13,8 +13,9 @@
     "subtitle": "Automatisez la génération de leads, la qualification, les appels, la planification, les mises à jour CRM et la conclusion des ventes",
     "description": "Le tout alimenté par des agents IA connectés à l'ensemble de votre stack de vente",
     "cta": "Automatiser Votre Pipeline de Vente",
-    "demo": "Réserver une Démo en Direct",
-    "poweredBy": "Propulsé par Voxsun.com"
+    "demo": "Réserver une Démo ",
+    "poweredBy": "Propulsé par Voxsun.com",
+    "waitlist": "Rejoindre la Liste d'Attente"
   },
   "product": {
     "title": "Notre Produit",
@@ -255,6 +256,343 @@
         "aiCalling": "Minute d'appel IA",
         "emailFollowup": "Suivi email",
         "videoHandoff": "Transfert vidéo"
+      }
+    }
+  },
+  "comparison": {
+    "chipLabel": "Page de Comparaison",
+    "title": "Pourquoi BoostMyDeal Est Différent",
+    "description": "Découvrez comment BoostMyDeal simplifie les processus de vente en automatisant chaque étape du parcours client dans un système intelligent unique.",
+    "table": {
+      "header": {
+        "categoryFeature": "Catégorie / Fonctionnalité",
+        "overallRating": "Note Globale Client",
+        "offersServices": "Offre des services dans",
+        "payPerUsage": "Option Paiement à l'Utilisation"
+      },
+      "unverifiedData": "Données Non Vérifiées",
+      "regions": {
+        "global": "Mondial",
+        "naEuropeAsia": "Amérique du Nord, Europe, Asie"
+      },
+      "pricing": {
+        "unlimited": "Illimité",
+        "limited": "Limité",
+        "perUser": "Tarification par utilisateur",
+        "creditBased": "Basé sur des crédits (sièges uniquement)",
+        "creditBasedNoSeat": "Basé sur des crédits (sans palier de sièges)",
+        "planBased": "Basé sur des plans"
+      }
+    }
+  },
+  "faq": {
+    "categories": {
+      "general": {
+        "title": "Général",
+        "questions": {
+          "whatIsBoostMyDeal": {
+            "question": "Qu'est-ce que BoostMyDeal ?",
+            "answer": "BoostMyDeal est un système d'exploitation des ventes piloté par l'IA qui gère l'ensemble du flux de travail commercial — de l'engagement des prospects à la réservation de réunions et aux mises à jour du CRM — automatiquement. Il orchestre les appels, e-mails, SMS, suivis et planification au sein d'un système unifié."
+          },
+          "whoIsBoostMyDealFor": {
+            "question": "À qui s'adresse BoostMyDeal ?",
+            "answer": "BoostMyDeal est conçu pour les PME et les entreprises qui souhaitent des temps de réponse plus rapides, une exécution cohérente et des résultats commerciaux prévisibles sans ajouter d'outils ou de personnel supplémentaires."
+          },
+          "isBoostMyDealCRM": {
+            "question": "BoostMyDeal est-il un CRM ?",
+            "answer": "Non. BoostMyDeal ne remplace pas votre CRM. Il fonctionne au-dessus de votre CRM existant et maintient toutes les activités, conversations et mises à jour des deals synchronisées en temps réel."
+          },
+          "whatProblemSolve": {
+            "question": "Quel problème BoostMyDeal résout-il ?",
+            "answer": "BoostMyDeal élimine les outils de vente fragmentés et la coordination manuelle en donnant aux équipes un système unique qui gère l'exécution — garantissant qu'aucun prospect n'est perdu et que chaque deal est suivi de manière cohérente."
+          }
+        }
+      },
+      "aiAutomation": {
+        "title": "IA & Automatisation",
+        "questions": {
+          "howDifferent": {
+            "question": "En quoi BoostMyDeal est-il différent des autres outils de vente IA ?",
+            "answer": "La plupart des outils IA aident avec des tâches isolées comme les appels ou les e-mails. BoostMyDeal gère l'ensemble du flux de travail commercial de bout en bout, en coordonnant automatiquement chaque étape de la transaction."
+          },
+          "aiOperateAlone": {
+            "question": "L'IA fonctionne-t-elle seule ?",
+            "answer": "BoostMyDeal fonctionne avec des flux de travail et des garde-fous configurables. Le comportement de l'IA est entièrement contrôlé et peut être annulé par des humains à tout moment."
+          },
+          "controlAISays": {
+            "question": "Pouvons-nous contrôler ce que l'IA dit aux prospects ?",
+            "answer": "Oui. Les messages, le ton, le timing, les règles d'escalade et les seuils d'approbation sont entièrement configurables pour correspondre à votre marque et aux exigences de conformité."
+          },
+          "replaceSalesReps": {
+            "question": "BoostMyDeal remplace-t-il les commerciaux ou les SDR ?",
+            "answer": "Non. BoostMyDeal supprime le travail d'exécution répétitif afin que les équipes commerciales puissent se concentrer sur les conversations à forte valeur ajoutée, la qualification et la conclusion."
+          }
+        }
+      },
+      "leadHandling": {
+        "title": "Gestion des Prospects & Flux de Travail",
+        "questions": {
+          "handleNewLeads": {
+            "question": "Comment BoostMyDeal gère-t-il les nouveaux prospects ?",
+            "answer": "Dès qu'un prospect entre dans le système, BoostMyDeal lance automatiquement le contact et adapte les suivis en temps réel en fonction de l'engagement."
+          },
+          "howFastRespond": {
+            "question": "À quelle vitesse BoostMyDeal répond-il aux prospects ?",
+            "answer": "Immédiatement. BoostMyDeal lance la démarche dès qu'un prospect est reçu, améliorant considérablement la rapidité de réponse."
+          },
+          "leadNoResponse": {
+            "question": "Que se passe-t-il si un prospect ne répond pas ?",
+            "answer": "BoostMyDeal déclenche automatiquement des suivis via appels, e-mail et SMS selon votre flux de travail configuré."
+          },
+          "bookMeetingsAuto": {
+            "question": "BoostMyDeal peut-il réserver des réunions automatiquement ?",
+            "answer": "Oui. BoostMyDeal peut qualifier les prospects, proposer des créneaux de réunion et réserver des réunions directement dans votre calendrier."
+          },
+          "speakToHuman": {
+            "question": "Que se passe-t-il si un prospect veut parler à un humain ?",
+            "answer": "BoostMyDeal transfère instantanément les conversations à un humain en fonction de l'intention, des règles ou d'une intervention manuelle."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Intégrations & Déploiement",
+        "questions": {
+          "integrateExistingTools": {
+            "question": "BoostMyDeal s'intègre-t-il avec nos outils existants ?",
+            "answer": "Oui. BoostMyDeal s'intègre avec les principaux CRM et plateformes de vente et est conçu pour fonctionner avec votre stack existant plutôt que de le remplacer."
+          },
+          "howLongGetStarted": {
+            "question": "Combien de temps faut-il pour démarrer ?",
+            "answer": "La plupart des équipes sont opérationnelles en quelques jours. Le temps de déploiement dépend de la complexité du flux de travail et des exigences d'intégration."
+          },
+          "changeWorkflows": {
+            "question": "Les flux de travail peuvent-ils être modifiés après le lancement ?",
+            "answer": "Oui. Les flux de travail sont entièrement configurables et peuvent être mis à jour au fur et à mesure que votre processus de vente évolue."
+          }
+        }
+      },
+      "smbs": {
+        "title": "PME",
+        "questions": {
+          "whyValuableForSMBs": {
+            "question": "Pourquoi BoostMyDeal est-il précieux pour les PME ?",
+            "answer": "BoostMyDeal permet aux PME de fonctionner comme une organisation commerciale plus grande en améliorant la vitesse de réponse, la cohérence et l'exécution sans augmenter les effectifs."
+          },
+          "reduceDependencySDRs": {
+            "question": "BoostMyDeal peut-il réduire la dépendance aux SDR ?",
+            "answer": "Oui. BoostMyDeal automatise les tâches répétitives des SDR, permettant aux équipes de faire plus avec moins de personnes."
+          }
+        }
+      },
+      "enterprise": {
+        "title": "Entreprise",
+        "questions": {
+          "suitableForEnterprise": {
+            "question": "BoostMyDeal convient-il aux environnements d'entreprise ?",
+            "answer": "Oui. BoostMyDeal est conçu pour une utilisation en entreprise avec des flux de travail standardisés, un contrôle centralisé, une évolutivité et une infrastructure de niveau entreprise."
+          },
+          "deployMultipleTeams": {
+            "question": "BoostMyDeal peut-il être déployé sur plusieurs équipes ?",
+            "answer": "Oui. BoostMyDeal prend en charge les déploiements multi-équipes et multi-flux de travail avec visibilité et contrôle centralisés."
+          }
+        }
+      },
+      "security": {
+        "title": "Sécurité, Conformité & Confiance",
+        "questions": {
+          "isSecure": {
+            "question": "BoostMyDeal est-il sécurisé ?",
+            "answer": "Oui. BoostMyDeal est construit sur une infrastructure de niveau entreprise avec contrôles d'accès, pistes d'audit et gestion sécurisée des données."
+          },
+          "whoOwnsData": {
+            "question": "À qui appartiennent les données ?",
+            "answer": "À vous. Toutes les données clients et commerciales restent votre propriété et restent synchronisées avec votre CRM."
+          },
+          "isAIBlackBox": {
+            "question": "L'IA est-elle une boîte noire ?",
+            "answer": "Non. BoostMyDeal fournit une transparence sur les actions prises par le système et une visibilité complète sur l'exécution du flux de travail."
+          },
+          "humansOverride": {
+            "question": "Les humains peuvent-ils outrepasser l'IA ?",
+            "answer": "Oui. Les équipes commerciales peuvent mettre en pause l'automatisation, intervenir dans les conversations ou reprendre le contrôle à tout moment."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Tarification & ROI",
+        "questions": {
+          "howPriced": {
+            "question": "Comment BoostMyDeal est-il tarifé ?",
+            "answer": "La tarification est basée sur l'utilisation, l'échelle et la complexité du flux de travail. Cela permet aux PME de démarrer petit et aux entreprises d'évoluer efficacement."
+          },
+          "reduceCosts": {
+            "question": "Comment BoostMyDeal réduit-il les coûts ?",
+            "answer": "En consolidant les outils, en réduisant le travail manuel, en diminuant les coûts d'appel grâce à l'infrastructure télécom de VoxSun et en améliorant l'efficacité de conversion."
+          },
+          "whatResults": {
+            "question": "Quels résultats pouvons-nous attendre ?",
+            "answer": "Les équipes constatent généralement une rapidité de réponse améliorée, des taux de contact plus élevés, plus de réunions réservées et un coût par deal réduit."
+          }
+        }
+      },
+      "support": {
+        "title": "Support & Intégration",
+        "questions": {
+          "whatSupportIncluded": {
+            "question": "Quel support est inclus ?",
+            "answer": "BoostMyDeal inclut l'intégration, la configuration du flux de travail, la formation et le support continu pour assurer le succès à long terme."
+          },
+          "helpDesignWorkflows": {
+            "question": "Aidez-vous à concevoir nos flux de travail ?",
+            "answer": "Oui. Le déploiement commence par un examen du flux de travail pour aligner BoostMyDeal avec votre processus de vente."
+          }
+        }
+      },
+      "gettingStarted": {
+        "title": "Démarrage",
+        "questions": {
+          "howGetStarted": {
+            "question": "Comment commencer avec BoostMyDeal ?",
+            "answer": "Le démarrage commence par une évaluation du flux de travail, suivie de la configuration, des tests et du déploiement."
+          },
+          "industrySpecific": {
+            "question": "BoostMyDeal est-il spécifique à un secteur ?",
+            "answer": "Non. BoostMyDeal est agnostique en termes de secteur et fonctionne dans les modèles de vente B2B, B2C, entrants, sortants et à tickets élevés."
+          },
+          "whoNotFor": {
+            "question": "À qui BoostMyDeal ne s'adresse-t-il pas ?",
+            "answer": "BoostMyDeal n'est pas conçu pour les équipes qui préfèrent l'exécution manuelle ou les processus de vente fragmentés."
+          }
+        }
+      }
+    }
+  },
+  "testimonials": {
+    "customerStory": "Témoignage Client",
+    "items": {
+      "mariana": {
+        "text": "La vitesse est primordiale dans l'immobilier. BoostMyDeal nous a permis de contacter les prospects instantanément et de les qualifier avant l'intervention de nos agents.",
+        "author": {
+          "name": "Mariana Lee",
+          "position": "Responsable des Ventes",
+          "company": "Zohopediac"
+        }
+      }
+    }
+  },
+  "blog": {
+    "chip": "Blog",
+    "section": {
+      "title": "Conseils pour Développer Votre Entreprise",
+      "description": "Untitled connaît une croissance rapide, et nous recherchons toujours des personnes passionnées, dynamiques et talentueuses pour rejoindre notre équipe distribuée partout dans le monde."
+    },
+    "readMore": "lire la suite",
+    "posts": {
+      "aiSalesAgents": {
+        "title": "Comment les Agents de Vente IA Aident les Équipes à Répondre Plus Vite et Conclure Plus d'Affaires",
+        "description": "Cela aide à rationaliser les flux de travail, améliorer les interactions clients et fournir des insights pour des décisions plus intelligentes basées sur les données, stimulant la croissance de l'entreprise."
+      },
+      "automatingSales": {
+        "title": "Automatiser les Ventes avec l'IA",
+        "description": "Le CRM rationalise les flux de travail, automatise les tâches et améliore l'efficacité de l'équipe."
+      },
+      "manualProcesses": {
+        "title": "Pourquoi les Processus de Vente Manuels Vous Coûtent des Revenus",
+        "description": "Permet un meilleur suivi des prospects, une communication personnalisée et des conclusions d'affaires plus rapides."
+      }
+    }
+  },
+  "booking": {
+    "modal": {
+      "title": {
+        "form": "Planifiez Votre Démo",
+        "success": "Réservation Confirmée"
+      },
+      "sections": {
+        "personalInfo": {
+          "title": "Vos Informations"
+        },
+        "dateTime": {
+          "title": "Choisissez Date & Heure"
+        }
+      },
+      "fields": {
+        "firstname": {
+          "label": "Prénom *",
+          "placeholder": "Entrez votre prénom"
+        },
+        "lastname": {
+          "label": "Nom *",
+          "placeholder": "Entrez votre nom"
+        },
+        "email": {
+          "label": "Email *",
+          "placeholder": "votre.email@exemple.com"
+        },
+        "phone": {
+          "label": "Téléphone *",
+          "placeholder": "+33 6 12 34 56 78"
+        },
+        "company": {
+          "label": "Nom de l'Entreprise",
+          "placeholder": "Le nom de votre entreprise"
+        },
+        "date": {
+          "label": "Date Préférée *"
+        },
+        "time": {
+          "label": "Heure Préférée *",
+          "placeholder": "Sélectionnez l'heure"
+        },
+        "notes": {
+          "label": "Notes Supplémentaires",
+          "placeholder": "Des sujets spécifiques que vous aimeriez aborder ?"
+        }
+      },
+      "buttons": {
+        "processing": "Traitement...",
+        "confirm": "Confirmer la Réservation",
+        "close": "Fermer"
+      },
+      "success": {
+        "title": "Réservation Confirmée !",
+        "demoType": "Type de Démo :",
+        "date": "Date :",
+        "time": "Heure :",
+        "meetingLink": "Lien de la Réunion :",
+        "emailSent": "Un email de confirmation a été envoyé dans votre boîte de réception."
+      },
+      "errors": {
+        "bookingError": "Erreur de réservation. Veuillez réessayer.",
+        "generalError": "Une erreur s'est produite. Veuillez réessayer."
+      }
+    }
+  },
+  "waitlist": {
+    "modal": {
+      "title": {
+        "form": "Rejoindre la Liste d'Attente",
+        "success": "Inscription Réussie"
+      },
+      "sections": {
+        "personalInfo": {
+          "title": "Vos Informations"
+        }
+      },
+      "buttons": {
+        "processing": "Traitement...",
+        "join": "Rejoindre la Liste d'Attente",
+        "close": "Fermer"
+      },
+      "success": {
+        "title": "Vous êtes sur la Liste !",
+        "thankYou": "Merci pour votre intérêt",
+        "notify": "Nous vous informerons à ",
+        "emailSent": "Un email de confirmation a été envoyé dans votre boîte de réception."
+      },
+      "errors": {
+        "joinError": "Erreur lors de l'inscription à la liste d'attente. Veuillez réessayer.",
+        "generalError": "Une erreur s'est produite. Veuillez réessayer."
       }
     }
   }

@@ -5,7 +5,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { Footer } from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({
   subsets: ['latin'],
@@ -39,6 +39,7 @@ export default function RootLayout({
           <main>
             {children}
           </main>
+          <Toaster />
           <Footer />
         </LanguageProvider>
       </body>

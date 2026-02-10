@@ -14,7 +14,8 @@
     "description": "Todo impulsado por agentes de IA conectados a todo su stack de ventas",
     "cta": "Automatizar Su Pipeline de Ventas",
     "demo": "Reservar una Demo en Vivo",
-    "poweredBy": "Impulsado por Voxsun.com"
+    "poweredBy": "Impulsado por Voxsun.com",
+    "waitlist": "Únase a la Lista de Espera"
   },
   "product": {
     "title": "Nuestro Producto",
@@ -26,7 +27,6 @@
     "subtitle": "Adaptadas a tus necesidades",
     "description": "Soluciones personalizadas que se adaptan a los requisitos de su negocio y escalan con su crecimiento."
   },
- 
   "resources": {
     "title": "Recursos",
     "subtitle": "Aprende y crece con nosotros",
@@ -174,90 +174,427 @@
     "description": "Un flujo de trabajo de IA que se adapta a diferentes modelos de ventas e industrias."
   },
   "pricing": {
-  "chipLabel": "Planes de Clientes",
-  "title": "Planes Simples para Cada Equipo de Ventas",
-  "description": "Precios flexibles diseñados para equipos de todos los tamaños, desde fundadores solo hasta operaciones de ventas empresariales.",
-  "billing": {
-    "monthly": "Mensual",
-    "yearly": "Anual"
-  },
-  "period": {
-    "month": "mes",
-    "year": "año"
-  },
-  "plans": {
-    "starter": {
-      "name": "Inicial",
-      "subtitle": "Ideal para individuos y pequeñas agencias",
-      "description": "Impulse su viaje de ventas IA con 300 minutos incluidos de llamadas IA humanizadas, seguimientos de correo automatizados y sincronización CRM — perfecto para emprendedores y pequeñas agencias listos para escalar inteligentemente.",
-      "features": [
-        "300 minutos de llamadas IA incluidos",
-        "Llamadas IA humanizadas",
-        "Seguimientos de correo automatizados",
-        "Sincronización CRM"
-      ],
-      "overage": "$0.50 por minuto IA adicional"
+    "chipLabel": "Planes de Clientes",
+    "title": "Planes Simples para Cada Equipo de Ventas",
+    "description": "Precios flexibles diseñados para equipos de todos los tamaños, desde fundadores solo hasta operaciones de ventas empresariales.",
+    "billing": {
+      "monthly": "Mensual",
+      "yearly": "Anual"
     },
-    "growth": {
-      "name": "Crecimiento",
-      "subtitle": "Ideal para equipos en crecimiento",
-      "description": "Escale su automatización de ventas con 1,000 minutos IA, integración avanzada de CRM y correo, y automatización completa del flujo de trabajo — diseñado para equipos en crecimiento que desean flujo de negocios constante con menos trabajo manual.",
-      "features": [
-        "1,000 minutos de llamadas IA incluidos",
-        "Integración avanzada de CRM y correo",
-        "Automatización completa del flujo de trabajo",
-        "Gestión coherente del flujo de negocios"
-      ],
-      "overage": "$0.50 por minuto IA adicional"
+    "period": {
+      "month": "mes",
+      "year": "año"
     },
-    "pro": {
-      "name": "Pro",
-      "subtitle": "Ideal para equipos de alto rendimiento",
-      "description": "Potencie su operación de ventas con 3,000 minutos IA, análisis más profundos y personalización IA completa en llamadas, correos y reuniones — ideal para organizaciones de ventas de alto rendimiento operando a escala.",
-      "badge": "Plan más popular",
-      "features": [
-        "3,000 minutos de llamadas IA incluidos",
-        "Análisis e informes más profundos",
-        "Personalización IA completa en llamadas, correos y reuniones",
-        "Operaciones de ventas de alto rendimiento a escala"
-      ],
-      "overage": "$0.50 por minuto IA adicional"
+    "plans": {
+      "starter": {
+        "name": "Inicial",
+        "subtitle": "Ideal para individuos y pequeñas agencias",
+        "description": "Impulse su viaje de ventas IA con 300 minutos incluidos de llamadas IA humanizadas, seguimientos de correo automatizados y sincronización CRM — perfecto para emprendedores y pequeñas agencias listos para escalar inteligentemente.",
+        "features": [
+          "300 minutos de llamadas IA incluidos",
+          "Llamadas IA humanizadas",
+          "Seguimientos de correo automatizados",
+          "Sincronización CRM"
+        ],
+        "overage": "$0.50 por minuto IA adicional"
+      },
+      "growth": {
+        "name": "Crecimiento",
+        "subtitle": "Ideal para equipos en crecimiento",
+        "description": "Escale su automatización de ventas con 1,000 minutos IA, integración avanzada de CRM y correo, y automatización completa del flujo de trabajo — diseñado para equipos en crecimiento que desean flujo de negocios constante con menos trabajo manual.",
+        "features": [
+          "1,000 minutos de llamadas IA incluidos",
+          "Integración avanzada de CRM y correo",
+          "Automatización completa del flujo de trabajo",
+          "Gestión coherente del flujo de negocios"
+        ],
+        "overage": "$0.50 por minuto IA adicional"
+      },
+      "pro": {
+        "name": "Pro",
+        "subtitle": "Ideal para equipos de alto rendimiento",
+        "description": "Potencie su operación de ventas con 3,000 minutos IA, análisis más profundos y personalización IA completa en llamadas, correos y reuniones — ideal para organizaciones de ventas de alto rendimiento operando a escala.",
+        "badge": "Plan más popular",
+        "features": [
+          "3,000 minutos de llamadas IA incluidos",
+          "Análisis e informes más profundos",
+          "Personalización IA completa en llamadas, correos y reuniones",
+          "Operaciones de ventas de alto rendimiento a escala"
+        ],
+        "overage": "$0.50 por minuto IA adicional"
+      },
+      "enterprise": {
+        "name": "Empresarial",
+        "subtitle": "Diseñado para grandes equipos y agencias",
+        "description": "Desbloquee todo el poder de BoostMyDeal con modelos IA personalizados, acceso API, usuarios ilimitados y soporte dedicado — adaptado para grandes equipos o agencias que gestionan miles de llamadas cada mes.",
+        "price": "Personalizado",
+        "features": [
+          "Modelos IA personalizados",
+          "Acceso API",
+          "Usuarios ilimitados",
+          "Soporte dedicado",
+          "Personalización de nivel empresarial"
+        ],
+        "overage": "Precios personalizados"
+      }
     },
-    "enterprise": {
-      "name": "Empresarial",
-      "subtitle": "Diseñado para grandes equipos y agencias",
-      "description": "Desbloquee todo el poder de BoostMyDeal con modelos IA personalizados, acceso API, usuarios ilimitados y soporte dedicado — adaptado para grandes equipos o agencias que gestionan miles de llamadas cada mes.",
-      "price": "Personalizado",
+    "payAsYouGo": {
+      "title": "Plan Pay-As-You-Go",
+      "subtitle": "Comience gratis — pague solo por lo que use.",
+      "description": "Recargue en cualquier momento con créditos prepagos — sin tarifas mensuales, sin compromisos.",
+      "getStarted": "Empezar",
+      "moreDetails": "Más Detalles",
+      "overageTitle": "Excedente",
       "features": [
-        "Modelos IA personalizados",
-        "Acceso API",
-        "Usuarios ilimitados",
-        "Soporte dedicado",
-        "Personalización de nivel empresarial"
+        "Comience gratis — pague solo por lo que use",
+        "Recarga de saldo: Compre $25, $50, $100 o $500 en créditos BoostMyDeal",
+        "Deducción automática: Cada minuto de llamada IA o seguimiento de correo deduce créditos en tiempo real",
+        "Alertas de saldo: El sistema solicita recarga automática cuando el saldo cae por debajo de $10",
+        "Recarga automática opcional: Active la recarga automática para operaciones fluidas",
+        "Sin tarifas mensuales, sin compromisos"
       ],
-      "overage": "Precios personalizados"
+      "overage": {
+        "aiCalling": "Minuto de llamada IA",
+        "emailFollowup": "Seguimiento de correo",
+        "videoHandoff": "Transferencia de video"
+      }
     }
   },
-  "payAsYouGo": {
-    "title": "Plan Pay-As-You-Go",
-    "subtitle": "Comience gratis — pague solo por lo que use.",
-    "description": "Recargue en cualquier momento con créditos prepagos — sin tarifas mensuales, sin compromisos.",
-    "getStarted": "Empezar",
-    "moreDetails": "Más Detalles",
-    "overageTitle": "Excedente",
-    "features": [
-      "Comience gratis — pague solo por lo que use",
-      "Recarga de saldo: Compre $25, $50, $100 o $500 en créditos BoostMyDeal",
-      "Deducción automática: Cada minuto de llamada IA o seguimiento de correo deduce créditos en tiempo real",
-      "Alertas de saldo: El sistema solicita recarga automática cuando el saldo cae por debajo de $10",
-      "Recarga automática opcional: Active la recarga automática para operaciones fluidas",
-      "Sin tarifas mensuales, sin compromisos"
-    ],
-    "overage": {
-      "aiCalling": "Minuto de llamada IA",
-      "emailFollowup": "Seguimiento de correo",
-      "videoHandoff": "Transferencia de video"
+  "comparison": {
+    "chipLabel": "Página de Comparación",
+    "title": "Por Qué BoostMyDeal Es Diferente",
+    "description": "Descubra cómo BoostMyDeal simplifica los procesos de ventas automatizando cada paso del viaje del cliente en un único sistema inteligente.",
+    "table": {
+      "header": {
+        "categoryFeature": "Categoría / Función",
+        "overallRating": "Calificación General del Cliente",
+        "offersServices": "Ofrece servicios en",
+        "payPerUsage": "Opción de Pago por Uso"
+      },
+      "unverifiedData": "Datos No Verificados",
+      "regions": {
+        "global": "Global",
+        "naEuropeAsia": "América del Norte, Europa, Asia"
+      },
+      "pricing": {
+        "unlimited": "Ilimitado",
+        "limited": "Limitado",
+        "perUser": "Precio por usuario",
+        "creditBased": "Basado en créditos (solo asientos)",
+        "creditBasedNoSeat": "Basado en créditos (sin nivel de asientos)",
+        "planBased": "Basado en planes"
+      }
+    }
+  },
+  "faq": {
+    "categories": {
+      "general": {
+        "title": "General",
+        "questions": {
+          "whatIsBoostMyDeal": {
+            "question": "¿Qué es BoostMyDeal?",
+            "answer": "BoostMyDeal es un sistema operativo de ventas impulsado por IA que gestiona todo el flujo de trabajo de ventas — desde la interacción con clientes potenciales hasta la reserva de reuniones y actualizaciones del CRM — automáticamente. Orquesta llamadas, correos electrónicos, SMS, seguimientos y programación dentro de un sistema unificado."
+          },
+          "whoIsBoostMyDealFor": {
+            "question": "¿Para quién es BoostMyDeal?",
+            "answer": "BoostMyDeal está diseñado para pymes y empresas que desean tiempos de respuesta más rápidos, ejecución consistente y resultados de ventas predecibles sin agregar más herramientas o personal."
+          },
+          "isBoostMyDealCRM": {
+            "question": "¿Es BoostMyDeal un CRM?",
+            "answer": "No. BoostMyDeal no reemplaza su CRM. Opera sobre su CRM existente y mantiene todas las actividades, conversaciones y actualizaciones de negocios sincronizadas en tiempo real."
+          },
+          "whatProblemSolve": {
+            "question": "¿Qué problema resuelve BoostMyDeal?",
+            "answer": "BoostMyDeal elimina las herramientas de ventas fragmentadas y la coordinación manual al ofrecer a los equipos un sistema único que gestiona la ejecución — garantizando que no se pierdan clientes potenciales y que cada negocio se siga de manera consistente."
+          }
+        }
+      },
+      "aiAutomation": {
+        "title": "IA y Automatización",
+        "questions": {
+          "howDifferent": {
+            "question": "¿En qué se diferencia BoostMyDeal de otras herramientas de ventas con IA?",
+            "answer": "La mayoría de las herramientas de IA ayudan con tareas aisladas como llamadas o correos electrónicos. BoostMyDeal gestiona todo el flujo de trabajo de ventas de principio a fin, coordinando automáticamente cada paso del negocio."
+          },
+          "aiOperateAlone": {
+            "question": "¿La IA opera por sí sola?",
+            "answer": "BoostMyDeal opera dentro de flujos de trabajo y barreras configurables. El comportamiento de la IA está completamente controlado y puede ser anulado por humanos en cualquier momento."
+          },
+          "controlAISays": {
+            "question": "¿Podemos controlar lo que la IA dice a los prospectos?",
+            "answer": "Sí. Los mensajes, el tono, el momento, las reglas de escalada y los umbrales de aprobación son completamente configurables para que coincidan con su marca y requisitos de cumplimiento."
+          },
+          "replaceSalesReps": {
+            "question": "¿BoostMyDeal reemplaza a los representantes de ventas o SDR?",
+            "answer": "No. BoostMyDeal elimina el trabajo de ejecución repetitivo para que los equipos de ventas puedan centrarse en conversaciones de alto valor, calificación y cierre."
+          }
+        }
+      },
+      "leadHandling": {
+        "title": "Gestión de Clientes Potenciales y Flujo de Trabajo",
+        "questions": {
+          "handleNewLeads": {
+            "question": "¿Cómo maneja BoostMyDeal los nuevos clientes potenciales?",
+            "answer": "Tan pronto como un cliente potencial ingresa al sistema, BoostMyDeal inicia el contacto automáticamente y adapta los seguimientos en tiempo real según la participación."
+          },
+          "howFastRespond": {
+            "question": "¿Qué tan rápido responde BoostMyDeal a los clientes potenciales?",
+            "answer": "Inmediatamente. BoostMyDeal inicia el contacto tan pronto como se recibe un cliente potencial, mejorando significativamente la velocidad de respuesta."
+          },
+          "leadNoResponse": {
+            "question": "¿Qué sucede si un cliente potencial no responde?",
+            "answer": "BoostMyDeal activa automáticamente seguimientos a través de llamadas, correo electrónico y SMS según su flujo de trabajo configurado."
+          },
+          "bookMeetingsAuto": {
+            "question": "¿Puede BoostMyDeal reservar reuniones automáticamente?",
+            "answer": "Sí. BoostMyDeal puede calificar clientes potenciales, proponer horarios de reunión y reservar reuniones directamente en su calendario."
+          },
+          "speakToHuman": {
+            "question": "¿Qué pasa si un prospecto quiere hablar con un humano?",
+            "answer": "BoostMyDeal escala las conversaciones a un humano instantáneamente según la intención, reglas o intervención manual."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integraciones y Despliegue",
+        "questions": {
+          "integrateExistingTools": {
+            "question": "¿BoostMyDeal se integra con nuestras herramientas existentes?",
+            "answer": "Sí. BoostMyDeal se integra con los principales CRM y plataformas de ventas y está diseñado para trabajar junto con su stack existente en lugar de reemplazarlo."
+          },
+          "howLongGetStarted": {
+            "question": "¿Cuánto tiempo se tarda en comenzar?",
+            "answer": "La mayoría de los equipos se ponen en marcha en cuestión de días. El tiempo de implementación depende de la complejidad del flujo de trabajo y los requisitos de integración."
+          },
+          "changeWorkflows": {
+            "question": "¿Se pueden cambiar los flujos de trabajo después del lanzamiento?",
+            "answer": "Sí. Los flujos de trabajo son completamente configurables y se pueden actualizar a medida que evoluciona su proceso de ventas."
+          }
+        }
+      },
+      "smbs": {
+        "title": "Pymes",
+        "questions": {
+          "whyValuableForSMBs": {
+            "question": "¿Por qué BoostMyDeal es valioso para las pymes?",
+            "answer": "BoostMyDeal permite a las pymes operar como una organización de ventas más grande al mejorar la velocidad de respuesta, la consistencia y la ejecución sin aumentar el personal."
+          },
+          "reduceDependencySDRs": {
+            "question": "¿Puede BoostMyDeal reducir la dependencia de los SDR?",
+            "answer": "Sí. BoostMyDeal automatiza las tareas repetitivas de los SDR, lo que permite a los equipos hacer más con menos personas."
+          }
+        }
+      },
+      "enterprise": {
+        "title": "Empresa",
+        "questions": {
+          "suitableForEnterprise": {
+            "question": "¿BoostMyDeal es adecuado para entornos empresariales?",
+            "answer": "Sí. BoostMyDeal está diseñado para uso empresarial con flujos de trabajo estandarizados, control centralizado, escalabilidad e infraestructura de nivel empresarial."
+          },
+          "deployMultipleTeams": {
+            "question": "¿Se puede implementar BoostMyDeal en varios equipos?",
+            "answer": "Sí. BoostMyDeal admite implementaciones multiequipo y multiflujo de trabajo con visibilidad y control centralizados."
+          }
+        }
+      },
+      "security": {
+        "title": "Seguridad, Cumplimiento y Confianza",
+        "questions": {
+          "isSecure": {
+            "question": "¿Es seguro BoostMyDeal?",
+            "answer": "Sí. BoostMyDeal está construido sobre una infraestructura de nivel empresarial con controles de acceso, pistas de auditoría y manejo seguro de datos."
+          },
+          "whoOwnsData": {
+            "question": "¿Quién es el propietario de los datos?",
+            "answer": "Usted. Todos los datos de clientes y ventas siguen siendo su propiedad y permanecen sincronizados con su CRM."
+          },
+          "isAIBlackBox": {
+            "question": "¿Es la IA una caja negra?",
+            "answer": "No. BoostMyDeal proporciona transparencia sobre las acciones tomadas por el sistema y visibilidad completa sobre la ejecución del flujo de trabajo."
+          },
+          "humansOverride": {
+            "question": "¿Pueden los humanos anular la IA?",
+            "answer": "Sí. Los equipos de ventas pueden pausar la automatización, intervenir en las conversaciones o tomar el control en cualquier momento."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Precios y ROI",
+        "questions": {
+          "howPriced": {
+            "question": "¿Cómo se fija el precio de BoostMyDeal?",
+            "answer": "El precio se basa en el uso, la escala y la complejidad del flujo de trabajo. Esto permite a las pymes comenzar de a poco y a las empresas escalar de manera eficiente."
+          },
+          "reduceCosts": {
+            "question": "¿Cómo reduce BoostMyDeal los costos?",
+            "answer": "Al consolidar herramientas, reducir el trabajo manual, disminuir los costos de llamadas a través de la infraestructura de telecomunicaciones de VoxSun y mejorar la eficiencia de conversión."
+          },
+          "whatResults": {
+            "question": "¿Qué tipo de resultados podemos esperar?",
+            "answer": "Los equipos generalmente ven una velocidad de respuesta más rápida, tasas de contacto más altas, más reuniones reservadas y un costo por negocio más bajo."
+          }
+        }
+      },
+      "support": {
+        "title": "Soporte e Incorporación",
+        "questions": {
+          "whatSupportIncluded": {
+            "question": "¿Qué soporte está incluido?",
+            "answer": "BoostMyDeal incluye incorporación, configuración de flujo de trabajo, capacitación y soporte continuo para garantizar el éxito a largo plazo."
+          },
+          "helpDesignWorkflows": {
+            "question": "¿Ayudan a diseñar nuestros flujos de trabajo?",
+            "answer": "Sí. La implementación comienza con una revisión del flujo de trabajo para alinear BoostMyDeal con su proceso de ventas."
+          }
+        }
+      },
+      "gettingStarted": {
+        "title": "Primeros Pasos",
+        "questions": {
+          "howGetStarted": {
+            "question": "¿Cómo comenzamos con BoostMyDeal?",
+            "answer": "Comenzar empieza con una evaluación del flujo de trabajo, seguida de configuración, pruebas e implementación."
+          },
+          "industrySpecific": {
+            "question": "¿BoostMyDeal es específico de la industria?",
+            "answer": "No. BoostMyDeal es independiente de la industria y funciona en modelos de ventas B2B, B2C, entrantes, salientes y de alto valor."
+          },
+          "whoNotFor": {
+            "question": "¿Para quién no es BoostMyDeal?",
+            "answer": "BoostMyDeal no está diseñado para equipos que prefieren la ejecución manual o procesos de ventas fragmentados."
+          }
+        }
+      }
+    }
+  },
+  "testimonials": {
+    "customerStory": "Historia de Cliente",
+    "items": {
+      "mariana": {
+        "text": "La velocidad lo es todo en bienes raíces. BoostMyDeal nos permitió contactar clientes potenciales al instante y calificarlos antes de que nuestros agentes intervinieran.",
+        "author": {
+          "name": "Mariana Lee",
+          "position": "Gerente de Ventas",
+          "company": "Zohopediac"
+        }
+      }
+    }
+  },
+  "blog": {
+    "chip": "Blog",
+    "section": {
+      "title": "Consejos para Hacer Crecer su Negocio",
+      "description": "Untitled está creciendo rápidamente, y siempre estamos buscando personas apasionadas, dinámicas y talentosas para unirse a nuestro equipo distribuido en todo el mundo."
+    },
+    "readMore": "leer más",
+    "posts": {
+      "aiSalesAgents": {
+        "title": "Cómo los Agentes de Ventas de IA Ayudan a los Equipos a Responder Más Rápido y Cerrar Más Negocios",
+        "description": "Ayuda a optimizar los flujos de trabajo, mejorar las interacciones con los clientes y proporcionar información para decisiones más inteligentes basadas en datos, impulsando el crecimiento empresarial."
+      },
+      "automatingSales": {
+        "title": "Automatizar las Ventas con IA",
+        "description": "El CRM optimiza los flujos de trabajo, automatiza tareas y aumenta la eficiencia del equipo."
+      },
+      "manualProcesses": {
+        "title": "Por Qué los Procesos de Venta Manuales le Están Costando Ingresos",
+        "description": "Permite un mejor seguimiento de clientes potenciales, comunicación personalizada y cierres de negocios más rápidos."
+      }
+    }
+  },
+  "booking": {
+    "modal": {
+      "title": {
+        "form": "Programe Su Demo",
+        "success": "Reserva Confirmada"
+      },
+      "sections": {
+        "personalInfo": {
+          "title": "Su Información"
+        },
+        "dateTime": {
+          "title": "Elija Fecha y Hora"
+        }
+      },
+      "fields": {
+        "firstname": {
+          "label": "Nombre *",
+          "placeholder": "Ingrese su nombre"
+        },
+        "lastname": {
+          "label": "Apellido *",
+          "placeholder": "Ingrese su apellido"
+        },
+        "email": {
+          "label": "Correo Electrónico *",
+          "placeholder": "su.correo@ejemplo.com"
+        },
+        "phone": {
+          "label": "Número de Teléfono *",
+          "placeholder": "+34 612 34 56 78"
+        },
+        "company": {
+          "label": "Nombre de la Empresa",
+          "placeholder": "El nombre de su empresa"
+        },
+        "date": {
+          "label": "Fecha Preferida *"
+        },
+        "time": {
+          "label": "Hora Preferida *",
+          "placeholder": "Seleccione la hora"
+        },
+        "notes": {
+          "label": "Notas Adicionales",
+          "placeholder": "¿Algún tema específico que le gustaría discutir?"
+        }
+      },
+      "buttons": {
+        "processing": "Procesando...",
+        "confirm": "Confirmar Reserva",
+        "close": "Cerrar"
+      },
+      "success": {
+        "title": "¡Reserva Confirmada!",
+        "demoType": "Tipo de Demo:",
+        "date": "Fecha:",
+        "time": "Hora:",
+        "meetingLink": "Enlace de la Reunión:",
+        "emailSent": "Se ha enviado un correo electrónico de confirmación a su bandeja de entrada."
+      },
+      "errors": {
+        "bookingError": "Error de reserva. Por favor, inténtelo de nuevo.",
+        "generalError": "Ocurrió un error. Por favor, inténtelo de nuevo."
+      }
+    }
+  },
+  "waitlist": {
+    "modal": {
+      "title": {
+        "form": "Unirse a la Lista de Espera",
+        "success": "Registro Exitoso"
+      },
+      "sections": {
+        "personalInfo": {
+          "title": "Su Información"
+        }
+      },
+      "buttons": {
+        "processing": "Procesando...",
+        "join": "Unirse a la Lista de Espera",
+        "close": "Cerrar"
+      },
+      "success": {
+        "title": "¡Está en la Lista!",
+        "thankYou": "¡Gracias por su interés",
+        "notify": "Le notificaremos en ",
+        "emailSent": "Se ha enviado un correo electrónico de confirmación a su bandeja de entrada."
+      },
+      "errors": {
+        "joinError": "Error al unirse a la lista de espera. Por favor, inténtelo de nuevo.",
+        "generalError": "Ocurrió un error. Por favor, inténtelo de nuevo."
+      }
     }
   }
-}
 }

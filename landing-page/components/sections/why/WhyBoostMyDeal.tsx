@@ -1,11 +1,15 @@
+'use client'
+
 import { ComparisonTable } from "@/components/shared/ComparisonTable";
 import { Chip } from "@/components/ui/Chip";
 import { Section } from "@/components/ui/Section";
 import { features } from "./comparason";
 import { Icons } from "@/constants/icon-import";
-
+import { useTranslation } from "@/context/LanguageContext";
 
 export function WhyBoostMyDeal() {
+  const { t } = useTranslation();
+
   // Liste des concurrents
   const competitors = [
     { name: 'Instantly', rating: '' },
@@ -20,24 +24,24 @@ export function WhyBoostMyDeal() {
     { name: 'Close.com', rating: '' },
   ];
 
-
   return (
     <Section background="white" spacing="sm" id="why">
       {/* Header */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         {/* Left: Chip + Title */}
         <div>
-          <Chip icon={<Icons.CopySimpleIcon />} variant="default">Comparison Page</Chip>
+          <Chip icon={<Icons.CopySimpleIcon />} variant="default">
+            {t('comparison.chipLabel')}
+          </Chip>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mt-4 leading-tight">
-            Why BoostMyDeal Is Different
+            {t('comparison.title')}
           </h2>
         </div>
 
         {/* Right: Description */}
         <div className="flex items-end">
           <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-            Discover how BoostMyDeal streamlines sales processes by automating
-            every step of the customer journey in a single intelligent system.
+            {t('comparison.description')}
           </p>
         </div>
       </div>

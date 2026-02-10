@@ -4,6 +4,7 @@ import { Accordion } from '@/components/shared/Accordion';
 import { Chip } from '@/components/ui/Chip';
 import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
+import { useTranslation } from '@/context/LanguageContext';
 import { useEffect, useState } from 'react';
 
 
@@ -18,199 +19,198 @@ interface FAQCategory {
 
 export default function FAQSection() {
   const [activeCategory, setActiveCategory] = useState('general');
-
+  const { t } = useTranslation()
   // Données FAQ organisées par catégorie
   const faqCategories: FAQCategory[] = [
     {
       id: 'general',
-      title: 'General',
+      title: t('faq.categories.general.title'),
       questions: [
         {
-          question: 'What is BoostMyDeal?',
-          answer: 'BoostMyDeal is an AI-driven sales operating system that manages the entire sales workflow — from lead engagement to meeting booking and CRM updates — automatically. It orchestrates calls, emails, SMS, follow-ups, and scheduling within one unified system.',
+          question: t('faq.categories.general.questions.whatIsBoostMyDeal.question'),
+          answer: t('faq.categories.general.questions.whatIsBoostMyDeal.answer'),
         },
         {
-          question: 'Who is BoostMyDeal for?',
-          answer: 'BoostMyDeal is designed for SMBs and enterprises that want faster response times, consistent execution, and predictable sales outcomes without adding more tools or headcount.',
+          question: t('faq.categories.general.questions.whoIsBoostMyDealFor.question'),
+          answer: t('faq.categories.general.questions.whoIsBoostMyDealFor.answer'),
         },
         {
-          question: 'Is BoostMyDeal a CRM?',
-          answer: 'No. BoostMyDeal does not replace your CRM. It operates on top of your existing CRM and keeps all activities, conversations, and deal updates synchronized in real time.',
+          question: t('faq.categories.general.questions.isBoostMyDealCRM.question'),
+          answer: t('faq.categories.general.questions.isBoostMyDealCRM.answer'),
         },
         {
-          question: 'What problem does BoostMyDeal solve?',
-          answer: 'BoostMyDeal eliminates fragmented sales tools and manual coordination by giving teams a single system that owns execution — ensuring no leads are dropped and every deal is followed through consistently.',
+          question: t('faq.categories.general.questions.whatProblemSolve.question'),
+          answer: t('faq.categories.general.questions.whatProblemSolve.answer'),
         },
       ],
     },
     {
       id: 'ai-automation',
-      title: 'AI & Automation',
+      title: t('faq.categories.aiAutomation.title'),
       questions: [
         {
-          question: 'How is BoostMyDeal different from other AI sales tools?',
-          answer: 'Most AI tools assist with isolated tasks like calling or emailing. BoostMyDeal manages the entire sales workflow end-to-end, coordinating every step of the deal automatically.',
+          question: t('faq.categories.aiAutomation.questions.howDifferent.question'),
+          answer: t('faq.categories.aiAutomation.questions.howDifferent.answer'),
         },
         {
-          question: 'Does the AI operate on its own?',
-          answer: 'BoostMyDeal operates within configurable workflows and guardrails. AI behavior is fully controlled and can be overridden by humans at any time.',
+          question: t('faq.categories.aiAutomation.questions.aiOperateAlone.question'),
+          answer: t('faq.categories.aiAutomation.questions.aiOperateAlone.answer'),
         },
         {
-          question: 'Can we control what the AI says to prospects?',
-          answer: 'Yes. Messaging, tone, timing, escalation rules, and approval thresholds are fully configurable to match your brand and compliance requirements.',
+          question: t('faq.categories.aiAutomation.questions.controlAISays.question'),
+          answer: t('faq.categories.aiAutomation.questions.controlAISays.answer'),
         },
         {
-          question: 'Does BoostMyDeal replace sales reps or SDRs?',
-          answer: 'No. BoostMyDeal removes repetitive execution work so sales teams can focus on high-value conversations, qualification, and closing.',
+          question: t('faq.categories.aiAutomation.questions.replaceSalesReps.question'),
+          answer: t('faq.categories.aiAutomation.questions.replaceSalesReps.answer'),
         },
       ],
     },
     {
       id: 'lead-handling',
-      title: 'Lead Handling & Workflow',
+      title: t('faq.categories.leadHandling.title'),
       questions: [
         {
-          question: 'How does BoostMyDeal handle new leads?',
-          answer: 'As soon as a lead enters the system, BoostMyDeal initiates contact automatically and adapts follow-ups in real time based on engagement.',
+          question: t('faq.categories.leadHandling.questions.handleNewLeads.question'),
+          answer: t('faq.categories.leadHandling.questions.handleNewLeads.answer'),
         },
         {
-          question: 'How fast does BoostMyDeal respond to leads?',
-          answer: 'Immediately. BoostMyDeal initiates outreach as soon as a lead is received, significantly improving speed-to-lead.',
+          question: t('faq.categories.leadHandling.questions.howFastRespond.question'),
+          answer: t('faq.categories.leadHandling.questions.howFastRespond.answer'),
         },
         {
-          question: "What happens if a lead doesn't respond?",
-          answer: 'BoostMyDeal automatically triggers follow-ups across calls, email, and SMS according to your configured workflow.',
+          question: t('faq.categories.leadHandling.questions.leadNoResponse.question'),
+          answer: t('faq.categories.leadHandling.questions.leadNoResponse.answer'),
         },
         {
-          question: 'Can BoostMyDeal book meetings automatically?',
-          answer: 'Yes. BoostMyDeal can qualify leads, propose meeting times, and book meetings directly into your calendar.',
+          question: t('faq.categories.leadHandling.questions.bookMeetingsAuto.question'),
+          answer: t('faq.categories.leadHandling.questions.bookMeetingsAuto.answer'),
         },
         {
-          question: 'What if a prospect wants to speak to a human?',
-          answer: 'BoostMyDeal escalates conversations to a human instantly based on intent, rules, or manual intervention.',
+          question: t('faq.categories.leadHandling.questions.speakToHuman.question'),
+          answer: t('faq.categories.leadHandling.questions.speakToHuman.answer'),
         },
       ],
     },
     {
       id: 'integrations',
-      title: 'Integrations & Deployment',
+      title: t('faq.categories.integrations.title'),
       questions: [
         {
-          question: 'Does BoostMyDeal integrate with our existing tools?',
-          answer: 'Yes. BoostMyDeal integrates with major CRMs and sales platforms and is designed to work alongside your existing stack rather than replace it.',
+          question: t('faq.categories.integrations.questions.integrateExistingTools.question'),
+          answer: t('faq.categories.integrations.questions.integrateExistingTools.answer'),
         },
         {
-          question: 'How long does it take to get started?',
-          answer: 'Most teams go live within days. Deployment time depends on workflow complexity and integration requirements.',
+          question: t('faq.categories.integrations.questions.howLongGetStarted.question'),
+          answer: t('faq.categories.integrations.questions.howLongGetStarted.answer'),
         },
         {
-          question: 'Can workflows be changed after launch?',
-          answer: 'Yes. Workflows are fully configurable and can be updated as your sales process evolves.',
+          question: t('faq.categories.integrations.questions.changeWorkflows.question'),
+          answer: t('faq.categories.integrations.questions.changeWorkflows.answer'),
         },
       ],
     },
     {
       id: 'smbs',
-      title: 'SMBs',
+      title: t('faq.categories.smbs.title'),
       questions: [
         {
-          question: 'Why is BoostMyDeal valuable for SMBs?',
-          answer: 'BoostMyDeal allows SMBs to operate like a larger sales organization by improving response speed, consistency, and execution without increasing headcount.',
+          question: t('faq.categories.smbs.questions.whyValuableForSMBs.question'),
+          answer: t('faq.categories.smbs.questions.whyValuableForSMBs.answer'),
         },
         {
-          question: 'Can BoostMyDeal reduce dependency on SDRs?',
-          answer: 'Yes. BoostMyDeal automates repetitive SDR tasks, allowing teams to do more with fewer people.',
+          question: t('faq.categories.smbs.questions.reduceDependencySDRs.question'),
+          answer: t('faq.categories.smbs.questions.reduceDependencySDRs.answer'),
         },
       ],
     },
     {
       id: 'enterprise',
-      title: 'Enterprise',
+      title: t('faq.categories.enterprise.title'),
       questions: [
         {
-          question: 'Is BoostMyDeal suitable for enterprise environments?',
-          answer: 'Yes. BoostMyDeal is built for enterprise use with standardized workflows, centralized control, scalability, and enterprise-grade infrastructure.',
+          question: t('faq.categories.enterprise.questions.suitableForEnterprise.question'),
+          answer: t('faq.categories.enterprise.questions.suitableForEnterprise.answer'),
         },
         {
-          question: 'Can BoostMyDeal be deployed across multiple teams?',
-          answer: 'Yes. BoostMyDeal supports multi-team, multi-workflow deployments with centralized visibility and control.',
+          question: t('faq.categories.enterprise.questions.deployMultipleTeams.question'),
+          answer: t('faq.categories.enterprise.questions.deployMultipleTeams.answer'),
         },
       ],
     },
     {
       id: 'security',
-      title: 'Security, Compliance & Trust',
+      title: t('faq.categories.security.title'),
       questions: [
         {
-          question: 'Is BoostMyDeal secure?',
-          answer: 'Yes. BoostMyDeal is built on enterprise-grade infrastructure with access controls, audit trails, and secure data handling.',
+          question: t('faq.categories.security.questions.isSecure.question'),
+          answer: t('faq.categories.security.questions.isSecure.answer'),
         },
         {
-          question: 'Who owns the data?',
-          answer: 'You do. All customer and sales data remain your property and stay synchronized with your CRM.',
+          question: t('faq.categories.security.questions.whoOwnsData.question'),
+          answer: t('faq.categories.security.questions.whoOwnsData.answer'),
         },
         {
-          question: 'Is the AI a black box?',
-          answer: 'No. BoostMyDeal provides transparency into actions taken by the system and full visibility into workflow execution.',
+          question: t('faq.categories.security.questions.isAIBlackBox.question'),
+          answer: t('faq.categories.security.questions.isAIBlackBox.answer'),
         },
         {
-          question: 'Can humans override the AI?',
-          answer: 'Yes. Sales teams can pause automation, intervene in conversations, or take over at any time.',
+          question: t('faq.categories.security.questions.humansOverride.question'),
+          answer: t('faq.categories.security.questions.humansOverride.answer'),
         },
       ],
     },
     {
       id: 'pricing',
-      title: 'Pricing & ROI',
+      title: t('faq.categories.pricing.title'),
       questions: [
         {
-          question: 'How is BoostMyDeal priced?',
-          answer: 'Pricing is based on usage, scale, and workflow complexity. This allows SMBs to start small and enterprises to scale efficiently.',
+          question: t('faq.categories.pricing.questions.howPriced.question'),
+          answer: t('faq.categories.pricing.questions.howPriced.answer'),
         },
         {
-          question: 'How does BoostMyDeal reduce costs?',
-          answer: "By consolidating tools, reducing manual labor, lowering call costs through VoxSun's telecom infrastructure, and improving conversion efficiency.",
+          question: t('faq.categories.pricing.questions.reduceCosts.question'),
+          answer: t('faq.categories.pricing.questions.reduceCosts.answer'),
         },
         {
-          question: 'What kind of results can we expect?',
-          answer: 'Teams typically see faster speed-to-lead, higher contact rates, more meetings booked, and lower cost per deal.',
+          question: t('faq.categories.pricing.questions.whatResults.question'),
+          answer: t('faq.categories.pricing.questions.whatResults.answer'),
         },
       ],
     },
     {
       id: 'support',
-      title: 'Support & Onboarding',
+      title: t('faq.categories.support.title'),
       questions: [
         {
-          question: 'What support is included?',
-          answer: 'BoostMyDeal includes onboarding, workflow configuration, training, and ongoing support to ensure long-term success.',
+          question: t('faq.categories.support.questions.whatSupportIncluded.question'),
+          answer: t('faq.categories.support.questions.whatSupportIncluded.answer'),
         },
         {
-          question: 'Do you help design our workflows?',
-          answer: 'Yes. Deployment begins with a workflow review to align BoostMyDeal with your sales process.',
+          question: t('faq.categories.support.questions.helpDesignWorkflows.question'),
+          answer: t('faq.categories.support.questions.helpDesignWorkflows.answer'),
         },
       ],
     },
     {
       id: 'getting-started',
-      title: 'Getting Started',
+      title: t('faq.categories.gettingStarted.title'),
       questions: [
         {
-          question: 'How do we get started with BoostMyDeal?',
-          answer: 'Getting started begins with a workflow assessment, followed by setup, testing, and deployment.',
+          question: t('faq.categories.gettingStarted.questions.howGetStarted.question'),
+          answer: t('faq.categories.gettingStarted.questions.howGetStarted.answer'),
         },
         {
-          question: 'Is BoostMyDeal industry-specific?',
-          answer: 'No. BoostMyDeal is industry-agnostic and works across B2B, B2C, inbound, outbound, and high-ticket sales models.',
+          question: t('faq.categories.gettingStarted.questions.industrySpecific.question'),
+          answer: t('faq.categories.gettingStarted.questions.industrySpecific.answer'),
         },
         {
-          question: 'Who is BoostMyDeal not for?',
-          answer: 'BoostMyDeal is not designed for teams that prefer manual execution or fragmented sales processes.',
+          question: t('faq.categories.gettingStarted.questions.whoNotFor.question'),
+          answer: t('faq.categories.gettingStarted.questions.whoNotFor.answer'),
         },
       ],
     },
   ];
-
   // Scroll vers une section
   const scrollToCategory = (categoryId: string) => {
     const element = document.getElementById(`faq-${categoryId}`);

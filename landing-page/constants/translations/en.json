@@ -14,7 +14,8 @@
     "description": "All powered by AI agents connected to your entire sales stack",
     "cta": "Start Automating Your Sales Pipeline",
     "demo": "Book a Live Demo",
-    "poweredBy": "Powered by Voxsun.com"
+    "poweredBy": "Powered by Voxsun.com",
+    "waitlist": "Join the Waitlist"
   },
   "product": {
     "title": "Our Product",
@@ -256,6 +257,343 @@
         "aiCalling": "AI Calling Minute",
         "emailFollowup": "Email Follow-up",
         "videoHandoff": "Video Handoff"
+      }
+    }
+  },
+  "comparison": {
+    "chipLabel": "Comparison Page",
+    "title": "Why BoostMyDeal Is Different",
+    "description": "Discover how BoostMyDeal streamlines sales processes by automating every step of the customer journey in a single intelligent system.",
+    "table": {
+      "header": {
+        "categoryFeature": "Category / Feature",
+        "overallRating": "Overall Customer Rating",
+        "offersServices": "Offers services in",
+        "payPerUsage": "Pay-per-Minute/Usage Option"
+      },
+      "unverifiedData": "Unverifiedly Sourced Data",
+      "regions": {
+        "global": "Global",
+        "naEuropeAsia": "North America, Europe, Asia"
+      },
+      "pricing": {
+        "unlimited": "Unlimited",
+        "limited": "Limited",
+        "perUser": "Per-user pricing",
+        "creditBased": "Credit-based (seats only)",
+        "creditBasedNoSeat": "Credit-based (No seat-based tier)",
+        "planBased": "Plan-based"
+      }
+    }
+  },
+  "faq": {
+    "categories": {
+      "general": {
+        "title": "General",
+        "questions": {
+          "whatIsBoostMyDeal": {
+            "question": "What is BoostMyDeal?",
+            "answer": "BoostMyDeal is an AI-driven sales operating system that manages the entire sales workflow — from lead engagement to meeting booking and CRM updates — automatically. It orchestrates calls, emails, SMS, follow-ups, and scheduling within one unified system."
+          },
+          "whoIsBoostMyDealFor": {
+            "question": "Who is BoostMyDeal for?",
+            "answer": "BoostMyDeal is designed for SMBs and enterprises that want faster response times, consistent execution, and predictable sales outcomes without adding more tools or headcount."
+          },
+          "isBoostMyDealCRM": {
+            "question": "Is BoostMyDeal a CRM?",
+            "answer": "No. BoostMyDeal does not replace your CRM. It operates on top of your existing CRM and keeps all activities, conversations, and deal updates synchronized in real time."
+          },
+          "whatProblemSolve": {
+            "question": "What problem does BoostMyDeal solve?",
+            "answer": "BoostMyDeal eliminates fragmented sales tools and manual coordination by giving teams a single system that owns execution — ensuring no leads are dropped and every deal is followed through consistently."
+          }
+        }
+      },
+      "aiAutomation": {
+        "title": "AI & Automation",
+        "questions": {
+          "howDifferent": {
+            "question": "How is BoostMyDeal different from other AI sales tools?",
+            "answer": "Most AI tools assist with isolated tasks like calling or emailing. BoostMyDeal manages the entire sales workflow end-to-end, coordinating every step of the deal automatically."
+          },
+          "aiOperateAlone": {
+            "question": "Does the AI operate on its own?",
+            "answer": "BoostMyDeal operates within configurable workflows and guardrails. AI behavior is fully controlled and can be overridden by humans at any time."
+          },
+          "controlAISays": {
+            "question": "Can we control what the AI says to prospects?",
+            "answer": "Yes. Messaging, tone, timing, escalation rules, and approval thresholds are fully configurable to match your brand and compliance requirements."
+          },
+          "replaceSalesReps": {
+            "question": "Does BoostMyDeal replace sales reps or SDRs?",
+            "answer": "No. BoostMyDeal removes repetitive execution work so sales teams can focus on high-value conversations, qualification, and closing."
+          }
+        }
+      },
+      "leadHandling": {
+        "title": "Lead Handling & Workflow",
+        "questions": {
+          "handleNewLeads": {
+            "question": "How does BoostMyDeal handle new leads?",
+            "answer": "As soon as a lead enters the system, BoostMyDeal initiates contact automatically and adapts follow-ups in real time based on engagement."
+          },
+          "howFastRespond": {
+            "question": "How fast does BoostMyDeal respond to leads?",
+            "answer": "Immediately. BoostMyDeal initiates outreach as soon as a lead is received, significantly improving speed-to-lead."
+          },
+          "leadNoResponse": {
+            "question": "What happens if a lead doesn't respond?",
+            "answer": "BoostMyDeal automatically triggers follow-ups across calls, email, and SMS according to your configured workflow."
+          },
+          "bookMeetingsAuto": {
+            "question": "Can BoostMyDeal book meetings automatically?",
+            "answer": "Yes. BoostMyDeal can qualify leads, propose meeting times, and book meetings directly into your calendar."
+          },
+          "speakToHuman": {
+            "question": "What if a prospect wants to speak to a human?",
+            "answer": "BoostMyDeal escalates conversations to a human instantly based on intent, rules, or manual intervention."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrations & Deployment",
+        "questions": {
+          "integrateExistingTools": {
+            "question": "Does BoostMyDeal integrate with our existing tools?",
+            "answer": "Yes. BoostMyDeal integrates with major CRMs and sales platforms and is designed to work alongside your existing stack rather than replace it."
+          },
+          "howLongGetStarted": {
+            "question": "How long does it take to get started?",
+            "answer": "Most teams go live within days. Deployment time depends on workflow complexity and integration requirements."
+          },
+          "changeWorkflows": {
+            "question": "Can workflows be changed after launch?",
+            "answer": "Yes. Workflows are fully configurable and can be updated as your sales process evolves."
+          }
+        }
+      },
+      "smbs": {
+        "title": "SMBs",
+        "questions": {
+          "whyValuableForSMBs": {
+            "question": "Why is BoostMyDeal valuable for SMBs?",
+            "answer": "BoostMyDeal allows SMBs to operate like a larger sales organization by improving response speed, consistency, and execution without increasing headcount."
+          },
+          "reduceDependencySDRs": {
+            "question": "Can BoostMyDeal reduce dependency on SDRs?",
+            "answer": "Yes. BoostMyDeal automates repetitive SDR tasks, allowing teams to do more with fewer people."
+          }
+        }
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "questions": {
+          "suitableForEnterprise": {
+            "question": "Is BoostMyDeal suitable for enterprise environments?",
+            "answer": "Yes. BoostMyDeal is built for enterprise use with standardized workflows, centralized control, scalability, and enterprise-grade infrastructure."
+          },
+          "deployMultipleTeams": {
+            "question": "Can BoostMyDeal be deployed across multiple teams?",
+            "answer": "Yes. BoostMyDeal supports multi-team, multi-workflow deployments with centralized visibility and control."
+          }
+        }
+      },
+      "security": {
+        "title": "Security, Compliance & Trust",
+        "questions": {
+          "isSecure": {
+            "question": "Is BoostMyDeal secure?",
+            "answer": "Yes. BoostMyDeal is built on enterprise-grade infrastructure with access controls, audit trails, and secure data handling."
+          },
+          "whoOwnsData": {
+            "question": "Who owns the data?",
+            "answer": "You do. All customer and sales data remain your property and stay synchronized with your CRM."
+          },
+          "isAIBlackBox": {
+            "question": "Is the AI a black box?",
+            "answer": "No. BoostMyDeal provides transparency into actions taken by the system and full visibility into workflow execution."
+          },
+          "humansOverride": {
+            "question": "Can humans override the AI?",
+            "answer": "Yes. Sales teams can pause automation, intervene in conversations, or take over at any time."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Pricing & ROI",
+        "questions": {
+          "howPriced": {
+            "question": "How is BoostMyDeal priced?",
+            "answer": "Pricing is based on usage, scale, and workflow complexity. This allows SMBs to start small and enterprises to scale efficiently."
+          },
+          "reduceCosts": {
+            "question": "How does BoostMyDeal reduce costs?",
+            "answer": "By consolidating tools, reducing manual labor, lowering call costs through VoxSun's telecom infrastructure, and improving conversion efficiency."
+          },
+          "whatResults": {
+            "question": "What kind of results can we expect?",
+            "answer": "Teams typically see faster speed-to-lead, higher contact rates, more meetings booked, and lower cost per deal."
+          }
+        }
+      },
+      "support": {
+        "title": "Support & Onboarding",
+        "questions": {
+          "whatSupportIncluded": {
+            "question": "What support is included?",
+            "answer": "BoostMyDeal includes onboarding, workflow configuration, training, and ongoing support to ensure long-term success."
+          },
+          "helpDesignWorkflows": {
+            "question": "Do you help design our workflows?",
+            "answer": "Yes. Deployment begins with a workflow review to align BoostMyDeal with your sales process."
+          }
+        }
+      },
+      "gettingStarted": {
+        "title": "Getting Started",
+        "questions": {
+          "howGetStarted": {
+            "question": "How do we get started with BoostMyDeal?",
+            "answer": "Getting started begins with a workflow assessment, followed by setup, testing, and deployment."
+          },
+          "industrySpecific": {
+            "question": "Is BoostMyDeal industry-specific?",
+            "answer": "No. BoostMyDeal is industry-agnostic and works across B2B, B2C, inbound, outbound, and high-ticket sales models."
+          },
+          "whoNotFor": {
+            "question": "Who is BoostMyDeal not for?",
+            "answer": "BoostMyDeal is not designed for teams that prefer manual execution or fragmented sales processes."
+          }
+        }
+      }
+    }
+  },
+  "testimonials": {
+    "customerStory": "Customer Story",
+    "items": {
+      "mariana": {
+        "text": "Speed is everything in real estate. BoostMyDeal allowed us to contact leads instantly and qualify them before our agents step in.",
+        "author": {
+          "name": "Mariana Lee",
+          "position": "Sales Manager",
+          "company": "Zohopediac"
+        }
+      }
+    }
+  },
+  "blog": {
+    "chip": "Blog",
+    "section": {
+      "title": "Tips To Grow Business",
+      "description": "Untitled is growing fast, and we are always looking for passionate, dynamic, and talented individuals to join our distributed team all around the world."
+    },
+    "readMore": "read more",
+    "posts": {
+      "aiSalesAgents": {
+        "title": "How AI Sales Agents Help Teams Respond Faster and Close More Deals",
+        "description": "It helps streamline workflows, enhance customer interactions, and provide insights for smarter, data-driven decisions, driving business growth."
+      },
+      "automatingSales": {
+        "title": "Automating the Sales with AI",
+        "description": "CRM streamlines workflows, automates tasks, and boosts team efficiency."
+      },
+      "manualProcesses": {
+        "title": "Why Manual Sales Processes Are Costing You Revenue",
+        "description": "Enables better lead tracking, personalized communication, and faster deal closures."
+      }
+    }
+  },
+  "booking": {
+    "modal": {
+      "title": {
+        "form": "Schedule Your Demo",
+        "success": "Booking Confirmed"
+      },
+      "sections": {
+        "personalInfo": {
+          "title": "Your Information"
+        },
+        "dateTime": {
+          "title": "Choose Date & Time"
+        }
+      },
+      "fields": {
+        "firstname": {
+          "label": "First Name *",
+          "placeholder": "Enter your first name"
+        },
+        "lastname": {
+          "label": "Last Name *",
+          "placeholder": "Enter your last name"
+        },
+        "email": {
+          "label": "Email *",
+          "placeholder": "your.email@example.com"
+        },
+        "phone": {
+          "label": "Phone Number *",
+          "placeholder": "+1 (555) 000-0000"
+        },
+        "company": {
+          "label": "Company Name",
+          "placeholder": "Your company name"
+        },
+        "date": {
+          "label": "Preferred Date *"
+        },
+        "time": {
+          "label": "Preferred Time *",
+          "placeholder": "Select time"
+        },
+        "notes": {
+          "label": "Additional Notes",
+          "placeholder": "Any specific topics you'd like to discuss?"
+        }
+      },
+      "buttons": {
+        "processing": "Processing...",
+        "confirm": "Confirm Booking",
+        "close": "Close"
+      },
+      "success": {
+        "title": "Booking Confirmed!",
+        "demoType": "Demo Type:",
+        "date": "Date:",
+        "time": "Time:",
+        "meetingLink": "Meeting Link:",
+        "emailSent": "A confirmation email has been sent to your inbox."
+      },
+      "errors": {
+        "bookingError": "Booking error. Please try again.",
+        "generalError": "An error occurred. Please try again."
+      }
+    }
+  },
+  "waitlist": {
+    "modal": {
+      "title": {
+        "form": "Join the Waitlist",
+        "success": "Successfully Registered"
+      },
+      "sections": {
+        "personalInfo": {
+          "title": "Your Information"
+        }
+      },
+      "buttons": {
+        "processing": "Processing...",
+        "join": "Join Waitlist",
+        "close": "Close"
+      },
+      "success": {
+        "title": "You're on the List!",
+        "thankYou": "Thank you for your interest",
+        "notify": "We'll notify you at ",
+        "emailSent": "A confirmation email has been sent to your inbox."
+      },
+      "errors": {
+        "joinError": "Error joining waitlist. Please try again.",
+        "generalError": "An error occurred. Please try again."
       }
     }
   }
