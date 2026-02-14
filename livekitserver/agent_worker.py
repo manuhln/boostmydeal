@@ -1342,10 +1342,31 @@ async def entrypoint(ctx: JobContext):
     # NOW connect to the room
     await ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
 
+    # Register room event listeners for SIP diagnostics
+    @ctx.room.on("participant_attributes_changed")
+    def on_attributes_changed(changed_attributes, participant_obj):
+        """Log all SIP attribute changes in real-time for debugging"""
+        sip_attrs = {k: v for k, v in changed_attributes.items() if k.startswith("sip.")}
+        if sip_attrs:
+            logger.info(f"🔄 SIP attribute change for {participant_obj.identity}: {sip_attrs}")
+            logger.info(f"   All current attributes: {dict(participant_obj.attributes)}")
+
+    @ctx.room.on("participant_disconnected")
+    def on_participant_disconnected(participant_obj):
+        """Log when a participant disconnects with all available SIP info"""
+        logger.warning(f"👋 Participant disconnected: {participant_obj.identity}")
+        logger.warning(f"   Kind: {participant_obj.kind}")
+        logger.warning(f"   Final attributes: {dict(participant_obj.attributes)}")
+        sip_status = participant_obj.attributes.get("sip.callStatus", "unknown")
+        sip_code = participant_obj.attributes.get("sip.statusCode", "unknown")
+        sip_reason = participant_obj.attributes.get("sip.disconnectReason", "unknown")
+        logger.warning(f"   SIP status={sip_status}, code={sip_code}, reason={sip_reason}")
+
     # Wait for SIP participant to join
     participant = await ctx.wait_for_participant()
     logger.info(
         f"📞 Participant {participant.identity} joined - waiting for pickup...")
+    logger.info(f"   Initial attributes: {dict(participant.attributes)}")
 
     # Monitor sip.callStatus to detect when user actually picks up
     # This prevents the agent from speaking before the user answers
@@ -1354,11 +1375,77 @@ async def entrypoint(ctx: JobContext):
             "⏳ Monitoring sip.callStatus - waiting for 'active' status...")
 
         # Wait for call status to become "active" (user picked up)
-        while participant.attributes.get("sip.callStatus") != "active":
+        # Also detect failures: if status changes to a terminal state or
+        # the participant disconnects, stop waiting and handle gracefully.
+        max_wait_seconds = 120  # Max 2 minutes for ringing/dialing before giving up
+        elapsed = 0.0
+        call_connected = False
+
+        while elapsed < max_wait_seconds:
+            current_status = participant.attributes.get("sip.callStatus", "unknown")
+
+            if current_status == "active":
+                call_connected = True
+                break
+
+            # Check for terminal SIP states that indicate call failure
+            if current_status in ("disconnected", "hangup", "failed", "error", "automation"):
+                logger.warning(
+                    f"❌ SIP call ended during dialing with status: {current_status}")
+                # Log any SIP disconnect reason if available
+                disconnect_reason = participant.attributes.get("sip.disconnectReason", "unknown")
+                sip_code = participant.attributes.get("sip.statusCode", "unknown")
+                logger.warning(
+                    f"   SIP disconnect reason: {disconnect_reason}, SIP code: {sip_code}")
+                logger.warning(f"   All SIP attributes: {dict(participant.attributes)}")
+                break
+
+            # Check if participant is still in the room
+            if participant.identity not in [
+                p.identity for p in ctx.room.remote_participants.values()
+            ]:
+                logger.warning(
+                    f"❌ SIP participant {participant.identity} left the room while still '{current_status}'")
+                logger.warning(f"   Last known SIP attributes: {dict(participant.attributes)}")
+                break
+
             await asyncio.sleep(0.5)
-            logger.debug(
-                f"Current sip.callStatus: {participant.attributes.get('sip.callStatus')}"
-            )
+            elapsed += 0.5
+
+            # Log status periodically (every 5 seconds instead of every 0.5s)
+            if int(elapsed * 2) % 10 == 0:
+                logger.info(
+                    f"⏳ SIP call status: {current_status} (waiting {elapsed:.0f}s)")
+
+        if not call_connected:
+            logger.error(f"❌ SIP call was NOT answered after {elapsed:.0f}s")
+            logger.error(f"   Last sip.callStatus: {participant.attributes.get('sip.callStatus', 'unknown')}")
+            logger.error(f"   All participant attributes: {dict(participant.attributes)}")
+
+            # Send webhook notification about failed call
+            if call_config.webhook_url:
+                try:
+                    call_end_time = datetime.utcnow()
+                    duration_seconds = int(
+                        (call_end_time - call_start_time).total_seconds())
+                    await webhook_sender.send_call_ended(
+                        call_config.webhook_url,
+                        call_id,
+                        duration_seconds,
+                        call_start_time,
+                        call_end_time,
+                        is_voicemail=False,
+                        is_rejected=True,
+                        call_outcome="not_answered",
+                        end_reason=f"SIP call failed: {participant.attributes.get('sip.callStatus', 'unknown')}"
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to send call-failed webhook: {e}")
+
+            # Clean up - shut down the agent since the call never connected
+            logger.info("🔚 Shutting down agent - call was not answered")
+            ctx.shutdown()
+            return
 
         logger.info("✅ Call is now active - user picked up!")
 

@@ -408,6 +408,7 @@ async def create_sip_trunk(
         trunk = proto_sip.SIPOutboundTrunkInfo(
             name=f"Voxsun Trunk",
             address=sip_address,
+            transport=proto_sip.SIP_TRANSPORT_UDP,  # VoxSun requires UDP transport
             numbers=[request_data.phone_number],
             auth_username=request_data.voxsun_username,
             auth_password=request_data.voxsun_password,
@@ -601,11 +602,17 @@ async def start_sip_call(
             logger.info(f"   wait_until_answered: True")
             logger.info("=" * 80)
             
+            # Strip '+' from phone number for SIP - some providers (like VoxSun)
+            # expect numbers without the '+' prefix in the SIP Request-URI
+            sip_to_number = request_data.to_phone.lstrip('+')
+            logger.info(f"   SIP Call To (stripped): {sip_to_number} (original: {request_data.to_phone})")
+
             sip_participant = await livekit_api_client.sip.create_sip_participant(
                 api.CreateSIPParticipantRequest(
                     room_name=request_data.room,
                     sip_trunk_id=request_data.livekit_sip_trunk_id,
-                    sip_call_to=request_data.to_phone,
+                    sip_call_to=sip_to_number,
+                    sip_number=request_data.from_phone,  # CallerID / From number
                     participant_identity=request_data.from_phone,
                     participant_name=request_data.contact_name,
                     dtmf="",
@@ -781,11 +788,16 @@ async def start_outbound_call(
         logger.info(f"✅ Validation passed - proceeding with call")
         
         try:
+            # Strip '+' from phone number for SIP providers that expect it without prefix
+            sip_to_number = call_config.to_phone.lstrip('+')
+            logger.info(f"📞 SIP Call To (stripped): {sip_to_number} (original: {call_config.to_phone})")
+
             sip_participant = await livekit_api_client.sip.create_sip_participant(
                 api.CreateSIPParticipantRequest(
                     room_name=room_name,
                     sip_trunk_id=call_config.livekit_sip_trunk_id,
-                    sip_call_to=call_config.to_phone,
+                    sip_call_to=sip_to_number,
+                    sip_number=call_config.from_phone,  # CallerID / From number
                     participant_identity=call_config.from_phone,
                     participant_name=call_config.contact_name,
                     dtmf="",
