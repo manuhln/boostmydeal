@@ -255,12 +255,19 @@ export async function processOutboundCall(job: Job<CallQueuePayload>) {
               const liveKitApiKey = process.env.LIVEKIT_API_KEY || 'dev-api-key';
               
               try {
+                // Use AbortController for timeout - wait_until_answered=True in the
+                // SIP endpoint means this call blocks until the phone is picked up
+                // or VoxSun returns a SIP error. Allow up to 90 seconds for ringing.
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
+                
                 const sipCallResponse = await fetch(`${liveKitServerUrl}/start_sip_call`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
                     'X-API-Key': liveKitApiKey
                   },
+                  signal: controller.signal,
                   body: JSON.stringify({
                     room: conversationId,
                     to_phone: payload.to_number,
@@ -282,6 +289,8 @@ export async function processOutboundCall(job: Job<CallQueuePayload>) {
                     recording: telephonePayload.recording
                   })
                 });
+                
+                clearTimeout(timeoutId);
                 
                 if (sipCallResponse.ok) {
                   const sipData = await sipCallResponse.json();

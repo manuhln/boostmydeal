@@ -554,7 +554,21 @@ async def start_sip_call(
                 logger.error(f"⚠️ Failed to save call config: {e}")
                 # Continue anyway - agent worker will use fallback metadata
         
-        # Create agent dispatch with metadata
+        # Step 1: Explicitly create the room FIRST
+        # The room MUST exist before creating agent dispatch and SIP participant.
+        # Without this, there's a race condition where the SIP participant tries
+        # to join a room that doesn't exist yet.
+        try:
+            logger.info(f"🏗️ Creating room: {request_data.room}")
+            room = await livekit_api_client.room.create_room(
+                api.CreateRoomRequest(name=request_data.room)
+            )
+            logger.info(f"✅ Room created: {room.name}")
+        except Exception as e:
+            # Room might already exist (e.g., from a previous attempt) - that's OK
+            logger.warning(f"⚠️ Room creation returned: {e} (may already exist, continuing)")
+        
+        # Step 2: Create agent dispatch with metadata
         metadata = json.dumps({
             "phone_number": request_data.to_phone,
             "contact_name": request_data.contact_name,
@@ -575,19 +589,7 @@ async def start_sip_call(
             logger.error(f"⚠️ Failed to create agent dispatch: {e}")
             # Continue anyway - the SIP participant can still be created
         
-        # Verify room exists
-        try:
-            rooms = await livekit_api_client.room.list_rooms()
-            room_exists = any(room.name == request_data.room for room in rooms)
-            
-            if room_exists:
-                logger.info(f"✅ Room '{request_data.room}' exists")
-            else:
-                logger.warning(f"⚠️ Room '{request_data.room}' not found, will be created by agent system")
-        except Exception as e:
-            logger.warning(f"⚠️ Could not verify room existence: {e}")
-        
-        # Create SIP participant that joins the room
+        # Step 3: Create SIP participant that joins the room and dials the number
         try:
             logger.info("=" * 80)
             logger.info("📞 Creating SIP Participant with parameters:")
@@ -596,6 +598,7 @@ async def start_sip_call(
             logger.info(f"   SIP Call To: {request_data.to_phone}")
             logger.info(f"   Participant Identity (From): {request_data.from_phone}")
             logger.info(f"   Participant Name: {request_data.contact_name}")
+            logger.info(f"   wait_until_answered: True")
             logger.info("=" * 80)
             
             sip_participant = await livekit_api_client.sip.create_sip_participant(
@@ -608,10 +611,15 @@ async def start_sip_call(
                     dtmf="",
                     play_ringtone=True,
                     hide_phone_number=False,
+                    # CRITICAL: Wait for the call to be answered before returning.
+                    # Without this, the SIP participant is created and immediately
+                    # disconnects because the API returns before the call is established.
+                    # See: https://docs.livekit.io/sip/making-calls/
+                    wait_until_answered=True,
                 )
             )
             
-            logger.info(f"✅ SIP Participant created successfully")
+            logger.info(f"✅ SIP Participant created & call answered!")
             logger.info(f"   Participant ID: {sip_participant.participant_identity}")
             logger.info(f"   SIP Call ID: {sip_participant.sip_call_id}")
             logger.info("=" * 80)
@@ -783,6 +791,7 @@ async def start_outbound_call(
                     dtmf="",
                     play_ringtone=True,
                     hide_phone_number=False,
+                    wait_until_answered=True,
                 )
             )
             
