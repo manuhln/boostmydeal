@@ -465,6 +465,68 @@ async def create_sip_trunk(
         if livekit_api_client:
             await livekit_api_client.aclose()
 
+
+@app.get("/list_sip_trunks")
+async def list_sip_trunks(
+    api_key: str = Depends(verify_api_key),
+):
+    """List all outbound SIP trunks for debugging"""
+    livekit_api_client = None
+    try:
+        livekit_api_client = api.LiveKitAPI(
+            url=LIVEKIT_URL,
+            api_key=LIVEKIT_API_KEY,
+            api_secret=LIVEKIT_API_SECRET,
+        )
+        result = await livekit_api_client.sip.list_outbound_trunk(
+            proto_sip.ListSIPOutboundTrunkRequest()
+        )
+        trunks = []
+        for t in result.items:
+            trunks.append({
+                "sip_trunk_id": t.sip_trunk_id,
+                "name": t.name,
+                "address": t.address,
+                "transport": t.transport,
+                "numbers": list(t.numbers),
+                "auth_username": t.auth_username,
+            })
+        logger.info(f"📋 Found {len(trunks)} outbound SIP trunks")
+        return {"trunks": trunks, "count": len(trunks)}
+    except Exception as e:
+        logger.error(f"❌ Failed to list trunks: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if livekit_api_client:
+            await livekit_api_client.aclose()
+
+
+@app.delete("/delete_sip_trunk/{trunk_id}")
+async def delete_sip_trunk(
+    trunk_id: str,
+    api_key: str = Depends(verify_api_key),
+):
+    """Delete a SIP trunk by ID"""
+    livekit_api_client = None
+    try:
+        livekit_api_client = api.LiveKitAPI(
+            url=LIVEKIT_URL,
+            api_key=LIVEKIT_API_KEY,
+            api_secret=LIVEKIT_API_SECRET,
+        )
+        result = await livekit_api_client.sip.delete_trunk(
+            proto_sip.DeleteSIPTrunkRequest(sip_trunk_id=trunk_id)
+        )
+        logger.info(f"🗑️ Deleted SIP trunk: {trunk_id}")
+        return {"status": "deleted", "trunk_id": trunk_id}
+    except Exception as e:
+        logger.error(f"❌ Failed to delete trunk {trunk_id}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if livekit_api_client:
+            await livekit_api_client.aclose()
+
+
 @app.post("/start_sip_call")
 async def start_sip_call(
     request_data: StartSIPCallRequest,

@@ -33,7 +33,8 @@ async def create_voxsun_trunk():
         # Create the trunk configuration
         trunk = proto_sip.SIPOutboundTrunkInfo(
             name="Voxsun Trunk",
-            address="voxsun.net",
+            address="voxsun.net:5060",
+            transport=proto_sip.SIP_TRANSPORT_UDP,  # VoxSun requires UDP
             numbers=["+14384760245"],
             auth_username="VoxSunai@voxsun.com",
             auth_password="Azertyuiop@2025"
