@@ -21,12 +21,8 @@ from livekit.agents import (
     BackgroundAudioPlayer,
     AudioConfig,
     BuiltinAudioClip,
-    room_io
 )
-# try:
-#     from livekit.agents import room_io
-# except ImportError:
-#     from livekit.agents.voice import room_io
+from livekit.agents.voice import room_io
 from livekit.agents.llm import function_tool
 from livekit.plugins import openai, silero, elevenlabs, deepgram, smallestai
 from livekit import api, rtc
@@ -1599,7 +1595,7 @@ async def entrypoint(ctx: JobContext):
 
     # Explicitly link session to the SIP participant so the agent receives their audio.
     # Without this, the default "first participant" may be wrong and the agent won't hear.
-    room_options = room_io.RoomOptions(
+    room_options = room_io.RoomInputOptions(
         participant_identity=participant.identity,
     )
     logger.info(
