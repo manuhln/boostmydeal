@@ -1580,6 +1580,7 @@ async def entrypoint(ctx: JobContext):
     await session.start(
         room=ctx.room,
         agent=assistant,
+        participant=participant,  # Critical: tells the session which participant's audio to listen to
     )
 
     logger.info("Voice agent started successfully")
