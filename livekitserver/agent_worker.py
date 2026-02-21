@@ -22,6 +22,10 @@ from livekit.agents import (
     AudioConfig,
     BuiltinAudioClip,
 )
+try:
+    from livekit.agents import room_io
+except ImportError:
+    from livekit.agents.voice import room_io
 from livekit.agents.llm import function_tool
 from livekit.plugins import openai, silero, elevenlabs, deepgram, smallestai
 from livekit import api, rtc
@@ -1474,6 +1478,21 @@ async def entrypoint(ctx: JobContext):
     # Track full transcript for TRANSCRIPT_COMPLETE webhook
     call_transcript = []
 
+    # Debug: log user speech and state changes to verify conversation pipeline
+    @session.on("user_input_transcribed")
+    def on_user_input_transcribed(event):
+        logger.info(
+            f"🎤 User speech transcribed: is_final={event.is_final}, text={event.transcript[:80] if event.transcript else ''}..."
+        )
+
+    @session.on("user_state_changed")
+    def on_user_state_changed(event):
+        logger.info(f"👤 User state: {event.new_state}")
+
+    @session.on("agent_state_changed")
+    def on_agent_state_changed(event):
+        logger.info(f"🤖 Agent state: {event.new_state}")
+
     # Setup transcript handler
     @session.on("conversation_item_added")
     def on_conversation_item(event):
@@ -1577,13 +1596,32 @@ async def entrypoint(ctx: JobContext):
                                participant_identity=participant.identity)
     assistant._agent_session = session
 
+    # Explicitly link session to the SIP participant so the agent receives their audio.
+    # Without this, the default "first participant" may be wrong and the agent won't hear.
+    room_options = room_io.RoomOptions(
+        participant_identity=participant.identity,
+    )
+    logger.info(
+        f"🔗 Linking AgentSession to participant: {participant.identity} (kind={participant.kind})"
+    )
+
     await session.start(
         room=ctx.room,
         agent=assistant,
-        participant=participant,  # Critical: tells the session which participant's audio to listen to
+        room_options=room_options,
     )
 
     logger.info("Voice agent started successfully")
+
+    # Debug: verify RoomIO linked to correct participant
+    try:
+        linked = session.room_io.linked_participant
+        if linked:
+            logger.info(f"✅ RoomIO linked to: {linked.identity}")
+        else:
+            logger.warning("⚠️ RoomIO linked_participant is None (may resolve shortly)")
+    except Exception as e:
+        logger.debug(f"Could not check linked participant: {e}")
 
     # Start background audio player for typing sounds (only if enabled)
     if assistant.background_audio:
