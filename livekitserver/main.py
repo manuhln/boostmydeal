@@ -718,7 +718,11 @@ async def start_sip_call(
             if "auth" in error_message.lower() or "401" in str(error_code) or "403" in str(error_code):
                 error_msg = f"❌ SIP Authentication Failed: Check Voxsun credentials (username/password/domain). SIP Status: {error_code}"
             elif "not found" in error_message.lower() or error_code in ["404", "480"]:
-                error_msg = f"❌ Room or SIP Trunk not found. Verify trunk ID: {request_data.livekit_sip_trunk_id}"
+                # Differentiate between LiveKit NOT FOUND and SIP NOT FOUND
+                if "sip" in error_message.lower():
+                    error_msg = f"❌ SIP Provider Rejected with 404 (Not Found). Destination number might be invalid or unreachable via this trunk: {request_data.livekit_sip_trunk_id}"
+                else:
+                    error_msg = f"❌ LiveKit Resource Not Found. Verify trunk ID: {request_data.livekit_sip_trunk_id} or Room: {request_data.room}"
             elif "trunk" in error_message.lower():
                 error_msg = f"❌ SIP Trunk '{request_data.livekit_sip_trunk_id}' is invalid or unreachable"
             elif "retry" in error_message.lower():
@@ -734,7 +738,9 @@ async def start_sip_call(
                     "message": error_msg,
                     "sip_status": error_code,
                     "room": request_data.room,
-                    "trunk_id": request_data.livekit_sip_trunk_id
+                    "trunk_id": request_data.livekit_sip_trunk_id,
+                    "raw_error": error_message,
+                    "metadata": e.metadata if hasattr(e, 'metadata') else {}
                 }
             )
         
@@ -882,13 +888,29 @@ async def start_outbound_call(
             }
             
         except api.TwirpError as e:
+            error_code = e.metadata.get("sip_status_code", "UNKNOWN") if hasattr(e, 'metadata') else "UNKNOWN"
             error_msg = (
                 f"SIP error: {e.message}, "
-                f"SIP status: {e.metadata.get('sip_status_code')} "
-                f"{e.metadata.get('sip_status')}"
+                f"SIP status: {error_code} "
+                f"{e.metadata.get('sip_status', 'Unknown')}"
             )
-            logger.error(error_msg)
-            raise HTTPException(status_code=500, detail=error_msg)
+            # Add context for 404 specifically
+            if error_code == "404":
+                error_msg += f" (Note: This often means destination {call_config.to_phone} is unreachable via trunk {call_config.livekit_sip_trunk_id})"
+                
+            logger.error(f"❌ TwirpError in start_outbound_call: {error_msg}")
+            if hasattr(e, 'metadata'):
+                logger.error(f"   Metadata: {e.metadata}")
+                
+            raise HTTPException(
+                status_code=500, 
+                detail={
+                    "error": "SIP Outbound Call Failed",
+                    "message": error_msg,
+                    "sip_status": error_code,
+                    "metadata": e.metadata if hasattr(e, 'metadata') else {}
+                }
+            )
     
     except HTTPException:
         raise
@@ -922,6 +944,11 @@ async def twilio_status_callback(room_name: str, request: Request):
 if __name__ == "__main__":
     logger.info("Starting LiveKit Telephonic Agent Server")
     logger.info("=" * 70)
+    logger.info(f"🌐 ENVIRONMENT:")
+    logger.info(f"  LiveKit URL: {LIVEKIT_URL}")
+    logger.info(f"  LiveKit API Key: {LIVEKIT_API_KEY[:5]}...")
+    logger.info(f"  Default Trunk ID (ENV): {os.getenv('LIVEKIT_SIP_TRUNK_ID', 'Not Set')}")
+    logger.info("=" * 70)
     logger.info("🔒 SECURITY STATUS:")
     if API_KEY:
         logger.info("  ✅ API Key authentication ENABLED")
@@ -929,11 +956,5 @@ if __name__ == "__main__":
     else:
         logger.warning("  ⚠️ API Key NOT SET - Server is UNSECURED!")
         logger.warning("  ⚠️ Set API_KEY environment variable to secure your server")
-    logger.info("=" * 70)
-    logger.info("IMPORTANT: This server uses LiveKit SIP integration")
-    logger.info("You MUST configure:")
-    logger.info("  1. Set API_KEY environment variable for security")
-    logger.info("  2. Pass livekit_sip_trunk_id in JSON request")
-    logger.info("  3. Run agent worker: python agent_worker.py dev")
     logger.info("=" * 70)
     uvicorn.run(app, host="0.0.0.0", port=5000)
