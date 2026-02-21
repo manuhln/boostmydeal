@@ -1595,7 +1595,7 @@ async def entrypoint(ctx: JobContext):
 
     # Explicitly link session to the SIP participant so the agent receives their audio.
     # Without this, the default "first participant" may be wrong and the agent won't hear.
-    room_options = room_io.RoomInputOptions(
+    room_input_options = room_io.RoomInputOptions(
         participant_identity=participant.identity,
     )
     logger.info(
@@ -1605,7 +1605,7 @@ async def entrypoint(ctx: JobContext):
     await session.start(
         room=ctx.room,
         agent=assistant,
-        room_options=room_options,
+        room_input_options=room_input_options,
     )
 
     logger.info("Voice agent started successfully")
