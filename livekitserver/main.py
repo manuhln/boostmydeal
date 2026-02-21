@@ -613,9 +613,31 @@ async def start_sip_call(
                 
                 save_call_config(request_data.room, call_config)
                 logger.info(f"✅ Call configuration saved for room: {request_data.room}")
+                
+                # PRE-FLIGHT VALIDATION: Check if from_phone is registered on the trunk
+                logger.info(f"🔍 Validating {request_data.from_phone} on LiveKit trunk {request_data.livekit_sip_trunk_id}")
+                validation_result = await validate_phone_on_trunk(call_config, livekit_api_client)
+                
+                if not validation_result.get("valid"):
+                    error_code = validation_result.get("code", "VALIDATION_FAILED")
+                    error_message = validation_result.get("message", "Validation failed")
+                    logger.error(f"❌ Validation failed during start_sip_call: {error_message}")
+                    
+                    raise HTTPException(
+                        status_code=400,
+                        detail={
+                            "error": "SIP Pre-flight Validation Failed",
+                            "message": error_message,
+                            "from_phone": request_data.from_phone,
+                            "trunk_id": request_data.livekit_sip_trunk_id
+                        }
+                    )
+            except HTTPException:
+                raise
             except Exception as e:
-                logger.error(f"⚠️ Failed to save call config: {e}")
-                # Continue anyway - agent worker will use fallback metadata
+                logger.error(f"⚠️ Failed to save call config or validate trunk: {e}")
+                # Continue anyway if it's just a config save failure, 
+                # but if validation failed it would have raised HTTPException already
         
         # Step 1: Explicitly create the room FIRST
         # The room MUST exist before creating agent dispatch and SIP participant.
@@ -664,10 +686,9 @@ async def start_sip_call(
             logger.info(f"   wait_until_answered: True")
             logger.info("=" * 80)
             
-            # Strip '+' from phone number for SIP - some providers (like VoxSun)
-            # expect numbers without the '+' prefix in the SIP Request-URI
-            sip_to_number = request_data.to_phone.lstrip('+')
-            logger.info(f"   SIP Call To (stripped): {sip_to_number} (original: {request_data.to_phone})")
+            # Keep '+' prefix for E.164 compliance (especially for VoxSun)
+            sip_to_number = request_data.to_phone
+            logger.info(f"   SIP Call To (E.164): {sip_to_number}")
 
             sip_participant = await livekit_api_client.sip.create_sip_participant(
                 api.CreateSIPParticipantRequest(
@@ -856,9 +877,9 @@ async def start_outbound_call(
         logger.info(f"✅ Validation passed - proceeding with call")
         
         try:
-            # Strip '+' from phone number for SIP providers that expect it without prefix
-            sip_to_number = call_config.to_phone.lstrip('+')
-            logger.info(f"📞 SIP Call To (stripped): {sip_to_number} (original: {call_config.to_phone})")
+            # Keep '+' prefix for E.164 compliance
+            sip_to_number = call_config.to_phone
+            logger.info(f"📞 SIP Call To (E.164): {sip_to_number}")
 
             sip_participant = await livekit_api_client.sip.create_sip_participant(
                 api.CreateSIPParticipantRequest(
