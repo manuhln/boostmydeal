@@ -21,11 +21,12 @@ from livekit.agents import (
     BackgroundAudioPlayer,
     AudioConfig,
     BuiltinAudioClip,
+    room_io
 )
-try:
-    from livekit.agents import room_io
-except ImportError:
-    from livekit.agents.voice import room_io
+# try:
+#     from livekit.agents import room_io
+# except ImportError:
+#     from livekit.agents.voice import room_io
 from livekit.agents.llm import function_tool
 from livekit.plugins import openai, silero, elevenlabs, deepgram, smallestai
 from livekit import api, rtc
