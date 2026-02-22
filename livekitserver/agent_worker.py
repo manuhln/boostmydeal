@@ -1427,8 +1427,8 @@ async def entrypoint(ctx: JobContext):
             if call_config.webhook_url:
                 try:
                     call_end_time = datetime.utcnow()
-                    duration_seconds = int(
-                        (call_end_time - call_start_time).total_seconds())
+                    # Use 0 for failed calls (never connected)
+                    duration_seconds = 0
                     await webhook_sender.send_call_ended(
                         call_config.webhook_url,
                         call_id,

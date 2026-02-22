@@ -14,6 +14,7 @@ import ragRoutes from '../modules/rag/routes/ragRoutes';
 import knowledgeRoutes from './knowledge';
 import billingRoutes from './billingRoutes';
 import teamRoutes from './teamRoutes';
+import notificationRoutes from '../modules/notifications/routes/notificationRoutes';
 
 const router = Router();
 
@@ -32,6 +33,7 @@ router.use('/rag', ragRoutes);
 router.use('/knowledge', knowledgeRoutes);
 router.use('/billing', billingRoutes);
 router.use('/team', teamRoutes);
+router.use('/notifications', notificationRoutes);
 
 // Mount webhook routes FIRST (before any auth middleware)
 router.use('/webhook', webhookRouter);

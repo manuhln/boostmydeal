@@ -28,6 +28,9 @@ export interface ICall extends Document {
     timestamp?: Date;
   }>; // Store array of webhook data for different event types
   user_tags?: string[]; // Array of user-defined tags
+  errorMessage?: string; // Human-readable error when call fails
+  endReason?: string; // Reason from webhook (e.g. SIP status, end_reason)
+  failureType?: 'call' | 'system' | 'agent'; // call=callee/carrier, system=infra, agent=runtime
   createdAt: Date;
   updatedAt: Date;
 }
@@ -75,6 +78,9 @@ const callSchema = new Schema<ICall>({
   endedAt: Date,
   webhookPayload: [Schema.Types.Mixed],
   user_tags: { type: [String], default: [] },
+  errorMessage: String,
+  endReason: String,
+  failureType: { type: String, enum: ['call', 'system', 'agent'] },
 }, {
   timestamps: true,
 });

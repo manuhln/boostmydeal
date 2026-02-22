@@ -21,7 +21,8 @@ import {
   Zap,
   Activity,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Bell
 } from "lucide-react";
 import { useAuth, useLogout } from "@/hooks/useAuth";
 import { useUserWithOrganization } from "@/hooks/useUser";
@@ -38,6 +39,7 @@ const navigationItems = [
   { id: "integrations", label: "Integrations", href: "/integrations", icon: Zap },
   { id: "phone-numbers", label: "Phone Numbers", href: "/phone-numbers", icon: PhoneCall },
   { id: "call-logs", label: "Call Logs", href: "/call-logs", icon: Phone },
+  { id: "notifications", label: "Notifications", href: "/notifications", icon: Bell },
   { id: "knowledge-base", label: "Knowledge Base", href: "/knowledge-base", icon: Database },
   // { id: "webhook-debug", label: "Webhook Debug", href: "/webhook-debug", icon: Activity }, // Temporarily commented out
   { id: "settings", label: "Settings", href: "/settings", icon: Settings },

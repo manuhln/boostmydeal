@@ -18,6 +18,7 @@ import CreateWorkflow from "@/pages/CreateWorkflow";
 import WorkflowExecutionHistory from "@/pages/WorkflowExecutionHistory";
 import KnowledgeBase from "@/pages/KnowledgeBase";
 import WebhookDebug from "@/pages/WebhookDebug";
+import Notifications from "@/pages/Notifications";
 
 
 import AcceptInvite from "@/pages/AcceptInvite";
@@ -71,6 +72,7 @@ function Router() {
       <Route path="/workflows/edit/:id" component={CreateWorkflow} />
       <Route path="/workflows/execution-history/:workflowId" component={WorkflowExecutionHistory} />
       <Route path="/knowledge-base" component={KnowledgeBase} />
+      <Route path="/notifications" component={Notifications} />
       <Route path="/webhook-debug" component={WebhookDebug} />
 
       <Route path="/settings" component={Settings} />

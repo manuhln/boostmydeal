@@ -697,13 +697,25 @@ export class CallService {
   async updateCallWithSuccess(callId: string, externalCallId: string, responseData: any): Promise<boolean> {
     try {
       console.log(`✅ [CallService] Updating call record ${callId} with success status and external call_id: ${externalCallId}`);
-      
-      await Call.findByIdAndUpdate(callId, {
+
+      const updateData: Record<string, any> = {
         status: 'initiated',
-        externalCallId: externalCallId,
-        telephoneServerResponse: responseData,
+        roomName: externalCallId, // Required for webhook lookup by call_id
         updatedAt: new Date()
-      });
+      };
+
+      // Set provider-specific identifiers from response
+      if (responseData?.room_name) {
+        updateData.roomName = responseData.room_name;
+      }
+      if (responseData?.call_id) {
+        updateData.voxsunCallId = responseData.call_id;
+      }
+      if (responseData?.twilioSid) {
+        updateData.twilioSid = responseData.twilioSid;
+      }
+
+      await Call.findByIdAndUpdate(callId, updateData);
 
       console.log(`✅ [CallService] Call record updated successfully with success status`);
       return true;
@@ -714,18 +726,50 @@ export class CallService {
   }
 
   /**
-   * Update call record with failure status and error details
+   * Update call record with failure status and error details.
+   * Sets duration: 0, endedAt, and infers failureType from error context.
    */
   async updateCallWithFailure(callId: string, errorMessage: string, errorData: any): Promise<boolean> {
     try {
       console.log(`❌ [CallService] Updating call record ${callId} with failure status: ${errorMessage}`);
-      
+
+      // Infer failureType: SIP/carrier -> call, network/telephonic -> system, else -> agent
+      let failureType: 'call' | 'system' | 'agent' = 'system';
+      const msgLower = errorMessage.toLowerCase();
+      if (msgLower.includes('sip') || msgLower.includes('busy') || msgLower.includes('no-answer') || msgLower.includes('rejected')) {
+        failureType = 'call';
+      } else if (msgLower.includes('network') || msgLower.includes('timeout') || msgLower.includes('telephonic') || msgLower.includes('connect')) {
+        failureType = 'system';
+      }
+
+      const callRecord = await Call.findById(callId);
       await Call.findByIdAndUpdate(callId, {
         status: 'failed',
+        duration: 0,
+        endedAt: new Date(),
         errorMessage: errorMessage,
-        errorData: errorData,
+        endReason: errorMessage,
+        failureType,
         updatedAt: new Date()
       });
+
+      // Emit notification (async, non-blocking)
+      if (callRecord?.organizationId) {
+        setImmediate(async () => {
+          try {
+            const { createCallNotification } = await import('../../notifications/services/NotificationService');
+            await createCallNotification(
+              callRecord.organizationId,
+              'system_error',
+              'Call failed',
+              `Call failed: ${errorMessage}`,
+              { callId, endReason: errorMessage, failureType, contactPhone: callRecord.contactPhone, contactName: callRecord.contactName }
+            );
+          } catch (notifErr) {
+            console.error('❌ [CallService] Error creating failure notification:', notifErr);
+          }
+        });
+      }
 
       console.log(`✅ [CallService] Call record updated successfully with failure status`);
       return true;
@@ -1190,27 +1234,44 @@ export class CallService {
       
       if (webhookData.type === 'PHONE_CALL_ENDED') {
         // Determine call status based on webhook data
+        const isRejected = webhookData.is_rejected === true;
+        const callOutcome = webhookData.call_outcome || '';
+        const endReason = webhookData.end_reason || '';
+
         if (webhookData.is_voicemail) {
           conditionalUpdates.status = 'voicemail';
-        } else if (webhookData.call_status === 'no-answer' || webhookData.status === 'no-answer') {
+        } else if (isRejected || callOutcome === 'not_answered' || webhookData.call_status === 'no-answer' || webhookData.status === 'no-answer') {
           conditionalUpdates.status = 'no-answer';
+          conditionalUpdates.failureType = 'call';
+          conditionalUpdates.endReason = endReason || 'Call not answered';
+          conditionalUpdates.duration = 0;
+        } else if (callOutcome === 'busy' || webhookData.call_status === 'busy') {
+          conditionalUpdates.status = 'busy';
+          conditionalUpdates.failureType = 'call';
+          conditionalUpdates.endReason = endReason || 'Line busy';
+          conditionalUpdates.duration = 0;
+        } else if (callOutcome === 'failed' || callOutcome === 'error') {
+          conditionalUpdates.status = 'failed';
+          conditionalUpdates.failureType = 'call';
+          conditionalUpdates.endReason = endReason || callOutcome;
+          conditionalUpdates.duration = Math.round(webhookData.duration_seconds || 0);
         } else {
           conditionalUpdates.status = 'completed';
+          conditionalUpdates.duration = Math.round(webhookData.duration_seconds || 0);
         }
-        
-        conditionalUpdates.duration = Math.round(webhookData.duration_seconds || 0);
-        conditionalUpdates.endedAt = new Date(webhookData.call_end_time);
-        
+
+        conditionalUpdates.endedAt = webhookData.call_end_time ? new Date(webhookData.call_end_time) : new Date();
+
         if (webhookData.call_start_time && !callRecord.startedAt) {
           conditionalUpdates.startedAt = new Date(webhookData.call_start_time);
         }
-        
+
         // Save recording URL from PHONE_CALL_ENDED webhook
         if (webhookData.recording_url) {
           conditionalUpdates.recording = webhookData.recording_url;
           console.log(`🎥 [Webhook Service] Saved recording URL from PHONE_CALL_ENDED: ${webhookData.recording_url}`);
         }
-        
+
         console.log(`📱 [Webhook Service] Call ended with status: ${conditionalUpdates.status}, voicemail: ${webhookData.is_voicemail}, duration: ${conditionalUpdates.duration}s`);
       } else if (webhookData.type === 'PHONE_CALL_CONNECTED') {
         conditionalUpdates.status = 'in-progress';
@@ -1295,7 +1356,55 @@ export class CallService {
         console.error(`[Webhook Service] Failed to update call record ${callRecord._id} for webhook type: ${webhookData.type}`);
         return;
       }
-      
+
+      // Emit notifications for call failures (async, non-blocking)
+      if (webhookData.type === 'PHONE_CALL_ENDED' && callRecord.organizationId) {
+        const status = conditionalUpdates.status ?? updateResult.status;
+        const contactName = callRecord.contactName || 'Unknown';
+        const contactPhone = callRecord.contactPhone || '';
+
+        setImmediate(async () => {
+          try {
+            const { createCallNotification } = await import('../../notifications/services/NotificationService');
+            if (status === 'no-answer') {
+              await createCallNotification(
+                callRecord.organizationId,
+                'call_no_answer',
+                'Call not answered',
+                `Call to ${contactName} (${contactPhone}) was not answered. ${conditionalUpdates.endReason || ''}`.trim(),
+                { callId: callRecord._id?.toString(), endReason: conditionalUpdates.endReason, failureType: 'call', contactPhone, contactName }
+              );
+            } else if (status === 'busy') {
+              await createCallNotification(
+                callRecord.organizationId,
+                'call_busy',
+                'Line busy',
+                `Call to ${contactName} (${contactPhone}) - line was busy.`,
+                { callId: callRecord._id?.toString(), endReason: conditionalUpdates.endReason, failureType: 'call', contactPhone, contactName }
+              );
+            } else if (status === 'failed') {
+              await createCallNotification(
+                callRecord.organizationId,
+                'call_failed',
+                'Call failed',
+                `Call to ${contactName} (${contactPhone}) failed. ${conditionalUpdates.endReason || ''}`.trim(),
+                { callId: callRecord._id?.toString(), endReason: conditionalUpdates.endReason, failureType: conditionalUpdates.failureType, contactPhone, contactName }
+              );
+            } else if (status === 'completed') {
+              await createCallNotification(
+                callRecord.organizationId,
+                'call_success',
+                'Call completed',
+                `Call to ${contactName} (${contactPhone}) completed successfully.`,
+                { callId: callRecord._id?.toString(), contactPhone, contactName }
+              );
+            }
+          } catch (notifErr) {
+            console.error('❌ [Webhook Service] Error creating call notification:', notifErr);
+          }
+        });
+      }
+
       console.log(`[Webhook Service] Call record ${callRecord._id} was successfully updated for webhook type: ${webhookData.type}`);
       console.log(`[Webhook Service] Updated webhook count: ${updateResult.webhookPayload?.length || 0}`);
       console.log(`[Webhook Service] All webhook types: ${updateResult.webhookPayload?.map(w => w.type).join(', ') || 'none'}`);

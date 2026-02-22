@@ -27,6 +27,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import {
   Download,
   Filter,
   Phone,
@@ -783,7 +789,7 @@ export default function CallLogs() {
 
                             {/* Date */}
                             <TableCell className="text-foreground">
-                              {formatDate(call.startedAt)}
+                              {formatDate((call as any).startedAt || (call as any).createdAt)}
                             </TableCell>
 
                             {/* Duration */}
@@ -796,50 +802,80 @@ export default function CallLogs() {
                               {formatCost(call.cost || undefined)}
                             </TableCell>
 
-                            {/* Call ID (twilioSid) */}
+                            {/* Call ID (roomName, twilioSid, or voxsunCallId) */}
                             <TableCell className="text-foreground font-mono text-sm">
-                              {(call as any).twilioSid || "-"}
+                              {(call as any).roomName || (call as any).twilioSid || (call as any).voxsunCallId || "-"}
                             </TableCell>
 
                             {/* Status */}
                             <TableCell className="min-w-[120px]">
-                              <span
-                                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${
-                                  call.status === "completed"
-                                    ? "border-[#F74000] text-[#F74000]"
-                                    : call.status === "in_progress" ||
-                                        call.status === "in-progress"
-                                      ? "border-[#F74000] text-[#F74000]"
-                                      : call.status === "failed"
-                                        ? "border-red-500 text-red-500"
-                                        : call.status === "voicemail"
-                                          ? "border-orange-500 text-orange-500"
-                                          : call.status === "missed"
-                                            ? "border-red-500 text-red-500"
-                                            : call.status === "queued"
-                                              ? "border-[#F74000] text-[#F74000]"
-                                              : call.status === "ringing"
-                                                ? "border-[#F74000] text-[#F74000]"
-                                                : "border-gray-500 text-gray-500"
-                                }`}
-                              >
-                                {call.status === "completed"
-                                  ? "Completed"
-                                  : call.status === "missed"
-                                    ? "Missed"
-                                    : call.status === "failed"
-                                      ? "Failed"
-                                      : call.status === "voicemail"
-                                        ? "Voicemail"
+                              {(() => {
+                                const errorMsg = (call as any).errorMessage || (call as any).endReason;
+                                const failureType = (call as any).failureType;
+                                const statusSpan = (
+                                  <span
+                                    className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${
+                                      call.status === "completed"
+                                        ? "border-[#F74000] text-[#F74000]"
                                         : call.status === "in_progress" ||
                                             call.status === "in-progress"
-                                          ? "In Progress"
-                                          : call.status === "queued"
-                                            ? "Queued"
-                                            : call.status === "ringing"
-                                              ? "Ringing"
-                                              : call.status.replace("_", " ")}
-                              </span>
+                                          ? "border-[#F74000] text-[#F74000]"
+                                          : call.status === "failed"
+                                            ? "border-red-500 text-red-500"
+                                            : call.status === "no-answer"
+                                              ? "border-orange-500 text-orange-500"
+                                              : call.status === "voicemail"
+                                                ? "border-orange-500 text-orange-500"
+                                                : call.status === "missed"
+                                                  ? "border-red-500 text-red-500"
+                                                    : call.status === "queued"
+                                                    ? "border-[#F74000] text-[#F74000]"
+                                                    : call.status === "ringing"
+                                                      ? "border-[#F74000] text-[#F74000]"
+                                                      : call.status === "initiated"
+                                                        ? "border-[#F74000] text-[#F74000]"
+                                                        : "border-gray-500 text-gray-500"
+                                    }`}
+                                  >
+                                    {call.status === "completed"
+                                      ? "Completed"
+                                      : call.status === "missed"
+                                        ? "Missed"
+                                        : call.status === "failed"
+                                          ? "Failed"
+                                          : call.status === "no-answer"
+                                            ? "No Answer"
+                                            : call.status === "voicemail"
+                                              ? "Voicemail"
+                                              : call.status === "in_progress" ||
+                                                  call.status === "in-progress"
+                                                ? "In Progress"
+                                                : call.status === "queued"
+                                                    ? "Queued"
+                                                    : call.status === "ringing"
+                                                      ? "Ringing"
+                                                      : call.status === "initiated"
+                                                        ? "Initiated"
+                                                        : call.status.replace("_", " ")}
+                                    {failureType && ["failed", "no-answer", "busy"].includes(call.status) && (
+                                      <span className="text-[10px] opacity-80">({failureType})</span>
+                                    )}
+                                  </span>
+                                );
+                                if (errorMsg && ["failed", "no-answer", "busy"].includes(call.status)) {
+                                  return (
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>{statusSpan}</TooltipTrigger>
+                                        <TooltipContent className="max-w-xs">
+                                          <p>{errorMsg}</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  );
+                                }
+                                return statusSpan;
+                              })()}
                             </TableCell>
 
                             {/* Tags */}

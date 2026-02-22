@@ -47,12 +47,19 @@ export async function processCallTimeoutCheck(job: any) {
     
     // No PHONE_CALL_CONNECTED webhook received within timeout period
     console.log(`❌ [CallTimeoutChecker] No PHONE_CALL_CONNECTED webhook received for call ${payload.callId} within ${payload.checkAfterMinutes} minutes`);
-    
-    // Mark call as failed
+
+    const errorMessage = 'No PHONE_CALL_CONNECTED webhook received within timeout period';
+
+    // Mark call as failed with duration 0, endedAt, errorMessage, failureType
     const updatedCall = await Call.findByIdAndUpdate(
       payload.callId,
       {
         status: 'failed',
+        duration: 0,
+        endedAt: new Date(),
+        errorMessage,
+        endReason: errorMessage,
+        failureType: 'system',
         updatedAt: new Date(),
         // Add a webhook entry to track the timeout
         $push: {
@@ -60,7 +67,7 @@ export async function processCallTimeoutCheck(job: any) {
             type: 'CALL_TIMEOUT',
             call_id: payload.callId,
             data: {
-              reason: 'No PHONE_CALL_CONNECTED webhook received',
+              reason: errorMessage,
               timeoutAfterMinutes: payload.checkAfterMinutes,
               checkedAt: new Date()
             },
@@ -72,9 +79,27 @@ export async function processCallTimeoutCheck(job: any) {
     );
     
     if (updatedCall) {
+      // Emit notification (async, non-blocking)
+      if (callRecord.organizationId) {
+        setImmediate(async () => {
+          try {
+            const { createCallNotification } = await import('../../notifications/services/NotificationService');
+            await createCallNotification(
+              callRecord.organizationId,
+              'call_timeout',
+              'Call timeout',
+              `Call to ${callRecord.contactName || callRecord.contactPhone || 'unknown'} did not connect within ${payload.checkAfterMinutes} minutes. No PHONE_CALL_CONNECTED webhook received.`,
+              { callId: payload.callId, endReason: errorMessage, failureType: 'system', contactPhone: callRecord.contactPhone, contactName: callRecord.contactName }
+            );
+          } catch (notifErr) {
+            console.error('❌ [CallTimeoutChecker] Error creating timeout notification:', notifErr);
+          }
+        });
+      }
+
       console.log(`✅ [CallTimeoutChecker] Call ${payload.callId} marked as failed due to timeout`);
-      return { 
-        success: true, 
+      return {
+        success: true,
         message: 'Call marked as failed due to timeout',
         previousStatus: callRecord.status,
         newStatus: 'failed'
