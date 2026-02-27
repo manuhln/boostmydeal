@@ -48,10 +48,10 @@ export function Hero() {
               {t('hero.poweredBy')}
             </Chip>
           </div>
-          <h1 className="text-xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
+          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
             {t('hero.title')}
           </h1>
-          <p className="text-lg sm:text-2xl text-white mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
+          <p className="text-xl sm:text-2xl text-white mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
             {t('hero.subtitle')} {t('hero.description')}
           </p>
 
