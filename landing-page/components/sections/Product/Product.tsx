@@ -13,7 +13,7 @@ export default function Product() {
   const { t } = useTranslation()
 
   return (
-    <Section background="white" spacing="lg" id='product'>
+    <Section background="white" spacing="sm" id='product'>
       <Container>
         <ContentLayout
           imagePosition="right"
@@ -28,7 +28,7 @@ export default function Product() {
           className="bg-white"
         />
       </Container>
-      <Container className='mt-28'>
+      <Container className='mt-10'>
         <ContentLayout
           imagePosition="left"
           image={Images.pain}

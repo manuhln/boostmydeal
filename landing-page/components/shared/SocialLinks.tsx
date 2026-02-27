@@ -2,7 +2,6 @@
 
 import { Icons } from '@/constants/icon-import'
 import { SOCIAL_LINKS } from '@/constants/site-config'
-import Image from 'next/image'
 
 const iconMap = {
   facebook: Icons.facebook,
@@ -10,6 +9,7 @@ const iconMap = {
   twitter: Icons.twitter,
   linkedin: Icons.linkedin
 }
+
 
 export function SocialLinks() {
   return (
@@ -24,8 +24,9 @@ export function SocialLinks() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.name}
+            className='w-full'
           >
-            {Icon && <Image src={Icon} width={200} height={200} alt='social' />}
+            {Icon && <Icon className='text-white border border-white  rounded-lg text-3xl h-auto w-auto p-2 ' />}
           </a>
         )
       })}

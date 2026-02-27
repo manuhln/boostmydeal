@@ -14,8 +14,8 @@ export default function IndustryCase() {
   const { t } = useTranslation()
 
   return (
-    <Section background="white" spacing="lg" id=''>
-      <Container className='mb-40'>
+    <Section background="white" spacing="sm" id=''>
+      <Container className='mb-6'>
         <ContentLayout imagePosition="right"
           layout='centered'
           chip={{
@@ -62,9 +62,8 @@ export default function IndustryCase() {
           title={t('highPerformance.title')}
           description={t('highPerformance.description')}
         />
-
         {/* Grid des cartes industries */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {industries.map((industry, index) => (
             <Card
               key={index}
@@ -72,7 +71,7 @@ export default function IndustryCase() {
               icon={industry.icon}
               title={t(industry.titleKey)}
               description={t(industry.descriptionKey)}
-              className=' border-gray-200  '
+              className=' border-gray-200'
             />
           ))}
         </div>

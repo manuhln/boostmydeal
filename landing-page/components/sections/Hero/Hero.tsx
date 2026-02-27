@@ -19,7 +19,7 @@ export function Hero() {
   const [isWaitModalOpen, setIsWaitModalOpen] = useState(false)
   return (
     <Section background="white" spacing="none" id='hero'
-      className="relative min-h-screen mt-0 pt-0 sm:min-h-screen flex items-center overflow-hidden"
+      className="relative min-h-screen mt-4 pt-0 sm:min-h-screen flex items-center overflow-hidden"
     >
       {/* Background Image avec gradient overlay */}
       <div
@@ -35,7 +35,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-white/10 to-white/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-orange-500/20 via-transparent to-transparent" />
       </div>
-      <Container className="relative z-10">
+      <Container className="relative z-10 mt-0">
         <div className="max-w-4xl mx-auto text-center ">
           <div className="flex justify-center mb-8 animate-fade-in">
             <Chip
@@ -48,10 +48,10 @@ export function Hero() {
               {t('hero.poweredBy')}
             </Chip>
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
+          <h1 className="text-xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
             {t('hero.title')}
           </h1>
-          <p className="text-xl sm:text-2xl text-white mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
+          <p className="text-lg sm:text-2xl text-white mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
             {t('hero.subtitle')} {t('hero.description')}
           </p>
 
@@ -60,7 +60,7 @@ export function Hero() {
               variant="outline"
               size="lg"
               onClick={() => scrollToSection('pricing')}
-              className="relative whitespace-nowrap  drop-shadow-white drop-shadow-lg hover:shadow-xl transition-all duration-300 border-none outline-none  "
+              className="relative whitespace-nowrap   hover:shadow-xl transition-all duration-300 border-none outline-none  "
             >
               {t('hero.cta')}
             </Button>
@@ -71,7 +71,7 @@ export function Hero() {
               icon={<Icons.playIcon />}
               iconPosition="left"
               onClick={() => setIsModalOpen(true)}
-              className="group drop-shadow-white drop-shadow-lg  whitespace-nowrap transition-all duration-300"
+              className="group   whitespace-nowrap transition-all duration-300"
             >
               {t('hero.demo')}
             </Button>
@@ -81,7 +81,7 @@ export function Hero() {
               icon={<Icons.fileListIcon />}
               iconPosition="left"
               onClick={() => setIsWaitModalOpen(true)}
-              className="group drop-shadow-white drop-shadow-lg  whitespace-nowrap transition-all duration-300"
+              className="group   whitespace-nowrap transition-all duration-300"
             >
               {t('hero.waitlist')}
             </Button>

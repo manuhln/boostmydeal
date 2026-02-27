@@ -27,13 +27,14 @@ import Signup from "@/pages/Signup";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 import NotFound from "@/pages/not-found";
+import Onboarding from "./pages/Onboarding";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
-  
+
   // Always check for token first
   const hasToken = !!localStorage.getItem('authToken');
-  
+
   // Removed continuous logging to prevent console spam
 
   if (isLoading && hasToken) {
@@ -50,12 +51,13 @@ function Router() {
   if (!hasToken || !isAuthenticated) {
     return (
       <Switch>
+        <Route path="/wizard" component={Onboarding} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/forgot-password" component={ForgotPassword} />
         <Route path="/reset-password" component={ResetPassword} />
         <Route path="/accept-invite/:token" component={AcceptInvite} />
-        <Route component={Login} /> {/* Default to login for any other route */}
+        <Route component={Login} />
       </Switch>
     );
   }
@@ -65,8 +67,8 @@ function Router() {
       <Route path="/" component={Dashboard} />
       <Route path="/call-logs" component={CallLogs} />
       <Route path="/agents" component={AgentManagement} />
-      <Route path="/integrations" component={Integrations} />
       <Route path="/phone-numbers" component={PhoneNumbers} />
+      <Route path="/integrations" component={Integrations} />
       <Route path="/workflows" component={Workflows} />
       <Route path="/workflows/create" component={CreateWorkflow} />
       <Route path="/workflows/edit/:id" component={CreateWorkflow} />

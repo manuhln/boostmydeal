@@ -88,7 +88,7 @@ export function Plans() {
   ];
 
   return (
-    <Section background="white" spacing="lg" id="pricing">
+    <Section background="white" spacing="sm" id="pricing">
       <ContentLayout
         layout="centered"
         chip={{ icon: <Image src={Icons.planIcon} alt='icon' width={15} height={15} />, text: t('pricing.chipLabel') }}
@@ -98,7 +98,7 @@ export function Plans() {
         maxWidth="xl"
       >
         {/* Toggle Monthly/Yearly */}
-        <div className="flex justify-center mt-8 mb-12">
+        <div className="flex justify-center mt-8 mb-4">
           <Toggle
             options={[t('pricing.billing.monthly'), t('pricing.billing.yearly')]}
             selected={billingPeriod === 'Monthly' ? t('pricing.billing.monthly') : t('pricing.billing.yearly')}

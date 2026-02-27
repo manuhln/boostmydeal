@@ -69,7 +69,7 @@ export function ContentLayout({
   // Layout Centered
   if (layout === 'centered') {
     return (
-      <div className={`${maxWidthClasses[maxWidth]} mx-auto text-center ${className}`}>
+      <div className={`${maxWidthClasses[maxWidth]} mx-auto text-center  ${className}`}>
         {/* Chip centré */}
         {chip && (
           <div className="flex justify-center mb-6">

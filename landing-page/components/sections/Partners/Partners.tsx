@@ -51,7 +51,7 @@ export function Partners() {
   const videoUrl = "https://voxsun.com/images/BoostMyDeal.mov"
 
   return (
-    <Section background="white" spacing="lg" id=''>
+    <Section background="white" spacing="sm" id=''>
       {/* Video Container - Chevauchement avec section précédente */}
       <div className="relative -mt-28 lg:-mt-38 mb-16">
         <button
@@ -89,7 +89,7 @@ export function Partners() {
             </div>
 
             {/* Texte sous la vidéo */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 to-transparent">
+            <div className="absolute hidden lg:block bottom-0 left-0 right-0 p-6 to-transparent">
               <p className="text-gray-900 text-center text-sm sm:text-base font-medium">
                 {t('partners.videoCaption')}
               </p>

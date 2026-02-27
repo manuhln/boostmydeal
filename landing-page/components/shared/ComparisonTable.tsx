@@ -186,12 +186,12 @@ export function ComparisonTable({
             {features.map((item, index) => (
               <tr
                 key={index}
-                className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-white' : 'bg-orange-50/20'}`}
+                className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-white' : 'bg-orange-50'}`}
               >
                 <td className="p-3 text-xs text-gray-800 sticky left-0 z-10 bg-inherit font-medium">
                   {item.feature}
                 </td>
-                <td className={`p-3 ${index % 2 === 0 ? 'bg-orange-50/30' : 'bg-orange-50/50'}`}>
+                <td className={`p-3 ${index % 2 === 0 ? 'bg-orange-50' : 'bg-orange-50'}`}>
                   {renderCell(item.boostMyDeal)}
                 </td>
                 {competitors.map((competitor, idx) => (

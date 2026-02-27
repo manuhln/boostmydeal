@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useSignup } from "@/hooks/useAuth";
 import { UserPlus, Building2 } from "lucide-react";
+import { BoostMyLeadWhiteLogo } from "@/components/BoostmyLeadwhite";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const signupSchema = z.object({
   organizationName: z.string().min(1, "Organization name is required"),
@@ -44,7 +46,7 @@ export default function Signup() {
   const { toast } = useToast();
   const signup = useSignup();
   const [isLoading, setIsLoading] = useState(false);
-
+  const { theme } = useTheme()
   const form = useForm<FormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -63,12 +65,12 @@ export default function Signup() {
     setIsLoading(true);
     try {
       await signup(data);
-      
+
       toast({
         title: "Account Created!",
         description: "Your organization has been set up successfully.",
       });
-      
+
       // Add a longer delay to ensure token is properly stored and auth state updated
       setTimeout(() => {
         console.log('Redirecting to dashboard, token exists:', !!localStorage.getItem('authToken'));
@@ -93,21 +95,21 @@ export default function Signup() {
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-")
       .replace(/^-|-$/g, "");
-    
+
     form.setValue("organizationSlug", slug);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center">
-            <BoostMyLeadLogo width={100} height={50} className="hover:opacity-80 transition-opacity" />
+            {theme === 'light' ? <BoostMyLeadWhiteLogo width={100} height={50} className="hover:opacity-80 transition-opacity" /> : <BoostMyLeadLogo width={100} height={50} className="hover:opacity-80 transition-opacity" />}
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">
+          <h2 className="mt-6 text-3xl font-bold text-foreground">
             Create your organization
           </h2>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-foreground">
             Start managing your voice AI agents today
           </p>
         </div>

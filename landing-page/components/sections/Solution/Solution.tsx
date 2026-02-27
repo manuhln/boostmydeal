@@ -12,7 +12,7 @@ export default function Solution() {
   const { t } = useTranslation()
 
   return (
-    <Section background="dark" spacing="lg" id='solutions'>
+    <Section background="dark" spacing="sm" id='solutions'>
       <Container>
         <ContentLayout
           imagePosition="right"

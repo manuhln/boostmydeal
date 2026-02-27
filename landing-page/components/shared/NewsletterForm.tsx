@@ -4,7 +4,7 @@ import { useTranslation } from '@/context/LanguageContext'
 import { useState, FormEvent } from 'react'
 
 
-export function NewsletterForm() {
+export function NewsletterForm({ className }: { className?: string }) {
   const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -28,7 +28,7 @@ export function NewsletterForm() {
     setMessage(null)
 
     try {
-      // Simule un appel API (remplace par ton vrai endpoint)
+
       await new Promise(resolve => setTimeout(resolve, 1000))
 
       // Ici tu ferais ton appel API réel
@@ -48,7 +48,7 @@ export function NewsletterForm() {
 
   return (
     <div className="space-y-3">
-      <form onSubmit={handleSubmit} className="flex p-2 bg-gray-50/20 gap-2 text-white placeholder-gray-500 rounded-xl border-none border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+      <form onSubmit={handleSubmit} className={className ? className : "flex p-2 bg-gray-50/20 gap-2 text-white placeholder-gray-500 rounded-xl border-none border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"}
       >
         <input
           type="email"

@@ -44,12 +44,12 @@ export default function Login() {
     setIsLoading(true);
     try {
       await login(data);
-      
+
       toast({
         title: "Welcome back!",
         description: "You have been successfully logged in.",
       });
-      
+
       // Add a longer delay to ensure token is properly stored and auth state updated
       setTimeout(() => {
         console.log('Redirecting to dashboard, token exists:', !!localStorage.getItem('authToken'));

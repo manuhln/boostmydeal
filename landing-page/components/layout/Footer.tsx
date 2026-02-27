@@ -32,9 +32,9 @@ export function Footer() {
             </div>
 
             {/* Right side - Newsletter Form */}
-            <div className="w-full lg:w-auto lg:flex-shrink-0">
-              <NewsletterForm />
-              <span>We care about your data in our privacy policy.</span>
+            <div className="w-full lg:w-auto lg:flex-shrink-0 hidden lg:block ">
+              <NewsletterForm className='flex p-2 bg-gray-500/50 gap-2 text-white placeholder-gray-500 rounded-xl border-none border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent' />
+              <span className='hidden lg:block'>We care about your data in our privacy policy.</span>
             </div>
           </div>
         </Container>

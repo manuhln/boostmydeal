@@ -36,7 +36,6 @@ export default function WaitlistModal({ isOpen, onClose, logo }: WaitlistModalPr
   const { t } = useTranslation()
   const [waitlistResult, setWaitlistResult] = useState<WaitlistResult | null>(null);
 
-  // Reset modal when closed
   useEffect(() => {
     if (!isOpen) {
       setTimeout(() => {
@@ -92,7 +91,7 @@ export default function WaitlistModal({ isOpen, onClose, logo }: WaitlistModalPr
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in">
-        {/* Header */}
+
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
           <div className="flex items-center gap-3">
             <Image src={logo} alt="logo" width={32} height={32} className="object-contain" />
@@ -111,7 +110,6 @@ export default function WaitlistModal({ isOpen, onClose, logo }: WaitlistModalPr
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
           {step === 'form' ? (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -220,7 +218,7 @@ export default function WaitlistModal({ isOpen, onClose, logo }: WaitlistModalPr
 
               <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('waitlist.modal.success.title')}</h3>
 
-              <div className="bg-gray-50 rounded-xl p-6 text-left mb-6 border-l-4 border-green-500">
+              <div className="bg-gray-50 rounded-xl p-6 text-left mb-6 ">
                 <p className="text-gray-700 mb-3">
                   {t('waitlist.modal.success.thankYou')} {formData.firstname} {formData.lastname}
                 </p>
@@ -229,9 +227,7 @@ export default function WaitlistModal({ isOpen, onClose, logo }: WaitlistModalPr
                 </p>
               </div>
 
-              <p className="text-gray-600 mb-6">
-                {t('waitlist.modal.success.emailSent')}
-              </p>
+
 
               <button
                 onClick={onClose}

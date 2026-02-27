@@ -45,7 +45,7 @@ function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 bg-[#FEFBFF]  transition-all   duration-300 ${isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 bg-[#FEFBFF]  transition-all  w-screen  duration-300 ${isScrolled
           ? ' py-3'
           : ' py-4'
           }`}
@@ -66,10 +66,10 @@ function Header() {
                   <Image src={Images.logoText} alt="logoText" className="w-full h-full object-cover" width={100} height={100} />
                 </Link>
               </div>
-              <div className="hidden lg:flex w-1/2">
+              <div className="hidden xl:flex w-1/2">
                 <Navigation activeSection={activeSection} />
               </div>
-              <div className="hidden lg:flex items-center space-x-4">
+              <div className="hidden xl:flex items-center space-x-4">
                 <Button
                   variant="outline"
                   size="md"
@@ -92,7 +92,7 @@ function Header() {
               </div>
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 text-gray-700 hover:text-gray-900 focus:outline-none"
+                className="xl:hidden p-2 text-gray-700 hover:text-gray-900 focus:outline-none"
                 aria-label="Open menu"
               >
                 <Icons.HamburgerMenu />
@@ -102,8 +102,6 @@ function Header() {
           </div>
         </Section>
       </header>
-
-      <div className="h-20" />
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}

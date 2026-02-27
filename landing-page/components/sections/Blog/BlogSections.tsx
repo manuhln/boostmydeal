@@ -39,7 +39,7 @@ export function BlogSection() {
   ];
 
   return (
-    <Section id="resources" background="white" spacing="lg" className="relative overflow-hidden">
+    <Section id="resources" background="white" spacing="sm" className="relative overflow-hidden">
       <div className="relative z-10">
         {/* Header avec ContentLayout centered */}
         <div className="mb-8 md:mb-12 px-4">

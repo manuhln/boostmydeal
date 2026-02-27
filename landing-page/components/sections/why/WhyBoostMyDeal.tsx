@@ -28,7 +28,6 @@ export function WhyBoostMyDeal() {
     <Section background="white" spacing="sm" id="why">
       {/* Header */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        {/* Left: Chip + Title */}
         <div>
           <Chip icon={<Icons.CopySimpleIcon />} variant="default">
             {t('comparison.chipLabel')}
@@ -37,8 +36,6 @@ export function WhyBoostMyDeal() {
             {t('comparison.title')}
           </h2>
         </div>
-
-        {/* Right: Description */}
         <div className="flex items-end">
           <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
             {t('comparison.description')}
@@ -46,7 +43,6 @@ export function WhyBoostMyDeal() {
         </div>
       </div>
 
-      {/* Comparison Table */}
       <ComparisonTable competitors={competitors} features={features} />
     </Section>
   );

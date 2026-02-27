@@ -21,9 +21,7 @@ class RedisConnectionPool {
       // console.log(process.env);
       // console.log("REDIS_CLOUD_URL", redisUrl);
       if (!redisUrl || typeof redisUrl !== "string") {
-        throw new Error(
-          "REDIS_CLOUD_URL environment variable is required and must be a valid URL string"
-        );
+        throw new Error("REDIS_CLOUD_URL environment variable is required and must be a valid URL string");
       }
 
       // Redis Cloud connection established
@@ -31,7 +29,7 @@ class RedisConnectionPool {
       const connection = new IORedis(redisUrl, {
         maxRetriesPerRequest: null, // Required by BullMQ
         enableReadyCheck: false,
-        lazyConnect: false,  // Changed to false to auto-connect
+        lazyConnect: false, // Changed to false to auto-connect
         connectTimeout: 30000, // Increased timeout for Redis Cloud
         commandTimeout: 30000, // Increased command timeout
         keepAlive: 30000, // Keepalive interval in milliseconds for Redis Cloud

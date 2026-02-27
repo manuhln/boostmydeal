@@ -79,7 +79,7 @@ export function CustomerStory() {
   };
 
   return (
-    <Section id='customerStory' background="white" spacing="lg">
+    <Section id='customerStory' background="white" spacing="sm">
       <div className="grid grid-cols-1 lg:grid-cols-[58%_42%] gap-0 items-stretch">
 
 
@@ -100,7 +100,7 @@ export function CustomerStory() {
             </div>
 
             {/* Témoignage */}
-            <blockquote className="text-2xl lg:text-3xl  text-gray-900 leading-relaxed mb-8">
+            <blockquote className="text-xl sm:text-2xl lg:text-3xl  text-gray-900 leading-relaxed mb-8">
               {currentTestimonial.text}
             </blockquote>
           </div>

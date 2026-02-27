@@ -1,6 +1,3 @@
-
-import { Footer } from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
 import { BlogSection } from "@/components/sections/Blog/BlogSections";
 import { CustomerStory } from "@/components/sections/CustomerStory/CustomerStory";
 import Features from "@/components/sections/Features/Features";
@@ -30,7 +27,6 @@ export default function HomePage() {
         <CustomerStory />
         <BlogSection />
       </main>
-
     </>
   )
 }

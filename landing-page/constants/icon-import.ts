@@ -12,6 +12,10 @@ import { FiZap } from "react-icons/fi";
 import { PiCopySimple } from "react-icons/pi";
 import { IoPlayCircleOutline } from "react-icons/io5";
 import { RiFileList3Line } from "react-icons/ri";
+import { FaFacebookF } from "react-icons/fa6";
+import { FaInstagram } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaLinkedinIn } from "react-icons/fa";
 
 export const Icons = {
   HamburgerMenu: GiHamburgerMenu,
@@ -30,10 +34,10 @@ export const Icons = {
   CopySimpleIcon: PiCopySimple,
   check: "/icons/check.png",
   X: "/icons/X.png",
-  twitter: "/social/X.png",
-  instagram: "/social/insta.png",
-  linkedin: "/social/linked.png",
-  facebook: "/social/facebook.png",
+  twitter: FaXTwitter,
+  instagram: FaInstagram,
+  linkedin: FaLinkedinIn,
+  facebook: FaFacebookF,
   cloudIndo: "/icons/cloudInfo.png",
   industryIcon: "/icons/IndustryIcon.png",
   industryCaseIcon1: "/icons/Frame.png",
