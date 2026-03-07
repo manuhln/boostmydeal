@@ -96,7 +96,6 @@ export default function CallLogs() {
   const assistants = assistantsResponse?.data || [];
   const exportCalls = useExportCalls();
   const initiateCall = useInitiateCall();
-  const initiateCallDemo = useInitiateCallDemo(); // Temporary demo method
 
   const handleFilterChange = (key: keyof CallLogFilters, value: string) => {
     setFilters((prev) => ({
@@ -253,6 +252,7 @@ export default function CallLogs() {
         assistantId: outboundCallData.assistantId,
         toNumber: outboundCallData.toNumber,
         message: `Call to ${outboundCallData.contactName}`,
+        contactName: outboundCallData.contactName,
       });
       console.log("✅ Call initiation result:", result);
       toast({

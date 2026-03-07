@@ -11,6 +11,7 @@ export interface CallInitiationPayload {
   assistantId: string;
   toNumber: string;
   message: string;
+  contactName?: string;
 }
 
 export interface CallQueuePayload {
@@ -34,6 +35,7 @@ export interface CallQueuePayload {
   workspaceId?: string;
   user_tags?: string[];
   system_tags?: string[];
+  contact_name?: string;
   // Call settings
   callRecording?: boolean;
   callRecordingFormat?: string;
@@ -171,6 +173,7 @@ export class CallService {
           })
         },
         to_number: payload.toNumber,
+        contact_name: payload.contactName,
         message: payload.message,
         assistantId: payload.assistantId,
         organizationId: organizationId,
@@ -687,6 +690,26 @@ export class CallService {
       return true;
     } catch (error) {
       console.error(`❌ [CallService] Error saving Voxsun call ID:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Save roomName to the call record before the SIP call is initiated.
+   * This ensures the webhook lookup can find the call record immediately
+   * when PHONE_CALL_CONNECTED fires (prevents race condition).
+   */
+  async saveCallRoomName(callId: string, roomName: string): Promise<boolean> {
+    try {
+      console.log(`💾 [CallService] Pre-saving roomName=${roomName} for call ${callId}`);
+      await Call.findByIdAndUpdate(callId, {
+        roomName,
+        updatedAt: new Date()
+      });
+      console.log(`✅ [CallService] roomName saved successfully`);
+      return true;
+    } catch (error) {
+      console.error(`❌ [CallService] Error saving roomName:`, error);
       return false;
     }
   }

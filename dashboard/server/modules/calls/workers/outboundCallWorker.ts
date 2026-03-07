@@ -261,6 +261,12 @@ export async function processOutboundCall(job: Job<CallQueuePayload>) {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
                 
+                // Save roomName BEFORE the SIP call so webhooks can find the call record
+                // immediately when PHONE_CALL_CONNECTED fires (race condition fix)
+                await callService.saveCallRoomName(callId, conversationId);
+                console.log(`💾 [OutboundWorker] Pre-saved roomName=${conversationId} for call ${callId}`);
+
+                const appUrl = process.env.APP_URL || 'https://portal.boostmydeal.com';
                 const sipCallResponse = await fetch(`${liveKitServerUrl}/start_sip_call`, {
                   method: 'POST',
                   headers: {
@@ -272,9 +278,10 @@ export async function processOutboundCall(job: Job<CallQueuePayload>) {
                     room: conversationId,
                     to_phone: payload.to_number,
                     from_phone: payload.config.from_number,
-                    contact_name: 'Customer',
+                    contact_name: payload.contact_name || '',
                     user_speak_first: false,
                     livekit_sip_trunk_id: payload.config.voxsun_livekit_trunk_id,
+                    webhook_url: `${appUrl}/api/webhook/webhook-status`,
                     // Agent configuration for the LiveKit agent worker
                     agent_initial_message: telephonePayload.agent_initial_message,
                     agent_prompt_preamble: telephonePayload.agent_prompt_preamble,
