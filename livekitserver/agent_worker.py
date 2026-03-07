@@ -870,7 +870,7 @@ I am an agent. Follow these instructions every time you speak:
                 voice_id=call_config.tts.voice_id,
                 model=elevenlabs_model,
                 api_key=call_config.tts.api_key,
-                streaming_latency=2,
+                streaming_latency=0,
                 chunk_length_schedule=[120, 160, 250, 290],
                 enable_ssml_parsing=False,
             )
