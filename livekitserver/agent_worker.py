@@ -1468,24 +1468,12 @@ async def entrypoint(ctx: JobContext):
     else:
         logger.info("No webhook_url configured - webhooks disabled")
 
-    # Configure semantic turn detection if available
-    turn_detection_mode = None
-    if SEMANTIC_TURN_AVAILABLE:
-        try:
-            turn_detection_mode = MultilingualModel()
-            logger.info("✅ Semantic turn detection enabled (MultilingualModel)")
-        except Exception as e:
-            logger.warning(f"⚠️ Failed to load semantic turn detector: {e}. Falling back to VAD-only.")
-    else:
-        logger.info("ℹ️ Semantic turn detector not installed, using VAD-only turn detection")
-
     session_kwargs = dict(
         vad=ctx.proc.userdata["vad"],
         min_endpointing_delay=0.5,
         max_endpointing_delay=6.0,
+        turn_detection=MultilingualModel()
     )
-    if turn_detection_mode is not None:
-        session_kwargs["turn_detection"] = turn_detection_mode
 
     session = AgentSession(**session_kwargs)
 
