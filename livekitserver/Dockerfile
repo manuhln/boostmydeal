@@ -48,6 +48,9 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Copy application code
 COPY --chown=livekitapp:livekitapp . .
 
+# Download turn detector model files
+RUN python agent_worker.py download-files
+
 # Create config directory
 RUN mkdir -p /tmp && chown livekitapp:livekitapp /tmp
 
