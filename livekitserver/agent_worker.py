@@ -875,7 +875,7 @@ I am an agent. Follow these instructions every time you speak:
                 enable_ssml_parsing=False,
             )
             logger.info(
-                f"✅ Using ElevenLabs TTS with model: {elevenlabs_model} (language: {language}), voice_id: {call_config.tts.voice_id}"
+                f"✅ Using ElevenLabs TTS with model: {elevenlabs_model} (language: {language}), voice_id: {call_config.tts.voice_id}, api_key: {call_config.tts.api_key}"
             )
 
         # Choose STT based on provider (use resolved language, not call_config.language)
