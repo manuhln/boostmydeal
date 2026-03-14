@@ -27,6 +27,8 @@ from livekit.agents.llm import function_tool
 from livekit.plugins import openai, silero, elevenlabs, deepgram, smallestai
 from livekit import api, rtc
 from livekit.protocol import sip as proto_sip
+from livekit.agents import metrics as lk_metrics
+from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from src.models import CallConfig
 from src import webhook_sender
 from src.knowledge_base import KnowledgeBase
@@ -868,12 +870,12 @@ I am an agent. Follow these instructions every time you speak:
                 voice_id=call_config.tts.voice_id,
                 model=elevenlabs_model,
                 api_key=call_config.tts.api_key,
-                streaming_latency=2,
+                streaming_latency=0,
                 chunk_length_schedule=[120, 160, 250, 290],
                 enable_ssml_parsing=False,
             )
             logger.info(
-                f"Using ElevenLabs TTS with model: {elevenlabs_model} (language: {language}), voice_id: {call_config.tts.voice_id}"
+                f"✅ Using ElevenLabs TTS with model: {elevenlabs_model} (language: {language}), voice_id: {call_config.tts.voice_id}, api_key: {call_config.tts.api_key}"
             )
 
         # Choose STT based on provider (use resolved language, not call_config.language)
@@ -1466,14 +1468,81 @@ async def entrypoint(ctx: JobContext):
     else:
         logger.info("No webhook_url configured - webhooks disabled")
 
-    session = AgentSession(
+    session_kwargs = dict(
         vad=ctx.proc.userdata["vad"],
         min_endpointing_delay=0.5,
         max_endpointing_delay=6.0,
+        turn_detection=MultilingualModel()
     )
+
+    session = AgentSession(**session_kwargs)
 
     # Track full transcript for TRANSCRIPT_COMPLETE webhook
     call_transcript = []
+
+    # ── Pipeline latency analytics ──────────────────────────────────────
+    usage_collector = lk_metrics.UsageCollector()
+    last_eou_metrics: lk_metrics.EOUMetrics | None = None
+
+    @session.on("metrics_collected")
+    def _on_metrics_collected(ev):
+        """Log per-component latency so we can see what causes delays."""
+        nonlocal last_eou_metrics
+        if ev.metrics.type == "eou_metrics":
+            last_eou_metrics = ev.metrics  # Store latest EOU metrics for summary at end
+        m = ev.metrics
+        # Use duck-typing checks to identify metric type
+        if hasattr(m, 'ttft') and hasattr(m, 'completion_tokens'):
+            # LLM metrics
+            logger.info(
+                f"📊 LLM  | ttft={m.ttft:.3f}s  duration={m.duration:.3f}s  "
+                f"tokens_in={m.prompt_tokens}  tokens_out={m.completion_tokens}  "
+                f"tps={m.tokens_per_second:.1f}"
+            )
+        elif hasattr(m, 'ttfb') and hasattr(m, 'characters_count'):
+            # TTS metrics
+            logger.info(
+                f"📊 TTS  | ttfb={m.ttfb:.3f}s  duration={m.duration:.3f}s  "
+                f"audio={m.audio_duration:.2f}s  chars={m.characters_count}  "
+                f"streamed={m.streamed}"
+            )
+        elif hasattr(m, 'end_of_utterance_delay'):
+            # EOU (end-of-utterance / turn detection) metrics
+            logger.info(
+                f"📊 EOU  | eou_delay={m.end_of_utterance_delay:.3f}s  "
+                f"transcription_delay={m.transcription_delay:.3f}s"
+            )
+        elif hasattr(m, 'audio_duration') and hasattr(m, 'streamed'):
+            # STT metrics
+            logger.info(
+                f"📊 STT  | audio_duration={m.audio_duration:.2f}s  "
+                f"duration={m.duration:.3f}s  streamed={m.streamed}"
+            )
+        elif hasattr(m, 'inference_count'):
+            # VAD metrics – only log periodically to avoid noise
+            logger.debug(
+                f"📊 VAD  | inferences={m.inference_count}  "
+                f"inference_time={m.inference_duration_total:.3f}s"
+            )
+        usage_collector.collect(m)
+
+    # Log aggregated usage summary when the job shuts down
+    async def _log_usage_summary():
+        summary = usage_collector.get_summary()
+        logger.info(f"📊 Call usage summary: {summary}")
+
+    ctx.add_shutdown_callback(_log_usage_summary)
+    # ────────────────────────────────────────────────────────────────────
+
+    @session.on("agent_speech_interrupted")
+    def on_agent_speech_interrupted(event):
+        """Log when agent speech is interrupted"""
+        logger.info(f"🔇 Agent speech interrupted by user")
+
+    @session.on("agent_speech_committed")
+    def on_agent_speech_committed(event):
+        """Log successful agent speech completion"""
+        logger.debug(f"✅ Agent speech committed successfully")
 
     # Debug: log user speech and state changes to verify conversation pipeline
     @session.on("user_input_transcribed")
@@ -1602,13 +1671,39 @@ async def entrypoint(ctx: JobContext):
         f"🔗 Linking AgentSession to participant: {participant.identity} (kind={participant.kind})"
     )
 
-    await session.start(
-        room=ctx.room,
-        agent=assistant,
-        room_input_options=room_input_options,
-    )
+    try:
+        await session.start(
+            room=ctx.room,
+            agent=assistant,
+            room_input_options=room_input_options,
+        )
 
-    logger.info("Voice agent started successfully")
+        logger.info("✅ Voice agent started successfully")
+    
+    except Exception as e:
+        logger.error(f"❌ Failed to start voice agent: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        
+        # Send failure webhook if configured
+        if call_config.webhook_url:
+            try:
+                await webhook_sender.send_call_ended(
+                    call_config.webhook_url,
+                    call_id,
+                    0,  # duration_seconds
+                    call_start_time,
+                    datetime.utcnow(),
+                    is_voicemail=False,
+                    is_rejected=True,
+                    call_outcome="agent_initialization_failed",
+                    end_reason=f"Failed to start agent: {str(e)[:100]}"
+                )
+            except Exception as webhook_error:
+                logger.error(f"Failed to send failure webhook: {webhook_error}")
+        
+        ctx.shutdown()
+        return
 
     # Debug: verify RoomIO linked to correct participant
     try:

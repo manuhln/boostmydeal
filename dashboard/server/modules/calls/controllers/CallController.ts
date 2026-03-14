@@ -284,7 +284,7 @@ export class CallController {
         return;
       }
 
-      const { assistantId, toNumber, message } = req.body;
+      const { assistantId, toNumber, message, contactName } = req.body;
       const organizationId = (req as any).user?.organizationId;
 
       if (!organizationId) {
@@ -324,7 +324,7 @@ export class CallController {
 
       // Prepare call for queue processing
       const callData = await callService.prepareCallForQueue(
-        { assistantId, toNumber, message },
+        { assistantId, toNumber, message, contactName },
         organizationId
       );
 
@@ -362,10 +362,11 @@ export class CallController {
           status: "success",
           message: "Call queued for processing",
           job_id: job.id,
-          to_phone: callData.payload.config.to_number,
-          from_phone: callData.payload.config.from_number
+          to_phone: callData?.payload?.to_number,
+          from_phone: callData?.payload?.config?.from_number,
+          contact_name: callData?.payload?.contact_name
         });
-
+        
       } catch (queueError) {
         console.warn(`⚠️ [CallController] Queue failed, falling back to direct processing:`);
         console.error(`❌ [CallController] Queue error type:`, (queueError as any)?.constructor?.name);
@@ -395,8 +396,8 @@ export class CallController {
               status: "success",
               message: result.message || "Call initiated successfully",
               call_id: result.call_id,
-              to_phone: result.to_phone || callData.payload.config.to_number,
-              from_phone: result.from_phone || callData.payload.config.from_number
+              to_phone: result.to_phone || callData?.payload?.to_number,
+              from_phone: result.from_phone || callData?.payload?.config?.from_number,
             });
           } else {
             console.error(`❌ [CallController] No call_id in result:`, result);

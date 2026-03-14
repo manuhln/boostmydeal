@@ -64,6 +64,7 @@ export function useInitiateCall() {
       assistantId: string; 
       toNumber: string; 
       message?: string;
+      contactName?: string;
     }) => {
       console.log("🌐 API Request - Making call to /api/calls/initiate with:", data);
       const result = await apiRequest("POST", "/api/calls/initiate", data);

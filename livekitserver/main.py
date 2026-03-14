@@ -107,6 +107,7 @@ class StartSIPCallRequest(BaseModel):
     voicemail_detection: Optional[bool] = Field(None, description="Enable voicemail detection")
     voicemail_message: Optional[str] = Field(None, description="Message to leave on voicemail")
     recording: Optional[bool] = Field(None, description="Enable call recording")
+    webhook_url: Optional[str] = Field(None, description="Webhook URL for call status events (PHONE_CALL_CONNECTED, PHONE_CALL_ENDED, etc.)")
 
     class Config:
         json_schema_extra = {
@@ -604,7 +605,7 @@ async def start_sip_call(
                     temperature=0.7,
                     language="en",
                     agent_speed=1.0,
-                    webhook_url="",
+                    webhook_url=request_data.webhook_url or os.getenv("WEBHOOK_URL", ""),
                     use_knowledge_base=False,
                     recording=request_data.recording or False,
                     livekit_sip_trunk_id=request_data.livekit_sip_trunk_id,
@@ -735,9 +736,19 @@ async def start_sip_call(
                 logger.error(f"   Error Metadata: {e.metadata}")
             logger.error(f"   Error Type: {type(e).__name__}")
             
+            # Detect 408 timeout errors specifically
+            if "408" in str(error_code) or "canceled" in error_message.lower():
+                error_msg = (
+                    f"❌ SIP Call Timeout (408): Transaction failed to complete. "
+                    f"This usually means: (1) SIP trunk credentials are invalid, "
+                    f"(2) Voxsun account issue, (3) Network connectivity problem. "
+                    f"Trunk ID: {request_data.livekit_sip_trunk_id}. "
+                    f"Phone: {request_data.from_phone}. "
+                    f"Run /diagnose_sip_trunk to check trunk status."
+                )
             # Check for specific error conditions
-            if "auth" in error_message.lower() or "401" in str(error_code) or "403" in str(error_code):
-                error_msg = f"❌ SIP Authentication Failed: Check Voxsun credentials (username/password/domain). SIP Status: {error_code}"
+            elif "auth" in error_message.lower() or "401" in str(error_code) or "403" in str(error_code):
+                error_msg = f"❌ SIP Authentication Failed: Check Voxsun credentials (username/password/domain). SIP Status: {error_code}. Run /diagnose_sip_trunk for more info."
             elif "not found" in error_message.lower() or error_code in ["404", "480"]:
                 # Differentiate between LiveKit NOT FOUND and SIP NOT FOUND
                 if "sip" in error_message.lower():
@@ -745,7 +756,7 @@ async def start_sip_call(
                 else:
                     error_msg = f"❌ LiveKit Resource Not Found. Verify trunk ID: {request_data.livekit_sip_trunk_id} or Room: {request_data.room}"
             elif "trunk" in error_message.lower():
-                error_msg = f"❌ SIP Trunk '{request_data.livekit_sip_trunk_id}' is invalid or unreachable"
+                error_msg = f"❌ SIP Trunk '{request_data.livekit_sip_trunk_id}' is invalid or unreachable. Run /diagnose_sip_trunk to check trunk status."
             elif "retry" in error_message.lower():
                 error_msg = f"❌ SIP Gateway Retry Limit Exceeded: {error_message}. This usually indicates authentication failure or unreachable gateway."
             else:
@@ -760,8 +771,11 @@ async def start_sip_call(
                     "sip_status": error_code,
                     "room": request_data.room,
                     "trunk_id": request_data.livekit_sip_trunk_id,
+                    "from_phone": request_data.from_phone,
+                    "to_phone": request_data.to_phone,
                     "raw_error": error_message,
-                    "metadata": e.metadata if hasattr(e, 'metadata') else {}
+                    "metadata": e.metadata if hasattr(e, 'metadata') else {},
+                    "diagnostic_hint": "Call /diagnose_sip_trunk endpoint to check trunk health"
                 }
             )
         
@@ -910,14 +924,24 @@ async def start_outbound_call(
             
         except api.TwirpError as e:
             error_code = e.metadata.get("sip_status_code", "UNKNOWN") if hasattr(e, 'metadata') else "UNKNOWN"
-            error_msg = (
-                f"SIP error: {e.message}, "
-                f"SIP status: {error_code} "
-                f"{e.metadata.get('sip_status', 'Unknown')}"
-            )
-            # Add context for 404 specifically
-            if error_code == "404":
-                error_msg += f" (Note: This often means destination {call_config.to_phone} is unreachable via trunk {call_config.livekit_sip_trunk_id})"
+            error_message = str(e)
+            
+            # Detect 408 timeout errors specifically
+            if "408" in str(error_code) or "canceled" in error_message.lower():
+                error_msg = (
+                    f"SIP Call Timeout (408): Transaction failed to complete. "
+                    f"This usually means: (1) SIP trunk credentials are invalid, "
+                    f"(2) Voxsun account issue, (3) Network connectivity problem. "
+                    f"Trunk ID: {call_config.livekit_sip_trunk_id}. "
+                    f"Phone: {call_config.from_phone}. "
+                    f"Run /diagnose_sip_trunk to check trunk status."
+                )
+            elif error_code == "404":
+                error_msg = f"SIP 404 Error: Destination {call_config.to_phone} is unreachable via trunk {call_config.livekit_sip_trunk_id}. Check phone number validity and trunk configuration."
+            elif "401" in str(error_code) or "403" in str(error_code) or "auth" in error_message.lower():
+                error_msg = f"SIP Authentication Failed: Check Voxsun trunk credentials. Trunk ID: {call_config.livekit_sip_trunk_id}"
+            else:
+                error_msg = f"SIP Error: {error_message}, Status: {error_code}"
                 
             logger.error(f"❌ TwirpError in start_outbound_call: {error_msg}")
             if hasattr(e, 'metadata'):
@@ -929,7 +953,8 @@ async def start_outbound_call(
                     "error": "SIP Outbound Call Failed",
                     "message": error_msg,
                     "sip_status": error_code,
-                    "metadata": e.metadata if hasattr(e, 'metadata') else {}
+                    "metadata": e.metadata if hasattr(e, 'metadata') else {},
+                    "diagnostic_hint": "Call /diagnose_sip_trunk endpoint to check trunk health"
                 }
             )
     
@@ -960,6 +985,115 @@ async def twilio_status_callback(room_name: str, request: Request):
     except Exception as e:
         logger.error(f"Error in status callback: {e}")
         return {"status": "error", "message": str(e)}
+
+
+@app.get("/diagnose_sip_trunk")
+async def diagnose_sip_trunk(
+    api_key: str = Depends(verify_api_key),
+):
+    """
+    🔒 PROTECTED ENDPOINT - Requires X-API-Key header
+    
+    Diagnose the SIP trunk configuration and connectivity.
+    Returns information about all configured trunks and their status.
+    """
+    livekit_api_client = None
+    try:
+        logger.info("=" * 80)
+        logger.info("📊 SIP TRUNK DIAGNOSTIC")
+        logger.info("=" * 80)
+        logger.info(f"LiveKit URL: {LIVEKIT_URL}")
+        logger.info(f"Configured Trunk ID (ENV): {os.getenv('LIVEKIT_SIP_TRUNK_ID', 'Not Set')}")
+        
+        # Initialize LiveKit API client
+        livekit_api_client = api.LiveKitAPI(
+            url=LIVEKIT_URL,
+            api_key=LIVEKIT_API_KEY,
+            api_secret=LIVEKIT_API_SECRET,
+        )
+        logger.info("✅ Connected to LiveKit API")
+        
+        # List all trunks
+        logger.info("📋 Listing all SIP outbound trunks...")
+        trunk_list_response = await livekit_api_client.sip.list_sip_outbound_trunk(
+            api.ListSIPOutboundTrunkRequest()
+        )
+        
+        if not trunk_list_response.items:
+            logger.warning("❌ NO SIP TRUNKS FOUND!")
+            return {
+                "status": "error",
+                "code": "NO_TRUNKS",
+                "message": "No SIP trunks found in LiveKit. You need to create one.",
+                "trunks": [],
+                "configured_trunk_id": os.getenv('LIVEKIT_SIP_TRUNK_ID', 'Not Set'),
+                "action_required": "Create a SIP trunk using /create_sip_trunk endpoint"
+            }
+        
+        logger.info(f"✅ Found {len(trunk_list_response.items)} trunk(s)")
+        
+        trunks = []
+        found_configured = False
+        configured_trunk_id = os.getenv('LIVEKIT_SIP_TRUNK_ID', '')
+        
+        for trunk in trunk_list_response.items:
+            is_configured = trunk.sip_trunk_id == configured_trunk_id
+            if is_configured:
+                found_configured = True
+            
+            trunk_info = {
+                "sip_trunk_id": trunk.sip_trunk_id,
+                "name": trunk.name,
+                "address": trunk.address,
+                "transport": trunk.transport,
+                "numbers": list(trunk.numbers) if trunk.numbers else [],
+                "auth_username": trunk.auth_username,
+                "is_configured": is_configured,
+                "status": "✅ ACTIVE" if is_configured else "⚠️ NOT CONFIGURED"
+            }
+            trunks.append(trunk_info)
+            logger.info(f"Trunk: {trunk.sip_trunk_id} ({trunk_info['status']})")
+        
+        result = {
+            "status": "success",
+            "message": f"Found {len(trunks)} SIP trunk(s)",
+            "trunks": trunks,
+            "configured_trunk_id": configured_trunk_id,
+            "configured_trunk_found": found_configured,
+            "livekit_url": LIVEKIT_URL,
+        }
+        
+        if not found_configured and configured_trunk_id:
+            result["warning"] = f"Configured trunk '{configured_trunk_id}' not found. The trunk may have been deleted or the environment variable needs to be updated."
+            result["available_trunk_ids"] = [t["sip_trunk_id"] for t in trunks]
+            result["action_required"] = "Either create a new trunk or update LIVEKIT_SIP_TRUNK_ID environment variable"
+        
+        logger.info("=" * 80)
+        logger.info("✅ DIAGNOSTIC COMPLETE")
+        logger.info("=" * 80)
+        
+        return result
+        
+    except api.TwirpError as e:
+        logger.error(f"❌ LiveKit API error: {e}")
+        return {
+            "status": "error",
+            "code": "LIVEKIT_API_ERROR",
+            "message": str(e),
+            "error_metadata": e.metadata if hasattr(e, 'metadata') else {}
+        }
+    except Exception as e:
+        logger.error(f"❌ Diagnostic error: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        return {
+            "status": "error",
+            "code": "DIAGNOSTIC_FAILED",
+            "message": str(e)
+        }
+    finally:
+        if livekit_api_client:
+            await livekit_api_client.aclose()
 
 
 if __name__ == "__main__":

@@ -45,19 +45,27 @@ RUN groupadd --system --gid 1001 livekitapp && \
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
+# HuggingFace cache in a path writable by livekitapp
+ENV HF_HOME=/opt/hf-cache
+ENV TRANSFORMERS_CACHE=/opt/hf-cache
+
+# Create dirs and set ownership (still running as root here)
+RUN mkdir -p /opt/hf-cache /tmp && \
+    chown livekitapp:livekitapp /opt/hf-cache /tmp
+
 # Copy application code
 COPY --chown=livekitapp:livekitapp . .
 
-# Create config directory
-RUN mkdir -p /tmp && chown livekitapp:livekitapp /tmp
+# Switch to non-root user BEFORE downloading so files are owned correctly
+USER livekitapp
+
+# Download turn detector model files
+RUN python agent_worker.py download-files
 
 # Set environment
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PORT=5002
-
-# Switch to non-root user
-USER livekitapp
 
 # Expose the port
 EXPOSE 5002
