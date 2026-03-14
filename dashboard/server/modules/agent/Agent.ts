@@ -46,6 +46,8 @@ export interface IAgent extends Document {
   transferPhoneNumber?: string;
   // Keyboard sound settings
   keyboardSound?: boolean;
+  // Gemini Live settings
+  geminiLiveVoice?: string;
   metadata: Record<string, any>;
   providerSync: {
     vapi?: {
@@ -138,6 +140,8 @@ const agentSchema = new Schema<IAgent>({
   transferPhoneNumber: { type: String },
   // Keyboard sound settings
   keyboardSound: { type: Boolean, default: false },
+  // Gemini Live settings
+  geminiLiveVoice: { type: String },
   metadata: { type: Schema.Types.Mixed, default: {} },
   providerSync: {
     vapi: {

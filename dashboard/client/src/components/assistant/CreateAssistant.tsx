@@ -109,6 +109,8 @@ export default function CreateAssistant({
     transferPhoneNumber: "", // transferPhoneNumber -> transferPhoneNumber
     // Keyboard sound settings
     keyboardSound: false, // keyboardSound -> keyboardSound
+    // Gemini Live settings
+    geminiLiveVoice: "Puck", // Gemini Live voice selection
     // Post Call Analysis Tab
     userTags: [] as string[], // userTags -> userTags (array)
     systemTags: [] as string[], // systemTags -> systemTags (array)
@@ -318,6 +320,8 @@ export default function CreateAssistant({
         transferPhoneNumber: selectedAssistant.transferPhoneNumber || "",
         // Keyboard sound settings
         keyboardSound: selectedAssistant.keyboardSound ?? false,
+        // Gemini Live settings
+        geminiLiveVoice: (selectedAssistant as any).geminiLiveVoice || "Puck",
         userTags: selectedAssistant.userTags || [],
         systemTags: selectedAssistant.systemTags || [],
       };
@@ -391,6 +395,8 @@ export default function CreateAssistant({
         transferPhoneNumber: "",
         // Keyboard sound settings
         keyboardSound: false,
+        // Gemini Live settings
+        geminiLiveVoice: "Puck",
         userTags: [] as string[],
         systemTags: [] as string[],
       });
@@ -644,6 +650,8 @@ export default function CreateAssistant({
           transferPhoneNumber: "",
           // Keyboard sound settings
           keyboardSound: false,
+          // Gemini Live settings
+          geminiLiveVoice: "Puck",
           userTags: [] as string[],
           systemTags: [] as string[],
         });
@@ -848,6 +856,8 @@ export default function CreateAssistant({
       transferPhoneNumber: formData.transferPhoneNumber,
       // Keyboard sound settings
       keyboardSound: formData.keyboardSound,
+      // Gemini Live settings
+      geminiLiveVoice: formData.geminiLiveVoice,
     };
 
     console.log('📞 [Frontend] Submitting agent data with call transfer and keyboard sound settings:', {
@@ -932,11 +942,13 @@ export default function CreateAssistant({
     const maxTokensValue = typeof formData.maxTokens === 'string' ? parseInt(formData.maxTokens) : formData.maxTokens;
     const temperatureValue = typeof formData.temperature === 'string' ? parseFloat(formData.temperature) : formData.temperature;
 
+    const isGeminiLive = formData.modelProvider === "Gemini Live";
+
     const isValid = !!(
       formData.name?.trim() &&
       formData.voiceProvider &&
-      formData.voice &&
-      formData.transcriber &&
+      (isGeminiLive ? !!formData.geminiLiveVoice : !!formData.voice) &&
+      (isGeminiLive ? true : !!formData.transcriber) &&
       formData.modelProvider &&
       formData.aiModel &&
       formData.gender &&
@@ -954,8 +966,8 @@ export default function CreateAssistant({
       console.log('Form validation failed:', {
         name: !!formData.name?.trim(),
         voiceProvider: !!formData.voiceProvider,
-        voice: !!formData.voice,
-        transcriber: !!formData.transcriber,
+        voice: isGeminiLive ? !!formData.geminiLiveVoice : !!formData.voice,
+        transcriber: isGeminiLive ? true : !!formData.transcriber,
         modelProvider: !!formData.modelProvider,
         aiModel: !!formData.aiModel,
         gender: !!formData.gender,
@@ -1079,7 +1091,46 @@ export default function CreateAssistant({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="aiModel">Model Type</Label>
+                      <Label htmlFor="modelProvider">AI Provider</Label>
+                      <Select 
+                        value={formData.modelProvider} 
+                        onValueChange={(value) => {
+                          handleInputChange("modelProvider", value);
+                          // Set default model when switching providers
+                          if (value === "Gemini Live") {
+                            handleInputChange("aiModel", "gemini-2.5-flash-native-audio-preview-12-2025");
+                          } else {
+                            handleInputChange("aiModel", "gpt-4o-mini");
+                          }
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select AI Provider" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="ChatGPT">ChatGPT (OpenAI)</SelectItem>
+                          <SelectItem value="Gemini Live">Gemini Live (Google)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="aiModel">Model Type</Label>
+                    {formData.modelProvider === "Gemini Live" ? (
+                      <Select 
+                        value={formData.aiModel} 
+                        onValueChange={(value) => handleInputChange("aiModel", value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Gemini Model" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="gemini-2.5-flash-native-audio-preview-12-2025">Gemini 2.5 Flash (Dec 2025)</SelectItem>
+                          <SelectItem value="gemini-2.5-flash-native-audio-preview-09-2025">Gemini 2.5 Flash (Sep 2025)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
                       <Select 
                         value={formData.aiModel} 
                         onValueChange={(value) => handleInputChange("aiModel", value)}
@@ -1095,7 +1146,7 @@ export default function CreateAssistant({
                           <SelectItem value="gpt-4o-mini">GPT-4o Mini</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -1322,6 +1373,61 @@ export default function CreateAssistant({
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                {/* Voice Settings - conditional on AI Provider */}
+                  {formData.modelProvider === "Gemini Live" ? (
+                    <div className="space-y-4">
+                      <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 space-y-2">
+                        <p className="text-sm font-medium text-blue-400">Gemini Live — Native Audio</p>
+                        <p className="text-xs text-muted-foreground">
+                          Gemini Live handles speech-to-text and text-to-speech natively. Voice Provider and Transcriber settings are not used.
+                        </p>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="geminiLiveVoice">Gemini Voice</Label>
+                        <Select
+                          value={formData.geminiLiveVoice}
+                          onValueChange={(value) => handleInputChange("geminiLiveVoice", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Gemini Voice" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Puck">Puck</SelectItem>
+                            <SelectItem value="Aoede">Aoede</SelectItem>
+                            <SelectItem value="Charon">Charon</SelectItem>
+                            <SelectItem value="Fenrir">Fenrir</SelectItem>
+                            <SelectItem value="Kore">Kore</SelectItem>
+                            <SelectItem value="Leda">Leda</SelectItem>
+                            <SelectItem value="Orus">Orus</SelectItem>
+                            <SelectItem value="Zephyr">Zephyr</SelectItem>
+                            <SelectItem value="Achernar">Achernar</SelectItem>
+                            <SelectItem value="Achird">Achird</SelectItem>
+                            <SelectItem value="Algenib">Algenib</SelectItem>
+                            <SelectItem value="Algieba">Algieba</SelectItem>
+                            <SelectItem value="Alnilam">Alnilam</SelectItem>
+                            <SelectItem value="Autonoe">Autonoe</SelectItem>
+                            <SelectItem value="Callirrhoe">Callirrhoe</SelectItem>
+                            <SelectItem value="Despina">Despina</SelectItem>
+                            <SelectItem value="Enceladus">Enceladus</SelectItem>
+                            <SelectItem value="Erinome">Erinome</SelectItem>
+                            <SelectItem value="Gacrux">Gacrux</SelectItem>
+                            <SelectItem value="Iapetus">Iapetus</SelectItem>
+                            <SelectItem value="Laomedeia">Laomedeia</SelectItem>
+                            <SelectItem value="Pulcherrima">Pulcherrima</SelectItem>
+                            <SelectItem value="Rasalgethi">Rasalgethi</SelectItem>
+                            <SelectItem value="Sadachbia">Sadachbia</SelectItem>
+                            <SelectItem value="Sadaltager">Sadaltager</SelectItem>
+                            <SelectItem value="Schedar">Schedar</SelectItem>
+                            <SelectItem value="Sulafat">Sulafat</SelectItem>
+                            <SelectItem value="Umbriel">Umbriel</SelectItem>
+                            <SelectItem value="Vindemiatrix">Vindemiatrix</SelectItem>
+                            <SelectItem value="Zubenelgenubi">Zubenelgenubi</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
                   {/* Voice Settings */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -1600,6 +1706,8 @@ export default function CreateAssistant({
                       </SelectContent>
                     </Select>
                   </div>
+                    </>
+                  )}
 
                   <div className="space-y-2">
                     <Label htmlFor="knowledgeBase">Knowledge Base</Label>

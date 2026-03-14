@@ -90,6 +90,8 @@ export class AgentService {
       transferPhoneNumber: createDto.transferPhoneNumber,
       // Keyboard sound settings
       keyboardSound: createDto.keyboardSound,
+      // Gemini Live settings
+      geminiLiveVoice: createDto.geminiLiveVoice,
       cost: 0,
       latency: 0,
       isActive: true,
@@ -192,6 +194,8 @@ export class AgentService {
       transferPhoneNumber: agent.transferPhoneNumber,
       // Keyboard sound settings
       keyboardSound: agent.keyboardSound,
+      // Gemini Live settings
+      geminiLiveVoice: agent.geminiLiveVoice,
     };
   }
 }

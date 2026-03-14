@@ -207,13 +207,16 @@ class CallSession:
             logger.error(f"Failed to send call-failed webhook: {e}")
 
     def _create_agent_session(self) -> AgentSession:
-        session = AgentSession(
-            vad=self.ctx.proc.userdata["vad"],
-            min_endpointing_delay=0.5,
-            max_endpointing_delay=6.0,
-            turn_detection=MultilingualModel(),
-            preemptive_generation=True
-        )
+        if self.config.model.provider.lower().replace("-", "_") in ("gemini_live", "google"):
+            # Gemini Live handles VAD and turn detection natively in the audio stream
+            logger.info("Gemini Live detected — skipping VAD and turn detection in AgentSession")
+            session = AgentSession()
+        else:
+            session = AgentSession(
+                vad=self.ctx.proc.userdata["vad"],
+                turn_detection=MultilingualModel(),
+                preemptive_generation=True,
+            )
         return session
 
     def _create_voice_assistant(self, participant_identity: str = ""):

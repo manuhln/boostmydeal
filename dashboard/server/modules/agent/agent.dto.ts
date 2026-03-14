@@ -38,6 +38,8 @@ export interface CreateAgentDto {
   transferPhoneNumber?: string;
   // Keyboard sound settings
   keyboardSound?: boolean;
+  // Gemini Live settings
+  geminiLiveVoice?: string;
 }
 
 export interface UpdateAgentDto {
@@ -81,6 +83,8 @@ export interface UpdateAgentDto {
   transferPhoneNumber?: string;
   // Keyboard sound settings
   keyboardSound?: boolean;
+  // Gemini Live settings
+  geminiLiveVoice?: string;
 }
 
 export interface AgentResponseDto {
@@ -149,6 +153,8 @@ export interface AgentResponseDto {
   transferPhoneNumber?: string;
   // Keyboard sound settings
   keyboardSound?: boolean;
+  // Gemini Live settings
+  geminiLiveVoice?: string;
 }
 
 export interface AgentListDto {

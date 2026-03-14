@@ -24,7 +24,7 @@ from src.knowledge_base import KnowledgeBase
 
 from lib.i18n import Translator
 from lib.prompts import PromptBuilder
-from lib.providers import TTSFactory, STTFactory
+from lib.providers import TTSFactory, STTFactory, LLMFactory
 from lib.tools import ToolBuilder
 
 logging.basicConfig(level=logging.INFO)
@@ -99,14 +99,6 @@ class VoiceAssistant(Agent):
             voicemail_enabled=call_config.voicemail,
         )
 
-        # TTS / STT
-        tts_instance = TTSFactory.create(call_config.tts, self.language)
-        stt_instance = STTFactory.create(
-            call_config.stt,
-            self.language,
-            fallback_openai_key=call_config.model.api_key,
-        )
-
         #Knowledge base
         self.kb = None
         if call_config.use_knowledge_base:
@@ -130,16 +122,38 @@ class VoiceAssistant(Agent):
             f"language: {self.language}"
         )
 
-        super().__init__(
+        # LLM: standard pipeline or Gemini Live realtime
+        llm_result = LLMFactory.create(
+            call_config.model,
             instructions=full_prompt,
-            stt=stt_instance,
-            llm=openai.LLM(
-                model=call_config.model.name,
-                temperature=call_config.temperature,
-            ),
-            tts=tts_instance,
+            temperature=call_config.temperature,
             tools=tools,
+            language=self.language,
         )
+
+        if llm_result.is_realtime:
+            # Gemini Live handles audio end-to-end — no separate STT/TTS needed
+            logger.info("Using Gemini Live RealtimeModel (native audio pipeline)")
+            super().__init__(
+                instructions=full_prompt,
+                llm=llm_result.instance,
+                tools=tools,
+            )
+        else:
+            # Standard pipeline: STT → LLM → TTS
+            tts_instance = TTSFactory.create(call_config.tts, self.language)
+            stt_instance = STTFactory.create(
+                call_config.stt,
+                self.language,
+                fallback_openai_key=call_config.model.api_key,
+            )
+            super().__init__(
+                instructions=full_prompt,
+                stt=stt_instance,
+                llm=llm_result.instance,
+                tts=tts_instance,
+                tools=tools,
+            )
 
 
 def prewarm(proc: JobProcess):

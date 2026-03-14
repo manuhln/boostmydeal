@@ -200,7 +200,13 @@ export async function processOutboundCall(job: Job<CallQueuePayload>) {
           },
           model: {
             name: agent.aiModel || "gpt-4",
-            api_key: process.env.OPENAI_API_KEY
+            api_key: agent.modelProvider?.toLowerCase() === 'gemini live'
+              ? process.env.GOOGLE_API_KEY
+              : process.env.OPENAI_API_KEY,
+            provider: agent.modelProvider?.toLowerCase() === 'gemini live' ? 'gemini_live' : 'openai',
+            voice: agent.modelProvider?.toLowerCase() === 'gemini live'
+              ? (agent.geminiLiveVoice || 'Puck')
+              : undefined,
           },
           rag_response: agent.ragResponse || "",
           user_tags: payload.user_tags || [],

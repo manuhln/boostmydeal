@@ -21,9 +21,23 @@ class STTConfig(BaseModel):
 
 class ModelConfig(BaseModel):
     model_config = ConfigDict(protected_namespaces=())
-    
+
     name: str = Field(default="gpt-4o-mini", description="LLM model name")
     api_key: str = Field(..., description="API key for LLM provider")
+    provider: str = Field(
+        default="openai",
+        description=(
+            "LLM provider. Use 'openai' for the standard pipeline or "
+            "'gemini_live' for Google Gemini Live (native audio)."
+        ),
+    )
+    voice: str = Field(
+        default="Puck",
+        description=(
+            "Voice for Gemini Live. One of: Puck, Aoede, Charon, Fenrir, Kore, "
+            "Leda, Orus, Zephyr, etc. Ignored for 'openai' provider."
+        ),
+    )
 
 
 class CallConfig(BaseModel):
