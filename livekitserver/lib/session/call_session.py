@@ -212,6 +212,7 @@ class CallSession:
             min_endpointing_delay=0.5,
             max_endpointing_delay=6.0,
             turn_detection=MultilingualModel(),
+            preemptive_generation=True
         )
         return session
 

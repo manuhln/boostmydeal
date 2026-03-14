@@ -17,6 +17,7 @@ from livekit.agents import (
     cli,
 )
 from livekit.plugins import openai, silero
+from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
 from src.models import CallConfig, TTSConfig, STTConfig, ModelConfig
 from src.knowledge_base import KnowledgeBase
